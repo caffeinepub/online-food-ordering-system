@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Online food ordering system where customers register/log in, browse restaurants and menus, place orders, and track order status, using a normalized relational database design (1NF–3NF) with PK/FK and one-to-many relationships.",
+  "existing_features": [
+    {
+      "id": "feature-implement-user-authentication-using-internet-identity-and-provide-a-basic-user-profile-record-in-the-backend-that-is-created-updated-on-first-login-keyed-by-the-caller-principal",
+      "title": "Implement user authentication using Internet Identity, and provide a basic user profile record in the backend that is created/updated on first login (keyed by the caller Principal).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-backend-query-apis-to-browse-restaurants-and-their-menus-including-list-restaurants-get-restaurant-details-and-list-menu-items-for-a-restaurant",
+      "title": "Provide backend query APIs to browse restaurants and their menus, including: list restaurants, get restaurant details, and list menu items for a restaurant.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-order-placement-end-to-end-users-can-add-menu-items-to-a-cart-specify-quantities-submit-an-order-and-the-backend-persists-the-order-and-order-items-linked-to-the-authenticated-user",
+      "title": "Implement order placement end-to-end: users can add menu items to a cart, specify quantities, submit an order, and the backend persists the order and order items linked to the authenticated user.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-order-tracking-define-an-order-status-lifecycle-e-g-pending-confirmed-preparing-outfordelivery-delivered-cancelled-and-provide-backend-apis-and-frontend-ui-to-view-a-user-s-orders-and-track-each-order-s-current-status-and-history-timestamps",
+      "title": "Implement order tracking: define an order status lifecycle (e.g., Pending, Confirmed, Preparing, OutForDelivery, Delivered, Cancelled) and provide backend APIs and frontend UI to view a user's orders and track each order’s current status and history/timestamps.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-coherent-frontend-ui-for-the-core-flows-sign-in-browse-restaurants-view-menu-cart-checkout-orders-list-order-detail-using-react-typescript-tailwind-shadcn-ui-components-and-react-query-for-data-fetching-caching",
+      "title": "Create a coherent frontend UI for the core flows (sign in, browse restaurants, view menu, cart/checkout, orders list, order detail) using React + TypeScript, Tailwind, shadcn/ui components, and React Query for data fetching/caching.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-distinct-consistent-visual-theme-across-the-frontend-colors-typography-spacing-and-component-styling-appropriate-for-a-food-ordering-app-do-not-use-a-blue-and-purple-primary-palette-unless-explicitly-requested",
+      "title": "Apply a distinct, consistent visual theme across the frontend (colors, typography, spacing, and component styling) appropriate for a food ordering app; do not use a blue-and-purple primary palette unless explicitly requested.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "User registration and login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Browse restaurants and menus",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Place orders",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Track order status",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Design relational database schema using PK/FK, one-to-many relationships, and normalization (1NF–3NF)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Design and implement backend data models that reflect normalized (1NF–3NF) entities for an online food ordering domain, using explicit IDs and references to represent primary/foreign keys and one-to-many relationships: Restaurant -> MenuItem (one-to-many) and User -> Order (one-to-many), with Order -> OrderItem (one-to-many).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Seed the backend with a small set of sample restaurants and menu items so the app is usable immediately after deployment without requiring an admin UI.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    }
+  ],
+  "architectural_notes": [
+    "Use relational database tables with primary/foreign keys to model users, restaurants, menus/items, orders, and order statuses.",
+    "Model one-to-many relationships (e.g., restaurant->menu items, order->order items).",
+    "Apply basic normalization (1NF–3NF) to reduce redundancy and maintain data integrity."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "projectName": "Online Food Ordering System",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
