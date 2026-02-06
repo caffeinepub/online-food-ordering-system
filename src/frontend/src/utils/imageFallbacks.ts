@@ -19,6 +19,39 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'pepper chicken (milagu varuval)': '/assets/generated/dish-pepper-chicken.dim_512x512.png',
   'chettinad mutton kuzhambu': '/assets/generated/dish-mutton-kuzhambu.dim_512x512.png',
   'mutton kuzhambu': '/assets/generated/dish-mutton-kuzhambu.dim_512x512.png',
+  // Chennai Spice - newly generated dishes
+  'sambar': '/assets/generated/dish-sambar.dim_512x512.png',
+  'coconut chutney': '/assets/generated/dish-coconut-chutney.dim_512x512.png',
+  'nattu kozhi kulambu': '/assets/generated/dish-nattu-kozhi-kulambu.dim_512x512.png',
+  'nilgiri chicken korma': '/assets/generated/dish-nilgiri-chicken-korma.dim_512x512.png',
+  'nanjil nattu chicken curry': '/assets/generated/dish-nanjil-nattu-chicken-curry.dim_512x512.png',
+  'chicken ghee roast': '/assets/generated/dish-chicken-ghee-roast.dim_512x512.png',
+  'elumbu rasam / soup': '/assets/generated/dish-elumbu-rasam.dim_512x512.png',
+  'elumbu rasam': '/assets/generated/dish-elumbu-rasam.dim_512x512.png',
+  'mutton chukka (varuval)': '/assets/generated/dish-mutton-chukka.dim_512x512.png',
+  'mutton chukka': '/assets/generated/dish-mutton-chukka.dim_512x512.png',
+  'mutton uppu kari': '/assets/generated/dish-mutton-uppu-kari.dim_512x512.png',
+  'mutton nalli fry': '/assets/generated/dish-mutton-nalli-fry.dim_512x512.png',
+  // Chennai Spice - Seafood dishes (all available with new generated images)
+  'karimeen pollichathu': '/assets/generated/dish-karimeen-pollichathu.dim_512x512.png',
+  'malabar fish curry/meen curry': '/assets/generated/dish-malabar-fish-curry.dim_512x512.png',
+  'malabar fish curry': '/assets/generated/dish-malabar-fish-curry.dim_512x512.png',
+  'meen curry': '/assets/generated/dish-malabar-fish-curry.dim_512x512.png',
+  'nethili 65': '/assets/generated/dish-nethili-65.dim_512x512.png',
+  'fish varutharacha': '/assets/generated/dish-fish-varutharacha.dim_512x512.png',
+  // New Chennai Spice seafood dishes with generated images
+  'chepala pulusu': '/assets/generated/dish-chepala-pulusu.dim_512x512.png',
+  'prawn ghee roast': '/assets/generated/dish-prawn-ghee-roast.dim_512x512.png',
+  'crab masala/nandu kuzhambu': '/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png',
+  'crab masala': '/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png',
+  'nandu kuzhambu': '/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png',
+  'kanava/koonthal masala': '/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png',
+  'kanava masala': '/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png',
+  'koonthal masala': '/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png',
+  'fish mappas': '/assets/generated/dish-fish-mappas.dim_512x512.png',
+  'fish kola urundai': '/assets/generated/dish-fish-kola-urundai.dim_512x512.png',
+  'chemmeen biryani': '/assets/generated/dish-chemmeen-biryani.dim_512x512.png',
+  'andhra fish fry': '/assets/generated/dish-andhra-fish-fry.dim_512x512.png',
   // Tandoori Treats (North Indian) dishes - now with specific generated assets
   'chicken tikka masala': '/assets/generated/dish-chicken-tikka-masala.dim_512x512.png',
   'paneer makhani': '/assets/generated/dish-paneer-makhani.dim_512x512.png',
@@ -45,14 +78,20 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'hawaiian pizza': '/assets/generated/dish-hawaiian-pizza.dim_512x512.png',
   'garlic breadsticks': '/assets/generated/dish-garlic-breadsticks.dim_512x512.png',
   'caesar salad': '/assets/generated/dish-caesar-salad.dim_512x512.png',
+  // Sushi Central dishes - now with specific generated assets
+  'california salmon roll': '/assets/generated/dish-california-salmon-roll.dim_512x512.png',
+  'spicy tuna roll': '/assets/generated/dish-spicy-tuna-roll.dim_512x512.png',
+  'shrimp tempura roll': '/assets/generated/dish-shrimp-tempura-roll.dim_512x512.png',
+  'miso soup': '/assets/generated/dish-miso-soup.dim_512x512.png',
+  'edamame': '/assets/generated/dish-edamame.dim_512x512.png',
 };
 
 // Map of known restaurant names to their generated image filenames
 const RESTAURANT_NAME_TO_IMAGE: Record<string, string> = {
-  'chennai spice': '/assets/generated/restaurant-tamil-mess-cover.dim_1200x600.png',
+  'chennai spice': '/assets/generated/restaurant-chennai-spice-cover.dim_1200x600.png',
   'tandoori treats': '/assets/generated/restaurant-north-indian-cover.dim_1200x600.png',
   'pizza palace': '/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png',
-  'sushi central': '/assets/generated/restaurant-sushi-cover.dim_1200x600.png',
+  'sushi central': '/assets/generated/restaurant-sushi-central-cover.dim_1200x600.png',
   'pasta house': '/assets/generated/restaurant-pasta-house-cover.dim_1200x600.png',
   'burger joint': '/assets/generated/restaurant-burger-joint-cover.dim_1200x600.png',
 };
@@ -62,6 +101,7 @@ const RESTAURANT_NAME_TO_IMAGE: Record<string, string> = {
  * - Converting to lowercase
  * - Trimming whitespace
  * - Collapsing multiple spaces to single space
+ * - Normalizing slashes (removing spaces around them)
  * - Removing parenthetical suffixes like "(3 pcs)"
  * - Removing common punctuation
  */
@@ -70,6 +110,7 @@ function normalizeName(name: string): string {
     .toLowerCase()
     .trim()
     .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .replace(/\s*\/\s*/g, '/') // Normalize slashes (remove spaces around them)
     .replace(/\([^)]*\)/g, '') // Remove parenthetical suffixes
     .replace(/[,;:.!?]/g, '') // Remove common punctuation
     .trim();
@@ -86,6 +127,8 @@ function isLegacyAssetUrl(url: string): boolean {
   // - Known bad Pizza Palace patterns (garlic-bread-pizza.png, salad-pizza.png, margherita-pizza.png, etc.)
   // - Known bad South Indian patterns (dim_dosa.png, dim_idly.png, etc. - missing proper prefix)
   // - Known bad North Indian patterns (chicken-tikka-masala.png, paneer-makhani.png, etc.)
+  // - Known bad Sushi Central patterns (california-salmon-roll.png, etc.)
+  // - Known bad Chennai Spice patterns (sambar.png, coconut-chutney.png, etc. without .dim_ suffix)
   // - Any dim_* pattern without the proper dish- prefix
   const legacyPatterns = [
     // Pizza Palace incorrect mappings
@@ -107,6 +150,38 @@ function isLegacyAssetUrl(url: string): boolean {
     /dim_chicken_65\.png/,
     /dim_pepper_chicken_varuval\.png/,
     /dim_chettinad_mutton_kuzhambu\.png/,
+    // Chennai Spice legacy patterns (without .dim_ suffix or wrong prefix)
+    /sambar\.png(?!\.dim_)/,
+    /coconut-chutney\.png(?!\.dim_)/,
+    /nattu-kozhi-kulambu\.png(?!\.dim_)/,
+    /nilgiri-chicken-korma\.png(?!\.dim_)/,
+    /nanjil-nattu-chicken-curry\.png(?!\.dim_)/,
+    /chicken-ghee-roast\.png(?!\.dim_)/,
+    /elumbu-rasam\.png(?!\.dim_)/,
+    /mutton-chukka\.png(?!\.dim_)/,
+    /mutton-uppu-kari\.png(?!\.dim_)/,
+    /mutton-nalli-fry\.png(?!\.dim_)/,
+    /karimeen-pollichathu\.png(?!\.dim_)/,
+    /malabar-fish-curry\.png(?!\.dim_)/,
+    /nethili-65\.png(?!\.dim_)/,
+    /fish-varutharacha\.png(?!\.dim_)/,
+    /chepala-pulusu\.png(?!\.dim_)/,
+    /prawn-ghee-roast\.png(?!\.dim_)/,
+    /crab-masala\.png(?!\.dim_)/,
+    /kanava-masala\.png(?!\.dim_)/,
+    /fish-mappas\.png(?!\.dim_)/,
+    /fish-kola-urundai\.png(?!\.dim_)/,
+    /chemmeen-biryani\.png(?!\.dim_)/,
+    /andhra-fish-fry\.png(?!\.dim_)/,
+    // Legacy patterns with wrong prefix (dish-indian-*)
+    /dish-indian-chepala-pulusu\.dim_512x512\.png/,
+    /dish-indian-prawn-ghee-roast\.dim_512x512\.png/,
+    /dish-indian-crab-masala-nandu-kuzhambu\.dim_512x512\.png/,
+    /dish-indian-kanavakoonthal-masala\.dim_512x512\.png/,
+    /dish-indian-fish-mappas\.dim_512x512\.png/,
+    /dish-indian-fish-kola-urundai\.dim_512x512\.png/,
+    /dish-indian-chemmeen-biryani\.dim_512x512\.png/,
+    /dish-indian-andhra-fish-fry\.dim_512x512\.png/,
     // North Indian incorrect patterns (without .dim_ suffix)
     /chicken-tikka-masala\.png(?!\.dim_)/,
     /paneer-makhani\.png(?!\.dim_)/,
@@ -118,12 +193,17 @@ function isLegacyAssetUrl(url: string): boolean {
     /fettucine-alfredo\.png(?!\.dim_)/,
     /penne-arrabiata\.png(?!\.dim_)/,
     /chicken-parmigiana\.png(?!\.dim_)/,
-    // Sushi incorrect patterns
-    /california-salmon-roll\.png/,
-    /spicy-tuna-roll\.png/,
-    /shrimp-tempura-roll\.png/,
-    /miso-soup\.png/,
-    /edamame\.png/,
+    // Sushi Central incorrect patterns (without .dim_ suffix or wrong prefix)
+    /california-salmon-roll\.png(?!\.dim_)/,
+    /spicy-tuna-roll\.png(?!\.dim_)/,
+    /shrimp-tempura-roll\.png(?!\.dim_)/,
+    /miso-soup\.png(?!\.dim_)/,
+    /edamame\.png(?!\.dim_)/,
+    /dish-japanese-california-salmon-roll\.dim_512x512\.png/,
+    /dish-japanese-spicy-tuna-roll\.dim_512x512\.png/,
+    /dish-japanese-shrimp-tempura-roll\.dim_512x512\.png/,
+    /dish-japanese-miso-soup\.dim_512x512\.png/,
+    /dish-japanese-edamame\.dim_512x512\.png/,
     // Burger Joint incorrect patterns
     /cheeseburger\.png(?!\.dim_)/,
     /veggie-burger\.png(?!\.dim_)/,
@@ -135,6 +215,12 @@ function isLegacyAssetUrl(url: string): boolean {
     /pasta-house\.png(?!\.dim_)/,
     /burger-joint\.png(?!\.dim_)/,
     /restaurant-indian-chennai-spice\.png(?!\.dim_)/,
+    /restaurant-indian-chennai-spice\.hdr\.clean\.png/,
+    /restaurant-indian-chennai-spice\.hdr\.png/,
+    /restaurant-japanese-sushi-central\.dim_1200x600\.png/,
+    /restaurant-japanese-sushi-central\.hdr\.clean\.png/,
+    /restaurant-japanese-sushi-central\.hdr\.png/,
+    /restaurant-japanese-sushi-central\.png/,
     /restaurant-pizza-cover\.dim_1200x600\.png/,
   ];
   

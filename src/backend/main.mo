@@ -1,18 +1,20 @@
 import Map "mo:core/Map";
-import Iter "mo:core/Iter";
 import Text "mo:core/Text";
+import Iter "mo:core/Iter";
 import Time "mo:core/Time";
 import Array "mo:core/Array";
 import Order "mo:core/Order";
 import List "mo:core/List";
-import Runtime "mo:core/Runtime";
+import Migration "migration";
 
+import Runtime "mo:core/Runtime";
 import Int "mo:core/Int";
 import Principal "mo:core/Principal";
-import Migration "migration";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+// Apply migration via with-clause
 (with migration = Migration.run)
 actor {
   // Authorization Mixin
@@ -119,7 +121,7 @@ actor {
       id = 3;
       name = "Sushi Central";
       description = "Fresh sushi delivered to your door.";
-      imageUrl = "/assets/generated/sushi-central.png";
+      imageUrl = "/assets/generated/restaurant-japanese-sushi-central.dim_1200x600.png";
     },
   );
 
@@ -152,7 +154,7 @@ actor {
       id = 6;
       name = "Chennai Spice";
       description = "Authentic South Indian cuisine, specializing in Tamil Nadu flavors.";
-      imageUrl = "/assets/generated/restaurant-indian-chennai-spice.png";
+      imageUrl = "/assets/generated/restaurant-indian-chennai-spice.dim_1200x600.png";
     },
   );
 
@@ -279,7 +281,7 @@ actor {
       name = "California Salmon Roll";
       description = "Salmon, avocado, cucumber, sushi rice.";
       price = 1100;
-      imageUrl = "/assets/generated/california-salmon-roll.png";
+      imageUrl = "/assets/generated/dish-japanese-california-salmon-roll.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -290,7 +292,7 @@ actor {
       name = "Spicy Tuna Roll";
       description = "Tuna, sriracha, cucumber, sushi rice.";
       price = 1200;
-      imageUrl = "/assets/generated/spicy-tuna-roll.png";
+      imageUrl = "/assets/generated/dish-japanese-spicy-tuna-roll.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -301,7 +303,7 @@ actor {
       name = "Shrimp Tempura Roll";
       description = "Tempura fried shrimp, avocado, sushi rice.";
       price = 950;
-      imageUrl = "/assets/generated/shrimp-tempura-roll.png";
+      imageUrl = "/assets/generated/dish-japanese-shrimp-tempura-roll.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -312,7 +314,7 @@ actor {
       name = "Miso Soup";
       description = "Soup with tofu, nori, and spring onions.";
       price = 400;
-      imageUrl = "/assets/generated/miso-soup.png";
+      imageUrl = "/assets/generated/dish-japanese-miso-soup.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -323,7 +325,7 @@ actor {
       name = "Edamame";
       description = "Steamed soybeans with sea salt.";
       price = 350;
-      imageUrl = "/assets/generated/edamame.png";
+      imageUrl = "/assets/generated/dish-japanese-edamame.dim_512x512.png";
     },
   );
 
@@ -418,7 +420,7 @@ actor {
       name = "Dosa";
       description = "Crispy fermented rice and lentil crepe.";
       price = 200;
-      imageUrl = "/assets/generated/dim_dosa.png";
+      imageUrl = "/assets/generated/dish-indian-dosa.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -429,7 +431,7 @@ actor {
       name = "Vada";
       description = "Savoury fried lentil donuts.";
       price = 250;
-      imageUrl = "/assets/generated/dim_vada.png";
+      imageUrl = "/assets/generated/dish-indian-vada.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -440,7 +442,7 @@ actor {
       name = "Idly";
       description = "Steamed rice cakes served with sambar.";
       price = 200;
-      imageUrl = "/assets/generated/dim_idly.png";
+      imageUrl = "/assets/generated/dish-indian-idly.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -473,7 +475,7 @@ actor {
       name = "Vegetarian Meals";
       description = "South Indian style rice with assorted vegetables and accompaniments.";
       price = 600;
-      imageUrl = "/assets/generated/dim_vegetarian_meals.png";
+      imageUrl = "/assets/generated/dish-indian-vegetarian-meals.dim_512x512.png";
     },
   );
 
@@ -486,7 +488,7 @@ actor {
       name = "Non-Veg Meals";
       description = "Rice, vegetables, and non-veg curry, side dishes.";
       price = 800;
-      imageUrl = "/assets/generated/dim_non_veg_meals.png";
+      imageUrl = "/assets/generated/dish-indian-non-veg-meals.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -497,7 +499,7 @@ actor {
       name = "Chicken Chettinad";
       description = "Spicy Tamil chicken curry with coconut and spices.";
       price = 700;
-      imageUrl = "/assets/generated/dim_chicken_chettinad.png";
+      imageUrl = "/assets/generated/dish-indian-chicken-chettinad.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -541,7 +543,7 @@ actor {
       name = "Chicken 65";
       description = "Deep-fried spicy chicken appetizer.";
       price = 500;
-      imageUrl = "/assets/generated/dim_chicken_65.png";
+      imageUrl = "/assets/generated/dish-indian-chicken-65.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -552,7 +554,7 @@ actor {
       name = "Pepper Chicken (Milagu Varuval)";
       description = "Pepper-spiced chicken dish.";
       price = 750;
-      imageUrl = "/assets/generated/dim_pepper_chicken_varuval.png";
+      imageUrl = "/assets/generated/dish-indian-pepper-chicken-milagu-varuval.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -574,7 +576,7 @@ actor {
       name = "Chettinad Mutton Kuzhambu";
       description = "Tamil-style spicy mutton curry.";
       price = 950;
-      imageUrl = "/assets/generated/dim_chettinad_mutton_kuzhambu.png";
+      imageUrl = "/assets/generated/dish-indian-chettinad-mutton-kuzhambu.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -675,7 +677,7 @@ actor {
       name = "Chepala Pulusu";
       description = "Andhra style tangy fish curry.";
       price = 1100;
-      imageUrl = "/assets/generated/chepala-pulusu.png";
+      imageUrl = "/assets/generated/dish-indian-chepala-pulusu.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -686,7 +688,7 @@ actor {
       name = "Prawn Ghee Roast";
       description = "Prawns roasted in ghee and spices.";
       price = 1300;
-      imageUrl = "/assets/generated/prawn-ghee-roast.png";
+      imageUrl = "/assets/generated/dish-indian-prawn-ghee-roast.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -697,7 +699,7 @@ actor {
       name = "Crab Masala/Nandu Kuzhambu";
       description = "Spicy crab curry with aromatic spices.";
       price = 1350;
-      imageUrl = "/assets/generated/crab-masala.png";
+      imageUrl = "/assets/generated/dish-indian-crab-masala-nandu-kuzhambu.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -708,7 +710,7 @@ actor {
       name = "Kanava/Koonthal Masala";
       description = "Squid masala dish with rich flavors.";
       price = 900;
-      imageUrl = "/assets/generated/kanava-masala.png";
+      imageUrl = "/assets/generated/dish-indian-kanavakoonthal-masala.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -719,7 +721,7 @@ actor {
       name = "Fish Mappas";
       description = "Kerala style fish coconut curry with coconut milk.";
       price = 1000;
-      imageUrl = "/assets/generated/fish-mappas.png";
+      imageUrl = "/assets/generated/dish-indian-fish-mappas.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -730,7 +732,7 @@ actor {
       name = "Fish Kola Urundai";
       description = "Fish meatballs, deep-fried.";
       price = 400;
-      imageUrl = "/assets/generated/fish-kola-urundai.png";
+      imageUrl = "/assets/generated/dish-indian-fish-kola-urundai.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -741,7 +743,7 @@ actor {
       name = "Chemmeen Biryani";
       description = "Prawn biryani with South Indian spices.";
       price = 1400;
-      imageUrl = "/assets/generated/chemmeen-biryani.png";
+      imageUrl = "/assets/generated/dish-indian-chemmeen-biryani.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -752,7 +754,7 @@ actor {
       name = "Andhra Fish Fry";
       description = "Fish marinated in Andhra spices and fried.";
       price = 950;
-      imageUrl = "/assets/generated/andhra-fish-fry.png";
+      imageUrl = "/assets/generated/dish-indian-andhra-fish-fry.dim_512x512.png";
     },
   );
 
@@ -895,4 +897,3 @@ actor {
     orders.add(orderId, updatedOrder);
   };
 };
-

@@ -1,47 +1,45 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T09:11:33.587Z",
-  "summary": "Diff adds a new backend migration module and updates frontend centralized image mapping plus backend seed data, but it does not include the required new static image assets and shows several mismatches in the backend/migration imageUrl paths for Pizza Palace versus the requested filenames/dimensions.",
+  "generatedAt": "2026-02-06T10:10:24.979Z",
+  "summary": "Diff adds a backend migration and updates frontend dish-name image mappings, but the generated image asset files are not present in the diff and the backend migration (and likely seeded URLs) point to different, non-requested image filenames (\"dish-indian-*\") instead of the specified \"dish-*.dim_512x512.png\" names.",
   "missing_requirements": [
     {
-      "id": "REQ-28",
-      "requirement": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` with the exact specified `.dim_*` filenames and correct dimensions.",
-      "reason": "The diff summary does not show any new PNG assets added under `frontend/public/assets/generated/` (only code/text files are listed). Without those files, the required assets and their dimensions cannot be verified as present.",
+      "id": "REQ-43",
+      "requirement": "Generate and add 8 new static 512x512 seafood dish image assets under `frontend/public/assets/generated/` using the exact specified filenames.",
+      "reason": "The diff summary shows no added PNG assets under `frontend/public/assets/generated/` (only code/text files were added/modified), so the required image files are not evidenced as created.",
       "evidence": [
-        "File diff summary: Added files list contains only `backend/migration.mo` and no `frontend/public/assets/generated/*` image files."
+        "<file-diff> summary shows ADDED FILES: backend/migration.mo; MODIFIED: backend/main.mo, frontend/src/utils/imageFallbacks.ts, frontend-file-summaries.txt, project_state.json; no `frontend/public/assets/generated/*.png` files listed."
       ]
     },
     {
-      "id": "REQ-30",
-      "requirement": "Update backend seeded `imageUrl` values for Pizza Palace (restaurantId=2) and menuItemIds 6–10 to the new `/assets/generated/*.dim_*` asset paths (cover must be `restaurant-pizza-palace-cover.dim_1200x600.png`; dishes must be the specified dish filenames).",
-      "reason": "Backend seed for Pizza Palace restaurantId=2 is set to `/assets/generated/pizza-palace.dim_512x512.png`, which does not match the required cover filename `restaurant-pizza-palace-cover.dim_1200x600.png` (wrong name and wrong dimensions). The diff is truncated before showing menuItemIds 6–10, so there is no evidence those were updated to the required dish asset paths.",
+      "id": "REQ-44",
+      "requirement": "Update seeded backend menu item imageUrl values in `backend/main.mo` for Chennai Spice menuItemIds 46–53 to `/assets/generated/dish-*.dim_512x512.png` matching the specified filenames.",
+      "reason": "`backend/main.mo` is truncated before any of menuItemIds 46–53 are shown, so there is no evidence the seeded `imageUrl` values for items 46–53 were updated. Additionally, the new migration uses different filenames (`/assets/generated/dish-indian-*.dim_512x512.png`), suggesting the seeded values may also have been updated to non-specified paths or remain inconsistent.",
       "evidence": [
-        "backend/main.mo: restaurantId=2 `imageUrl = \"/assets/generated/pizza-palace.dim_512x512.png\";`",
-        "backend/main.mo (truncated before menuItemIds 6–10 are shown)"
+        "backend/main.mo (truncated; does not show menuItems 46–53)",
+        "backend/migration.mo (uses `/assets/generated/dish-indian-...dim_512x512.png` which does not match requested filenames)"
       ]
     },
     {
-      "id": "REQ-31",
-      "requirement": "Extend conditional Motoko state upgrade migration to update existing persisted Pizza Palace restaurant/menu `imageUrl` values (restaurantId=2 and menuItemIds 6–10) to the new `.dim_*` asset paths during upgrade.",
-      "reason": "The added migration only rewrites imageUrl when it exactly equals certain legacy paths. The restaurant mapping targets `/assets/generated/pizza-palace.png -> /assets/generated/pizza-palace.dim_512x512.png`, which does not match the required new cover path/filename. The menu mapping uses legacy/new names that do not match the requested dish filenames (e.g., `garlic-bread-pizza.png` -> `garlic-bread.dim_512x512.png`, `salad-pizza.png` -> `caesar-salad.dim_512x512.png`). Also, it updates all menu items with `restaurantId == 2` rather than explicitly menuItemIds 6–10 as required.",
+      "id": "REQ-46",
+      "requirement": "Migration must update persisted MenuItem.imageUrl values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths matching the specified filenames.",
+      "reason": "A migration exists and targets ids 46–53, but it updates them to different, non-requested filenames (adds `dish-indian-` prefix and different slugging for kanava/koonthal), so it does not meet the acceptance criteria of updating to the exact new `.dim_512x512.png` asset paths from Image Requirements.",
       "evidence": [
-        "backend/migration.mo: `pizzaRestaurantMapping` uses `/assets/generated/pizza-palace.png` -> `/assets/generated/pizza-palace.dim_512x512.png`",
-        "backend/migration.mo: `pizzaMenuMapping` entries include `/assets/generated/garlic-bread-pizza.png` -> `/assets/generated/garlic-bread.dim_512x512.png` and `/assets/generated/salad-pizza.png` -> `/assets/generated/caesar-salad.dim_512x512.png`",
-        "backend/migration.mo: migration condition `if (menuItem.restaurantId == 2)` (not explicit ids 6–10)"
+        "backend/migration.mo (e.g., sets id 46 to `/assets/generated/dish-indian-chepala-pulusu.dim_512x512.png` instead of `/assets/generated/dish-chepala-pulusu.dim_512x512.png`; similar for 47–53)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Expanded dish name-to-image mapping for multiple non-Pizza restaurants (e.g., Tandoori Treats, Burger Joint, Pasta House) beyond the requested Pizza Palace updates.",
-      "reason": "REQ-29 only asked to update centralized mapping for Pizza Palace restaurant and its five specified menu items. The diff adds/contains additional mappings for other restaurants' dishes.",
+      "description": "Migration updates menu items 46–53 to `/assets/generated/dish-indian-*.dim_512x512.png` image URLs (different naming scheme than requested).",
+      "reason": "BuildRequest explicitly specifies exact filenames like `dish-chepala-pulusu.dim_512x512.png`, `dish-kanava-koonthal-masala.dim_512x512.png`, etc. The diff implements different filenames with an added `dish-indian-` prefix and different slug for kanava/koonthal.",
       "evidence": [
-        "frontend/src/utils/imageFallbacks.ts: adds/contains mappings for 'chicken tikka masala', 'paneer makhani', 'jeera rice', 'butter naan', 'gajar halwa', 'cheeseburger', 'veggie burger', 'vanilla milkshake', 'fettuccine alfredo', 'penne arrabiata', 'chicken parmigiana', 'garlic bread' etc."
+        "backend/migration.mo (sets `/assets/generated/dish-indian-chepala-pulusu.dim_512x512.png`, `/assets/generated/dish-indian-kanavakoonthal-masala.dim_512x512.png`, etc.)"
       ]
     }
   ],
-  "confidence": 0.78,
+  "confidence": 0.74,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",

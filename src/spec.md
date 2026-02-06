@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add and wire up new static image assets for the Pizza Palace restaurant and its existing menu items so they display consistently across the app and are persisted via updated backend seed and migration.
+**Goal:** Add photo-realistic images for Chennai Spice seafood menu items and ensure both seeded and persisted menu data points to the new assets.
 
 **Planned changes:**
-- Add new Pizza Palace cover and dish images under `frontend/public/assets/generated/` using the required `.dim_*` filenames and dimensions.
-- Update the centralized image mapping in `frontend/src/utils/imageFallbacks.ts` so Pizza Palace and its 5 menu items resolve to the new static assets anywhere images render.
-- Update backend seed data in `backend/main.mo` so Pizza Palace (restaurantId=2) and menuItemIds 6–10 point to the new `/assets/generated/*.dim_*` imageUrl paths on fresh deploy.
-- Extend `backend/migration.mo` upgrade logic to overwrite any existing persisted Pizza Palace restaurant/menu `imageUrl` values (restaurantId=2, menuItemIds 6–10) with the new asset paths.
+- Generate and add 8 new 512x512 static dish images for Chennai Spice seafood items under `frontend/public/assets/generated/` using the specified filenames.
+- Update backend seed data in `backend/main.mo` so Chennai Spice menuItemIds 46–53 `imageUrl` values reference the new `/assets/generated/*.dim_512x512.png` paths.
+- Update `frontend/src/utils/imageFallbacks.ts` so these 8 dish names resolve by name to the new assets (including handling names with slashes).
+- Add a safe, conditional backend upgrade migration (in `backend/migration.mo` if needed) to update persisted `MenuItem.imageUrl` values for menuItemIds 46–53 to the new asset paths.
 
-**User-visible outcome:** Pizza Palace shows the new cover image in restaurant lists/details, and its 5 menu items show their specific new dish images (instead of a generic fallback), including after upgrading an existing deployment.
+**User-visible outcome:** The Chennai Spice restaurant detail/menu UI shows correct, non-generic images for the 8 seafood dishes on fresh deploys and after upgrades.

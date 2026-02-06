@@ -1,61 +1,71 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Pizza Palace generated images and wire them into centralized image resolution",
+  "title": "Wire up generated Chennai Spice seafood dish images (frontend assets + name-based resolution)",
   "requirements": [
     {
-      "id": "REQ-28",
-      "summary": "Add new generated static image assets for Pizza Palace cover and its 5 menu items under frontend/public/assets/generated/ using consistent .dim_* filenames.",
+      "id": "REQ-43",
+      "summary": "Add 8 new 512x512 static seafood dish image assets under frontend/public/assets/generated using the exact required filenames.",
       "acceptanceCriteria": [
-        "The following new image files exist under `frontend/public/assets/generated/` with the exact filenames specified in Image Requirements.",
-        "Each image is the correct dimension based on its filename suffix (1200x600 for the cover; 512x512 for dish images)."
+        "All 8 image files exist under `frontend/public/assets/generated/` with the exact filenames from Image Requirements.",
+        "Each image is 512x512 and visually represents the named dish (no generic placeholder-looking image)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png",
+          "path": "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated Pizza Palace restaurant cover static asset at `frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png` (1200x600)."
+          "description": "Add the required 512x512 static image asset for Chepala Pulusu per Image Requirements."
         },
         {
-          "path": "frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png` (512x512)."
+          "description": "Add the required 512x512 static image asset for Prawn Ghee Roast per Image Requirements."
         },
         {
-          "path": "frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png` (512x512)."
+          "description": "Add the required 512x512 static image asset for Crab Masala/Nandu Kuzhambu per Image Requirements."
         },
         {
-          "path": "frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png` (512x512)."
+          "description": "Add the required 512x512 static image asset for Kanava/Koonthal Masala per Image Requirements."
         },
         {
-          "path": "frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png` (512x512)."
+          "description": "Add the required 512x512 static image asset for Fish Mappas per Image Requirements."
         },
         {
-          "path": "frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
           "operation": "create",
-          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png` (512x512)."
+          "description": "Add the required 512x512 static image asset for Fish Kola Urundai per Image Requirements."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the required 512x512 static image asset for Chemmeen Biryani per Image Requirements."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the required 512x512 static image asset for Andhra Fish Fry per Image Requirements."
         }
       ]
     },
     {
-      "id": "REQ-29",
-      "summary": "Update centralized image mapping so Pizza Palace and its menu items resolve by name to the new generated static assets wherever images render.",
+      "id": "REQ-45",
+      "summary": "Update centralized dish-name-to-asset mapping so the 8 Chennai Spice seafood dish names resolve to the new generated image assets (including robust slash normalization).",
       "acceptanceCriteria": [
-        "In the restaurants list and restaurant detail views, Pizza Palace uses the new Pizza Palace cover image.",
-        "In the Pizza Palace restaurant detail view, each of the 5 Pizza Palace menu items displays its corresponding new dish image (not the generic dish fallback).",
-        "Image resolution changes are made via the centralized helpers in `frontend/src/utils/imageFallbacks.ts` (no duplicate ad-hoc mapping elsewhere)."
+        "When `getDishImageUrl(undefined, <dish name>)` is called for each of the 8 seafood dish names, it returns the corresponding new `/assets/generated/dish-*.dim_512x512.png` path.",
+        "The name normalization handles the slash in \"Crab Masala/Nandu Kuzhambu\" and \"Kanava/Koonthal Masala\" such that either full name resolves correctly.",
+        "The Restaurant Detail UI for Chennai Spice shows non-generic images for these 8 menu items (no `dish-generic` fallback for them under normal conditions)."
       ],
       "file_operations": [
         {
           "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Update centralized name-based mappings so restaurant name \"Pizza Palace\" resolves to `frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png` and dish names (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to `frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png`, `frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png`, ensuring all UI uses the centralized helpers (no ad-hoc mapping elsewhere)."
+          "description": "Replace the Chennai Spice seafood mappings currently pointing to the generic dish fallback with the new `/assets/generated/dish-*.dim_512x512.png` paths for: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry. Also adjust `normalizeName()` to canonicalize slash formatting (e.g., collapsing optional spaces around '/') so full names containing slashes resolve consistently."
         }
       ]
     }

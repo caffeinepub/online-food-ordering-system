@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-new-static-image-assets-for-pizza-palace-restaurant-cover-its-menu-items-under-frontend-public-assets-generated-using-consistent-dim-filenames-matching-the-existing-generated-asset-naming-conventions-used-for-other-restaurants",
-      "featureTitle": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, matching the existing generated-asset naming conventions used for other restaurants.",
+      "featureId": "feature-generate-new-static-512x512-dish-image-assets-for-the-chennai-spice-seafood-menu-items-chepala-pulusu-prawn-ghee-roast-crab-masala-nandu-kuzhambu-kanava-koonthal-masala-fish-mappas-fish-kola-urundai-chemmeen-biryani-and-andhra-fish-fry-and-add-them-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
+      "featureTitle": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
       "files": [],
       "components": [
         "authorization@4.0.0",
@@ -14,13 +14,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-28"
+        "REQ-43"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-centralized-frontend-image-resolution-so-pizza-palace-restaurant-name-pizza-palace-and-its-menu-items-margherita-pizza-pepperoni-pizza-hawaiian-pizza-garlic-breadsticks-caesar-salad-resolve-to-the-newly-generated-static-assets-by-name-based-mapping-and-are-displayed-consistently-anywhere-restaurant-menu-images-render",
-      "featureTitle": "Update centralized frontend image resolution so Pizza Palace (restaurant name \"Pizza Palace\") and its menu items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to the newly generated static assets by name-based mapping, and are displayed consistently anywhere restaurant/menu images render.",
+      "featureId": "feature-update-the-centralized-frontend-image-resolution-in-frontend-src-utils-imagefallbacks-ts-so-the-chennai-spice-seafood-dish-names-resolve-by-name-to-the-newly-generated-seafood-dish-assets-replacing-any-current-mappings-that-force-these-names-to-the-generic-dish-fallback",
+      "featureTitle": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
       "files": [
         "frontend/src/utils/imageFallbacks.ts"
       ],
@@ -33,7 +33,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-29"
+        "REQ-45"
       ],
       "confidence": "high"
     }

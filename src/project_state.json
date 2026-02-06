@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 36,
+  "projectStateVersion": 44,
   "summary": "ICP full-stack food ordering starter app (React/Vite + Tailwind/shadcn-ui with Internet Identity auth; Motoko backend) now includes expanded seeded restaurant/menu data (Tamil Nadu + seafood items), restaurant and menu-item images via `imageUrl` fields with state migration/backfill, UI rendering of photos across restaurant list/detail pages with fallbacks, and an app-wide food-themed background.",
   "architectural_notes": [
     "Frontend: React + Vite + Tailwind with shadcn-ui component library scaffolded and available for feature UI.",
@@ -18,10 +18,12 @@
     "Some food/menu item images do not match their current item names (imageUrl/mapping mismatch), requiring immediate correction.",
     "Restaurant UI still shows incorrect images for some items/restaurants (imageUrl/mapping mismatch not fully resolved).",
     "Dosa menu item images are incorrect/need replacement; ensure correct images are used consistently across the application.",
-    "Deployed UI still shows images as not visible (likely due to missing/incorrect imageUrl values or asset filenames not present at the referenced paths)."
+    "Deployed UI still shows images as not visible (likely due to missing/incorrect imageUrl values or asset filenames not present at the referenced paths).",
+    "Chennai Spice images are still imperfect/incorrect for some items; regenerate/improve the generated assets and update mappings so the UI shows the right images.",
+    "Chennai Spice seafood menu items (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry) currently need generated images or must be removed per user request."
   ],
-  "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Wide photo-realistic restaurant cover image featuring a pizza spread on a rustic table with warm lighting (restaurant-pizza-palace-cover.dim_1200x600.png)\n- Square photo-realistic dish image of a Margherita pizza with basil leaves and melted mozzarella (dish-margherita-pizza.dim_512x512.png)\n- Square photo-realistic dish image of a pepperoni pizza with crispy pepperoni slices and browned cheese (dish-pepperoni-pizza.dim_512x512.png)\n- Square photo-realistic dish image of a Hawaiian pizza with pineapple chunks, ham, and melted cheese (dish-hawaiian-pizza.dim_512x512.png)\n- Square photo-realistic dish image of garlic breadsticks with visible garlic-butter glaze and parmesan (dish-garlic-breadsticks.dim_512x512.png)\n- Square photo-realistic dish image of a Caesar salad with romaine, croutons, parmesan shavings, and creamy dressing (dish-caesar-salad.dim_512x512.png)",
+  "isFixRequest": true,
+  "imageRequirements": "## Required Images\n- Photo-realistic close-up of Andhra-style tangy fish curry in a bowl, warm tones, visible tamarind/red gravy (dish-chepala-pulusu.dim_512x512.png)\n- Photo-realistic prawn ghee roast plated with roasted prawns and spice masala, rich reddish-brown tones (dish-prawn-ghee-roast.dim_512x512.png)\n- Photo-realistic spicy crab curry in a bowl with crab pieces and aromatic masala gravy (dish-crab-masala-nandu-kuzhambu.dim_512x512.png)\n- Photo-realistic squid masala dish, rings/tentacles coated in thick masala, plated close-up (dish-kanava-koonthal-masala.dim_512x512.png)\n- Photo-realistic Kerala-style fish mappas with coconut milk curry, creamy light-orange gravy and fish pieces (dish-fish-mappas.dim_512x512.png)\n- Photo-realistic fish kola urundai (fish meatballs) deep-fried, served on a plate with garnish (dish-fish-kola-urundai.dim_512x512.png)\n- Photo-realistic prawn biryani, top-down plated rice with prawns and fried onions, vibrant spices (dish-chemmeen-biryani.dim_512x512.png)\n- Photo-realistic Andhra fish fry, golden-brown spiced fried fish fillet on plate with onion/lemon garnish (dish-andhra-fish-fry.dim_512x512.png)",
   "generatedImages": [
     {
       "filename": "frontend/public/assets/generated/food-background.dim_1920x1080.png",
@@ -414,6 +416,62 @@
         "REQ-29"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-new-static-image-assets-for-the-sushi-central-restaurant-and-its-menu-items-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
+      "title": "Add new static image assets for the Sushi Central restaurant and its menu items under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-static-restaurant-cover-image-asset-for-chennai-spice-under-frontend-public-assets-generated-using-the-exact-filename-specified-in-image-requirements",
+      "title": "Add a new static restaurant cover image asset for Chennai Spice under `frontend/public/assets/generated/` using the exact filename specified in Image Requirements.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-frontend-centralized-image-resolution-frontend-src-utils-imagefallbacks-ts-so-sushi-central-dish-names-resolve-by-name-to-the-new-generated-sushi-dish-assets-and-so-sushi-central-and-chennai-spice-restaurant-names-resolve-to-their-intended-cover-assets",
+      "title": "Extend the frontend centralized image resolution (`frontend/src/utils/imageFallbacks.ts`) so Sushi Central dish names resolve by name to the new generated Sushi dish assets, and so Sushi Central and Chennai Spice restaurant names resolve to their intended cover assets.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-new-high-quality-photo-realistic-static-image-assets-for-chennai-spice-restaurant-cover-any-chennai-spice-menu-items-that-currently-rely-on-non-dim-legacy-placeholders-and-add-them-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
+      "title": "Generate new high-quality, photo-realistic static image assets for Chennai Spice (restaurant cover + any Chennai Spice menu items that currently rely on non-`.dim_*` legacy placeholders), and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-centralized-frontend-image-resolution-frontend-src-utils-imagefallbacks-ts-so-the-chennai-spice-restaurant-name-chennai-spice-and-the-chennai-spice-dish-names-map-by-name-to-the-newly-generated-chennai-spice-static-assets-including-normalization-for-punctuation-and-parentheticals-already-supported-by-normalizename",
+      "title": "Update centralized frontend image resolution (`frontend/src/utils/imageFallbacks.ts`) so the Chennai Spice restaurant name (\"Chennai Spice\") and the Chennai Spice dish names map by name to the newly generated Chennai Spice static assets (including normalization for punctuation and parentheticals already supported by `normalizeName`).",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-new-static-512x512-dish-image-assets-for-the-chennai-spice-seafood-menu-items-chepala-pulusu-prawn-ghee-roast-crab-masala-nandu-kuzhambu-kanava-koonthal-masala-fish-mappas-fish-kola-urundai-chemmeen-biryani-and-andhra-fish-fry-and-add-them-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
+      "title": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-centralized-frontend-image-resolution-in-frontend-src-utils-imagefallbacks-ts-so-the-chennai-spice-seafood-dish-names-resolve-by-name-to-the-newly-generated-seafood-dish-assets-replacing-any-current-mappings-that-force-these-names-to-the-generic-dish-fallback",
+      "title": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -538,6 +596,94 @@
       "summary": "Extend the conditional Motoko state upgrade migration to update any existing persisted Pizza Palace restaurant/menu `imageUrl` values to the new `.dim_*` asset paths even when older/legacy values are already present.",
       "reqIds": [
         "REQ-31"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add/update restaurant cover + menu item images for Sushi Central and Chennai Spice, including generating any missing static assets under `/assets/generated/` and updating seeded/migrated `imageUrl` mappings so the new images render correctly in the UI (fresh deploy + upgraded canisters).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Update backend seeded `Restaurant.imageUrl` values for Sushi Central (restaurantId=3) and Chennai Spice (restaurantId=6) to point to the correct current static asset paths under `/assets/generated/` (using the new `.dim_1200x600.png` filenames from Image Requirements).",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Update backend seeded `MenuItem.imageUrl` values for Sushi Central menuItemIds 11–15 so they reference the newly generated `.dim_512x512.png` dish assets under `/assets/generated/` (using the exact filenames from Image Requirements).",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Update backend seeded `MenuItem.imageUrl` values for Chennai Spice menu items that currently use known legacy South-Indian `dim_*.png` patterns (at minimum: Dosa (23), Vada (24), Idly (25), Vegetarian Meals (28), Non-Veg Meals (29), Chicken Chettinad (30), Chicken 65 (34), Pepper Chicken (35), Chettinad Mutton Kuzhambu (37)) so they point to the existing correct `/assets/generated/dish-*.dim_512x512.png` assets.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Add/extend a conditional Motoko state upgrade migration to update persisted `Restaurant.imageUrl` and `MenuItem.imageUrl` values for Sushi Central (restaurantId=3, menuItemIds 11–15) and Chennai Spice (restaurantId=6, at minimum menuItemIds 23,24,25,28,29,30,34,35,37) so upgraded canisters move off legacy image URLs and onto the corrected `/assets/generated/*.dim_*.png` paths even if older values are already present.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Regenerate/improve the Chennai Spice image assets (restaurant cover and/or specific menu-item images) because current generated images are imperfect; update assets/mappings so the improved images render in the UI.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Update backend seeded data in `backend/main.mo` so Chennai Spice (restaurantId=6) and its menu items that received newly generated assets have `imageUrl` values set to the new `/assets/generated/*.dim_*` static asset paths.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Add/extend a conditional Motoko state upgrade migration (using `backend/migration.mo` per existing migration policy) to update persisted Chennai Spice `Restaurant.imageUrl` and relevant `MenuItem.imageUrl` values to the new `/assets/generated/*.dim_*` asset paths even when older/legacy values are already present.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Add/generate new static dish image assets for the Chennai Spice seafood menu items (create the required `/assets/generated/*.dim_512x512.png` files and update seeded + migrated `MenuItem.imageUrl` mappings so the seafood items show correct images in the UI).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "For Chennai Spice seafood menu items (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry): auto-generate matching dish images and wire them via seeded + migrated `MenuItem.imageUrl` mappings; if images cannot be generated, remove these items from the menu.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Update the backend seeded menu item `imageUrl` values in `backend/main.mo` for Chennai Spice seafood menuItemIds 46–53 (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry) to point to the new `/assets/generated/*.dim_512x512.png` static asset paths generated for these items.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Add a conditional Motoko state upgrade migration (create `backend/migration.mo` if it does not exist, per the project migration policy) that updates persisted `MenuItem.imageUrl` values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths even if older `imageUrl` values are already present, so upgraded canisters immediately display the new images.",
+      "reqIds": [
+        "REQ-46"
       ],
       "status": "pending"
     }

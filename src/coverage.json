@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T09:11:33.590Z",
+  "generatedAt": "2026-02-06T10:10:24.982Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,47 +11,51 @@
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-28",
-        "summary": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, matching the existing generated-asset naming conventions used for other restaurants.",
+        "id": "REQ-43",
+        "summary": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png",
-          "frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png",
-          "frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png"
+          "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
+          "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
+          "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
+          "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
+          "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
+          "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
+          "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
+          "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png",
-          "frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png",
-          "frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png",
-          "frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png"
+          "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
+          "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
+          "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
+          "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
+          "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
+          "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
+          "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
+          "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png"
         ]
       },
       {
-        "id": "REQ-29",
-        "summary": "Update centralized frontend image resolution so Pizza Palace (restaurant name \"Pizza Palace\") and its menu items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to the newly generated static assets by name-based mapping, and are displayed consistently anywhere restaurant/menu images render.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/utils/imageFallbacks.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/utils/imageFallbacks.ts"
-        ]
-      },
-      {
-        "id": "REQ-30",
-        "summary": "Update backend seeded `imageUrl` values for Pizza Palace (restaurantId=2) and its menu items (menuItemIds 6–10) so a fresh deploy points directly to the new `/assets/generated/*.dim_*` static asset paths.",
+        "id": "REQ-44",
+        "summary": "Update the backend seeded menu item `imageUrl` values in `backend/main.mo` for Chennai Spice seafood menuItemIds 46–53 (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry) to point to the new `/assets/generated/*.dim_512x512.png` static asset paths generated for these items.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-31",
-        "summary": "Extend the conditional Motoko state upgrade migration to update any existing persisted Pizza Palace restaurant/menu `imageUrl` values to the new `.dim_*` asset paths even when older/legacy values are already present.",
+        "id": "REQ-45",
+        "summary": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/imageFallbacks.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/imageFallbacks.ts"
+        ]
+      },
+      {
+        "id": "REQ-46",
+        "summary": "Add a conditional Motoko state upgrade migration (create `backend/migration.mo` if it does not exist, per the project migration policy) that updates persisted `MenuItem.imageUrl` values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths even if older `imageUrl` values are already present, so upgraded canisters immediately display the new images.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -65,12 +69,14 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png",
-    "frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png",
-    "frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png",
-    "frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png",
-    "frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png",
-    "frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png",
+    "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png",
+    "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
+    "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
+    "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
+    "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
+    "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
+    "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
+    "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
     "frontend/src/utils/imageFallbacks.ts",
     "project_state.json",
     "scratch/component-selection.json",
