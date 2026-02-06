@@ -2,14 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-implement-user-authentication-using-internet-identity-and-provide-a-basic-user-profile-record-in-the-backend-that-is-created-updated-on-first-login-keyed-by-the-caller-principal",
-      "featureTitle": "Implement user authentication using Internet Identity, and provide a basic user profile record in the backend that is created/updated on first login (keyed by the caller Principal).",
+      "featureId": "feature-update-frontend-dish-image-fallback-behavior-so-non-dosa-menu-items-never-display-the-dosa-image-just-because-an-image-url-is-missing-legacy-use-a-neutral-generic-dish-fallback-instead-and-only-show-the-dosa-image-when-the-dish-name-is-actually-dosa",
+      "featureTitle": "Update frontend dish image fallback behavior so non-dosa menu items never display the dosa image just because an image URL is missing/legacy; use a neutral generic dish fallback instead, and only show the dosa image when the dish name is actually \"Dosa\".",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/auth/AuthButton.tsx",
-        "frontend/src/components/auth/RequireAuth.tsx",
-        "frontend/src/components/profile/ProfileSetupDialog.tsx",
-        "frontend/src/hooks/useCurrentUserProfile.ts"
+        "frontend/src/utils/imageFallbacks.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,19 +16,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-16"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-provide-backend-query-apis-to-browse-restaurants-and-their-menus-including-list-restaurants-get-restaurant-details-and-list-menu-items-for-a-restaurant",
-      "featureTitle": "Provide backend query APIs to browse restaurants and their menus, including: list restaurants, get restaurant details, and list menu items for a restaurant.",
+      "featureId": "feature-refine-the-frontend-legacy-invalid-image-url-detection-in-frontend-src-utils-imagefallbacks-ts-so-that-valid-existing-static-asset-urls-are-not-incorrectly-treated-as-legacy-and-forced-to-fall-back-to-the-generic-placeholder-which-previously-caused-dosa-to-appear-widely",
+      "featureTitle": "Refine the frontend legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so that valid existing static asset URLs are not incorrectly treated as legacy and forced to fall back to the generic placeholder (which previously caused dosa to appear widely).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useRestaurant.ts",
-        "frontend/src/hooks/useRestaurants.ts",
-        "frontend/src/pages/RestaurantDetailPage.tsx",
-        "frontend/src/pages/RestaurantsListPage.tsx"
+        "frontend/src/utils/imageFallbacks.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -43,19 +35,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-3"
+        "REQ-17"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-order-placement-end-to-end-users-can-add-menu-items-to-a-cart-specify-quantities-submit-an-order-and-the-backend-persists-the-order-and-order-items-linked-to-the-authenticated-user",
-      "featureTitle": "Implement order placement end-to-end: users can add menu items to a cart, specify quantities, submit an order, and the backend persists the order and order items linked to the authenticated user.",
+      "featureId": "feature-ensure-the-dosa-menu-item-image-itself-is-high-quality-and-visually-correct-by-updating-the-existing-generated-dosa-asset-and-ensure-all-occurrences-of-the-dosa-image-in-the-ui-correspond-to-the-dosa-dish-only",
+      "featureTitle": "Ensure the dosa menu item image itself is high-quality and visually correct by updating the existing generated dosa asset, and ensure all occurrences of the dosa image in the UI correspond to the Dosa dish only.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/cart/CartContext.tsx",
-        "frontend/src/cart/cartTypes.ts",
-        "frontend/src/hooks/usePlaceOrder.ts",
-        "frontend/src/pages/CartPage.tsx"
+        "frontend/src/utils/imageFallbacks.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -66,73 +54,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-order-tracking-define-an-order-status-lifecycle-e-g-pending-confirmed-preparing-outfordelivery-delivered-cancelled-and-provide-backend-apis-and-frontend-ui-to-view-a-user-s-orders-and-track-each-order-s-current-status-and-history-timestamps",
-      "featureTitle": "Implement order tracking: define an order status lifecycle (e.g., Pending, Confirmed, Preparing, OutForDelivery, Delivered, Cancelled) and provide backend APIs and frontend UI to view a user's orders and track each order’s current status and history/timestamps.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useOrderDetail.ts",
-        "frontend/src/hooks/useOrders.ts",
-        "frontend/src/pages/OrderDetailPage.tsx",
-        "frontend/src/pages/OrdersListPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-coherent-frontend-ui-for-the-core-flows-sign-in-browse-restaurants-view-menu-cart-checkout-orders-list-order-detail-using-react-typescript-tailwind-shadcn-ui-components-and-react-query-for-data-fetching-caching",
-      "featureTitle": "Create a coherent frontend UI for the core flows (sign in, browse restaurants, view menu, cart/checkout, orders list, order detail) using React + TypeScript, Tailwind, shadcn/ui components, and React Query for data fetching/caching.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/common/QueryState.tsx",
-        "frontend/src/components/layout/AppLayout.tsx",
-        "frontend/src/main.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-apply-a-distinct-consistent-visual-theme-across-the-frontend-colors-typography-spacing-and-component-styling-appropriate-for-a-food-ordering-app-do-not-use-a-blue-and-purple-primary-palette-unless-explicitly-requested",
-      "featureTitle": "Apply a distinct, consistent visual theme across the frontend (colors, typography, spacing, and component styling) appropriate for a food ordering app; do not use a blue-and-purple primary palette unless explicitly requested.",
-      "files": [
-        "frontend/src/components/layout/AppLayout.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
+        "REQ-19"
       ],
       "confidence": "high"
     }

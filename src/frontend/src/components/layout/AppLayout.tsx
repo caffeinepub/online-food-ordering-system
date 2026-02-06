@@ -23,8 +23,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="min-h-screen flex flex-col">
+      <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/90 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
@@ -68,10 +68,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </header>
 
       <main className="flex-1 container py-8">
-        {children}
+        <div className="bg-card/90 backdrop-blur-sm rounded-lg shadow-lg p-6 min-h-[calc(100vh-12rem)]">
+          {children}
+        </div>
       </main>
 
-      <footer className="border-t py-6 bg-muted/30">
+      <footer className="border-t py-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/90 shadow-sm">
         <div className="container text-center text-sm text-muted-foreground">
           <p>© 2026. Built with ❤️ using <a href="https://caffeine.ai" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">caffeine.ai</a></p>
         </div>

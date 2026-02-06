@@ -3,7 +3,7 @@
   "frontend/src/components/auth/AuthButton.tsx": "Authentication button component that handles login/logout with Internet Identity, displays appropriate state (logging in, login, logout), and clears React Query cache on logout.",
   "frontend/src/components/auth/RequireAuth.tsx": "Authentication gate wrapper component that blocks access to protected routes when user is not authenticated, showing a login prompt card instead of personal data.",
   "frontend/src/components/profile/ProfileSetupDialog.tsx": "Modal dialog that prompts first-time users to enter their display name after Internet Identity login, saving the profile via backend actor.",
-  "frontend/src/components/layout/AppLayout.tsx": "Shared layout component providing consistent header with navigation (logo, restaurants, orders, cart with badge, auth button), main content area, and footer across all pages.",
+  "frontend/src/components/layout/AppLayout.tsx": "Shared layout component providing consistent header with navigation, main content area with semi-transparent card overlay for readability over background image, and footer across all pages.",
   "frontend/src/components/common/QueryState.tsx": "Reusable UI helper components for React Query states including loading skeletons, error alerts, and empty state cards to maintain consistency across pages.",
   "frontend/src/hooks/useCurrentUserProfile.ts": "React Query hooks for fetching and saving the authenticated user's profile, with proper actor dependency handling to prevent profile setup modal flash.",
   "frontend/src/hooks/useRestaurants.ts": "React Query hook to fetch the list of all restaurants from the backend with loading and error states.",
@@ -13,10 +13,12 @@
   "frontend/src/hooks/useOrderDetail.ts": "React Query hooks to fetch order status and order items for a specific order ID from the backend.",
   "frontend/src/cart/cartTypes.ts": "TypeScript interface definitions for cart items in the UI layer, including menu item details, pricing, quantity, and restaurant information.",
   "frontend/src/cart/CartContext.tsx": "React context provider managing cart state with add/remove/update/clear operations and localStorage persistence, ensuring single-restaurant constraint.",
-  "frontend/src/pages/RestaurantsListPage.tsx": "Restaurant browsing page displaying all available restaurants in a responsive grid with cards, loading states, and navigation to restaurant detail pages.",
-  "frontend/src/pages/RestaurantDetailPage.tsx": "Restaurant detail and menu page showing restaurant info and menu items with quantity selectors and add-to-cart functionality, enforcing single-restaurant cart constraint.",
+  "frontend/src/pages/RestaurantsListPage.tsx": "Restaurant browsing page displaying all available restaurants in a responsive grid with restaurant images resolved via centralized name-based mapping (getRestaurantImageUrl) and explicit restaurant fallback sources.",
+  "frontend/src/pages/RestaurantDetailPage.tsx": "Restaurant detail and menu page showing restaurant cover image and menu items with dish images resolved via centralized name-based mapping (getDishImageUrl), quantity selectors, and add-to-cart functionality with explicit restaurant and dish fallback sources.",
   "frontend/src/pages/CartPage.tsx": "Shopping cart page displaying cart items with quantity adjustment, removal, subtotal calculation, and checkout button that places orders via authenticated backend calls.",
   "frontend/src/pages/OrdersListPage.tsx": "Orders list page showing the authenticated user's order history with status badges and navigation to order detail (currently shows empty state due to missing backend endpoint).",
   "frontend/src/pages/OrderDetailPage.tsx": "Order detail page displaying order status, timestamps, and order items with manual refresh capability (order items show empty due to backend storage gap).",
-  "frontend/src/index.css": "Global styles with OKLCH color system using warm amber/orange tones for primary colors (avoiding blue/purple), defining light and dark mode tokens for a food-appropriate theme."
+  "frontend/src/index.css": "Global styles with OKLCH color system using warm amber/orange tones and food-themed background image applied to the body with fixed attachment for consistent visual experience.",
+  "frontend/src/utils/imageFallbacks.ts": "Centralized utility for managing fallback image paths with name-based mapping for dishes and restaurants, now using a generic dish placeholder as the default fallback and only showing dosa imagery when the normalized dish name matches \"dosa\", with narrowed legacy URL detection to avoid false positives.",
+  "frontend/src/components/common/ImageWithFallback.tsx": "Reusable image component that gracefully handles broken or missing image URLs by falling back to provided fallback sources, with state reset on src prop changes to handle navigation between pages."
 }

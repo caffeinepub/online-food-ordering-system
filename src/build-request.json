@@ -1,167 +1,104 @@
 {
   "kind": "build_request",
-  "title": "Online Food Ordering System: Auth, Restaurant/Menu Browsing, Order Placement & Tracking",
+  "title": "Stop using dosa images as generic menu-item placeholders and ensure correct dish images app-wide",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Implement user authentication using Internet Identity, and provide a basic user profile record in the backend that is created/updated on first login (keyed by the caller Principal).",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "User registration & login"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can sign in and sign out via Internet Identity in the frontend UI.",
-        "On first successful sign-in, the backend stores a user profile linked to the authenticated Principal.",
-        "Authenticated calls (e.g., placing an order, listing a user's orders) use the caller identity and do not require manual user ID entry."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Design and implement backend data models that reflect normalized (1NF–3NF) entities for an online food ordering domain, using explicit IDs and references to represent primary/foreign keys and one-to-many relationships: Restaurant -> MenuItem (one-to-many) and User -> Order (one-to-many), with Order -> OrderItem (one-to-many).",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Browse restaurants and menus",
-          "Place and track orders",
-          "Primary & foreign keys",
-          "One-to-many relationships",
-          "Basic normalization (1NF–3NF)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend defines distinct record types for Restaurant, MenuItem, Order, and OrderItem, each with stable unique identifiers.",
-        "Menu items reference their owning restaurant by ID (foreign-key-like reference), and order items reference both an order ID and a menu item ID.",
-        "Order records reference the owning user (Principal) and do not embed redundant restaurant/menu item data beyond what is required for ordering."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Provide backend query APIs to browse restaurants and their menus, including: list restaurants, get restaurant details, and list menu items for a restaurant.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Browse restaurants and menus"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Frontend displays a restaurant list view populated from the backend.",
-        "Selecting a restaurant shows its details and menu items fetched from the backend.",
-        "APIs are read-only for end users (no admin creation UI required unless explicitly added later)."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Implement order placement end-to-end: users can add menu items to a cart, specify quantities, submit an order, and the backend persists the order and order items linked to the authenticated user.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Place and track orders"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Frontend supports adding/removing items and adjusting quantities in a cart before checkout.",
-        "Submitting an order creates a new Order and associated OrderItem records in the backend.",
-        "Only authenticated users can place orders; unauthenticated users are prompted to sign in."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Implement order tracking: define an order status lifecycle (e.g., Pending, Confirmed, Preparing, OutForDelivery, Delivered, Cancelled) and provide backend APIs and frontend UI to view a user's orders and track each order’s current status and history/timestamps.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Place and track orders"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can view a list of their orders (most recent first) and open an order detail view.",
-        "Order detail shows status and relevant timestamps (at least created time; optionally status update times).",
-        "Backend prevents users from reading other users' orders."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Seed the backend with a small set of sample restaurants and menu items so the app is usable immediately after deployment without requiring an admin UI.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Browse restaurants and menus"
-        ]
-      },
-      "acceptanceCriteria": [
-        "At least 3 restaurants exist with at least 5 menu items each after initial deployment.",
-        "Seed data is deterministic and does not duplicate on subsequent canister upgrades/redeployments."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Create a coherent frontend UI for the core flows (sign in, browse restaurants, view menu, cart/checkout, orders list, order detail) using React + TypeScript, Tailwind, shadcn/ui components, and React Query for data fetching/caching.",
+      "id": "REQ-16",
+      "text": "Update frontend dish image fallback behavior so non-dosa menu items never display the dosa image just because an image URL is missing/legacy; use a neutral generic dish fallback instead, and only show the dosa image when the dish name is actually \"Dosa\".",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "User registration & login",
-          "Browse restaurants and menus",
-          "Place and track orders"
+          "remove the dosa images from the menu items and replace with the perfect images all over the application"
         ]
       },
       "acceptanceCriteria": [
-        "All user-facing text is in English.",
-        "Data-fetching views use React Query for loading/error states and caching.",
-        "Navigation between major views is clear and consistent (restaurants -> menu -> cart -> order confirmation; orders -> order detail)."
+        "If a menu item has an unknown/missing/invalid imageUrl, the UI shows a generic dish placeholder (not dosa).",
+        "Menu item cards in Restaurant Detail, cart items, and order detail views do not show dosa imagery unless the item name is Dosa (case-insensitive after normalization).",
+        "The centralized dish image helper continues to be the single source of truth for dish image resolution across the app."
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Apply a distinct, consistent visual theme across the frontend (colors, typography, spacing, and component styling) appropriate for a food ordering app; do not use a blue-and-purple primary palette unless explicitly requested.",
+      "id": "REQ-17",
+      "text": "Refine the frontend legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so that valid existing static asset URLs are not incorrectly treated as legacy and forced to fall back to the generic placeholder (which previously caused dosa to appear widely).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
+        ],
+        "quotes": [
+          "remove the dosa images from the menu items and replace with the perfect images all over the application"
         ]
       },
       "acceptanceCriteria": [
-        "The UI uses a consistent design system (primary/secondary colors, typography scale, button/input styles) across all screens.",
-        "The chosen palette is not predominantly blue-and-purple."
+        "Restaurant and menu item images that already resolve to real files under `/assets/generated/` continue to display, even if they do not use the newer `.dim_*` naming scheme.",
+        "Only known-bad/mismatched patterns (e.g., prior pizza placeholder patterns) are treated as legacy and re-resolved via name mapping/fallback.",
+        "No widespread regression where many items revert to a single placeholder image due to overly broad legacy detection."
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Update backend seeded `MenuItem.imageUrl` values for South Indian items so they point to the existing `.dim_*` generated assets (at minimum: Dosa, Idly, Vada, Vegetarian Meals, Non-Veg Meals, Chicken Chettinad, Chicken 65, Pepper Chicken, Mutton Kuzhambu/Chettinad Mutton Kuzhambu), and implement a conditional state upgrade migration to update persisted records to these corrected URLs on upgrade.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Fresh deployments seed the South Indian menu items with `.dim_*` imageUrl paths that match the existing generated filenames in `frontend/public/assets/generated/`.",
+        "On canister upgrade, existing persisted records for the affected menu items are updated to the corrected `.dim_*` URLs even if they previously had older/legacy values.",
+        "After upgrade, Dosa uses the dosa image asset; other affected items use their corresponding non-dosa assets."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Ensure the dosa menu item image itself is high-quality and visually correct by updating the existing generated dosa asset, and ensure all occurrences of the dosa image in the UI correspond to the Dosa dish only.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`dish-dosa.dim_512x512.png` is updated to a clearer, more appetizing dosa image (still visually a dosa).",
+        "No non-dosa menu item displays `dish-dosa.dim_512x512.png` anywhere in the application UI flows (restaurants list/detail, cart, order list/detail)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
-    "Use Internet Identity for authentication; do not add third-party auth providers.",
-    "Do not modify files under frontend/src/components/ui or other frontend immutablePaths; compose these components instead."
+    "Frontend files listed as immutable in SYSTEM_CONTEXT must not be edited (compose instead).",
+    "Backend must remain a single-actor Motoko canister with all logic in `backend/main.mo`; add `backend/migration.mo` only as needed for upgrade state corrections."
   ],
   "nonGoals": [
-    "Restaurant onboarding/admin dashboard for managing restaurants and menu items.",
-    "Payments processing and checkout integrations.",
-    "Real-time order updates via WebSockets/push notifications (polling or manual refresh is acceptable).",
-    "Delivery driver dispatching, mapping, or GPS tracking."
+    "Generating bespoke new images for every single seeded dish across all cuisines (beyond the generic fallback and dosa edit) unless explicitly requested.",
+    "Adding new restaurants, menu items, or changing pricing/descriptions unrelated to image correctness."
   ],
   "imageRequirements": {
-    "required": [],
-    "edits": []
+    "required": [
+      "Generic plated-food placeholder image (dish-generic.dim_512x512.png)"
+    ],
+    "edits": [
+      "Replace the dosa dish image with a higher-quality, more appetizing dosa photo (dish-dosa.dim_512x512.png > dish-dosa.dim_512x512.png)"
+    ]
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

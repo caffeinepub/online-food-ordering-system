@@ -12,6 +12,7 @@ export interface MenuItem {
     name: string;
     description: string;
     restaurantId: bigint;
+    imageUrl: string;
     price: bigint;
 }
 export interface OrderItem {
@@ -29,6 +30,7 @@ export interface Restaurant {
     id: bigint;
     name: string;
     description: string;
+    imageUrl: string;
 }
 export interface UserProfile {
     name: string;

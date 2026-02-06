@@ -9,6 +9,8 @@ import { Separator } from '@/components/ui/separator';
 import { LoadingSkeleton, ErrorState, EmptyState } from '../components/common/QueryState';
 import { toast } from 'sonner';
 import { ArrowLeft, Plus, Minus, ShoppingCart } from 'lucide-react';
+import ImageWithFallback from '../components/common/ImageWithFallback';
+import { getRestaurantImageUrl, getDishImageUrl, FALLBACK_IMAGES } from '../utils/imageFallbacks';
 
 export default function RestaurantDetailPage() {
   const { restaurantId } = useParams({ from: '/restaurants/$restaurantId' });
@@ -95,7 +97,15 @@ export default function RestaurantDetailPage() {
         Back to Restaurants
       </Button>
 
-      <Card className="mb-8">
+      <Card className="mb-8 overflow-hidden">
+        <div className="relative h-64 w-full overflow-hidden bg-muted">
+          <ImageWithFallback
+            src={getRestaurantImageUrl(restaurant.imageUrl, restaurant.name)}
+            alt={restaurant.name}
+            fallbackSrc={FALLBACK_IMAGES.restaurant}
+            className="w-full h-full object-cover"
+          />
+        </div>
         <CardHeader>
           <CardTitle className="text-3xl">{restaurant.name}</CardTitle>
           <CardDescription className="text-base">{restaurant.description}</CardDescription>
@@ -116,45 +126,57 @@ export default function RestaurantDetailPage() {
             const priceInDollars = Number(item.price) / 100;
 
             return (
-              <Card key={item.id.toString()} className="hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{item.name}</CardTitle>
-                      <CardDescription className="mt-1">{item.description}</CardDescription>
-                    </div>
-                    <Badge variant="secondary" className="ml-2 text-base font-semibold">
-                      ${priceInDollars.toFixed(2)}
-                    </Badge>
+              <Card key={item.id.toString()} className="hover:shadow-md transition-shadow overflow-hidden">
+                <div className="flex gap-4">
+                  <div className="relative w-32 h-32 flex-shrink-0 bg-muted">
+                    <ImageWithFallback
+                      src={getDishImageUrl(item.imageUrl, item.name)}
+                      alt={item.name}
+                      fallbackSrc={FALLBACK_IMAGES.dish}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center border rounded-md">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id.toString(), -1)}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-8 text-center font-medium">{quantity}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id.toString(), 1)}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <Button onClick={() => handleAddToCart(item)} className="flex-1 gap-2">
-                      <ShoppingCart className="h-4 w-4" />
-                      Add to Cart
-                    </Button>
+                  <div className="flex-1 flex flex-col">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg">{item.name}</CardTitle>
+                          <CardDescription className="mt-1 line-clamp-2">{item.description}</CardDescription>
+                        </div>
+                        <Badge variant="secondary" className="ml-2 text-base font-semibold whitespace-nowrap">
+                          ${priceInDollars.toFixed(2)}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-2 mt-auto">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center border rounded-md">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id.toString(), -1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-8 text-center font-medium">{quantity}</span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id.toString(), 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Button onClick={() => handleAddToCart(item)} className="flex-1 gap-2">
+                          <ShoppingCart className="h-4 w-4" />
+                          Add
+                        </Button>
+                      </div>
+                    </CardContent>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             );
           })}

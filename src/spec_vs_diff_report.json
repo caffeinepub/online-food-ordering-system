@@ -1,103 +1,51 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T04:58:03.222Z",
-  "summary": "Core scaffolding is present for Internet Identity login, restaurant/menu browsing APIs, cart UI, and order placement hook. However, key requirements are incomplete: backend seeding is insufficient, user-profile creation is not automatic on first login, and order tracking/listing is not implemented end-to-end (frontend orders query returns empty and backend order APIs appear incomplete/truncated). Diff also introduces an unrequested access-control/admin-token system.",
+  "generatedAt": "2026-02-06T07:56:11.208Z",
+  "summary": "Frontend image fallback utilities were updated to use a generic dish placeholder and add name-to-image mappings (including Dosa). A backend migration module was added and wired into the Motoko actor. However, the backend image URLs used in the migration appear to not match the required `.dim_*` generated asset filenames/paths, and the requested dosa asset update is not evidenced in the diff summary.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "On first successful sign-in, the backend stores a user profile linked to the authenticated Principal (created/updated automatically on first login).",
-      "reason": "Frontend shows a ProfileSetupDialog and calls saveCallerUserProfile; the backend query getCallerUserProfile enforces permissions but the diff does not show any logic that creates/updates a profile automatically upon first login/authenticated interaction.",
+      "id": "REQ-17",
+      "requirement": "Refine legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so valid existing `/assets/generated/` URLs are not incorrectly treated as legacy.",
+      "reason": "The diff shows the start of `isLegacyAssetUrl` but the implementation is truncated, so there is insufficient evidence that the legacy/invalid detection logic was actually refined to meet the acceptance criteria (avoid overly broad detection, only known-bad patterns).",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/hooks/useCurrentUserProfile.ts",
-        "frontend/src/components/profile/ProfileSetupDialog.tsx",
-        "frontend/src/App.tsx"
+        "frontend/src/utils/imageFallbacks.ts (truncated at `function isLegacyAssetUrl(url: string): boolean {`)"
       ]
     },
     {
-      "id": "REQ-5",
-      "requirement": "Users can view a list of their orders (most recent first) and open an order detail view; backend APIs must allow listing a user's orders and must prevent reading other users' orders.",
-      "reason": "The frontend hook explicitly returns an empty list with a comment that the backend does not have listCallerOrders yet. Backend order-related functions are truncated and do not provide evidence of a list-orders API or order history/timestamps beyond createdAt/updatedAt fields.",
+      "id": "REQ-18",
+      "requirement": "Update backend seeded South Indian `MenuItem.imageUrl` values to point to existing `.dim_*` generated assets and add conditional upgrade migration to update persisted records.",
+      "reason": "A migration was added, but it sets image URLs like `/assets/generated/dim_dosa.png` (and similar) rather than `.dim_*` filenames/paths that match the frontend mappings shown (e.g., `/assets/generated/dish-dosa.dim_512x512.png`). Also, the `backend/main.mo` seed data section is truncated and does not show updated `.dim_*` URLs for the specified South Indian items on fresh deploy.",
       "evidence": [
-        "frontend/src/hooks/useOrders.ts",
-        "backend/main.mo"
+        "backend/migration.mo (uses `/assets/generated/dim_*.png` URLs)",
+        "frontend/src/utils/imageFallbacks.ts (maps dishes to `/assets/generated/dish-*.dim_512x512.png`)",
+        "backend/main.mo (seeded menu items section is truncated; South Indian item URLs not evidenced)"
       ]
     },
     {
-      "id": "REQ-5",
-      "requirement": "Order detail shows status and relevant timestamps/history (at least created time; optionally status update times).",
-      "reason": "Backend defines createdAt/updatedAt on UserOrder, but the diff does not show an order detail API returning these fields, nor a status-history structure with timestamps. Only getOrderStatus and getAllOrderItems are referenced from the frontend, and getOrderStatus is truncated in the backend diff.",
+      "id": "REQ-19",
+      "requirement": "Update `dish-dosa.dim_512x512.png` to a higher-quality dosa image and ensure dosa imagery only appears for Dosa across the app.",
+      "reason": "No asset file change is shown for `frontend/public/assets/generated/dish-dosa.dim_512x512.png` (only LLM-readable diffs are provided). The diff summary does not evidence that the dosa image file itself was updated.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/hooks/useOrderDetail.ts"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "requirement": "Seed the backend with at least 3 restaurants and at least 5 menu items each; deterministic and no duplication on upgrades/redeployments.",
-      "reason": "The visible seed data includes only 2 restaurants and 3 menu items total. Also, seeding is done via unconditional restaurants.add/menuItems.add calls with IDs while nextRestaurantId/nextMenuItemId remain set to 1, suggesting potential ID/duplication issues; upgrade-safe/dedup behavior is not evidenced.",
-      "evidence": [
-        "backend/main.mo"
+        "File diff summary shows no modified image asset file; only `frontend/src/utils/imageFallbacks.ts`, `backend/main.mo`, and `backend/migration.mo` content is shown"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Custom access-control/authorization system with admin secret-token initialization (_initializeAccessControlWithSecret) and role/permission checks for profile/order access.",
-      "reason": "BuildRequest requires Internet Identity auth but does not request an additional admin-token-based access-control layer or secret URL parameter for initialization.",
+      "description": "Expanded dish name-to-image mapping for multiple non-requested cuisines/items (e.g., burgers, pasta dishes) and mapping pizza items to garlic bread.",
+      "reason": "BuildRequest scope was specifically about stopping dosa being used as a generic placeholder and correcting South Indian dish images; adding/altering mappings for many other dishes is not requested and risks changing unrelated image behavior.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "Admin token passed via URL parameter 'caffeineAdminToken' (getSecretParameter) to initialize access control.",
-      "reason": "Not requested in requirements; introduces a new privileged auth path beyond Internet Identity.",
-      "evidence": [
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "Footer branding/link to caffeine.ai including a heart emoji in UI text.",
-      "reason": "Not requested as part of the core flows/UI requirements; additionally introduces non-spec branding content.",
-      "evidence": [
-        "frontend/src/components/layout/AppLayout.tsx"
+        "frontend/src/utils/imageFallbacks.ts (DISH_NAME_TO_IMAGE entries for 'cheeseburger', 'veggie burger', 'vanilla milkshake', 'fettuccine alfredo', 'penne arrabbiata', 'chicken parmigiana', pizza items mapped to garlic bread, etc.)"
       ]
     }
   ],
-  "confidence": 0.74,
+  "confidence": 0.7,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
-    "frontend/src/cart/CartContext.tsx",
-    "frontend/src/cart/cartTypes.ts",
-    "frontend/src/components/auth/AuthButton.tsx",
-    "frontend/src/components/auth/RequireAuth.tsx",
-    "frontend/src/components/common/QueryState.tsx",
-    "frontend/src/components/layout/AppLayout.tsx",
-    "frontend/src/components/profile/ProfileSetupDialog.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useCurrentUserProfile.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useOrderDetail.ts",
-    "frontend/src/hooks/useOrders.ts",
-    "frontend/src/hooks/usePlaceOrder.ts",
-    "frontend/src/hooks/useRestaurant.ts",
-    "frontend/src/hooks/useRestaurants.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/CartPage.tsx",
-    "frontend/src/pages/OrderDetailPage.tsx",
-    "frontend/src/pages/OrdersListPage.tsx",
-    "frontend/src/pages/RestaurantDetailPage.tsx",
-    "frontend/src/pages/RestaurantsListPage.tsx",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/imageFallbacks.ts",
     "project_state.json"
   ]
 }

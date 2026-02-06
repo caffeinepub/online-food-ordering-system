@@ -8,10 +8,13 @@ import List "mo:core/List";
 import Runtime "mo:core/Runtime";
 import Int "mo:core/Int";
 import Principal "mo:core/Principal";
+import Migration "migration";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+// Use `with migration` clause to apply migration function
+(with migration = Migration.run)
 actor {
   // Authorization Mixin
   let accessControlState = AccessControl.initState();
@@ -22,6 +25,7 @@ actor {
     id : Nat;
     name : Text;
     description : Text;
+    imageUrl : Text;
   };
 
   type MenuItem = {
@@ -30,6 +34,7 @@ actor {
     name : Text;
     description : Text;
     price : Nat;
+    imageUrl : Text;
   };
 
   type UserOrder = {
@@ -79,37 +84,89 @@ actor {
   let menuItems = Map.empty<Nat, MenuItem>();
   let orders = Map.empty<Nat, UserOrder>();
   let userProfiles = Map.empty<Principal, UserProfile>();
-  var nextRestaurantId = 1;
-  var nextMenuItemId = 1;
+
+  var nextRestaurantId = 6; // Update for more seeded restaurants
+  var nextMenuItemId = 53; // Updated for more seeded menu items
   var nextOrderId = 1;
   var nextOrderItemId = 1;
 
   // Seed Data
+  // Indian
   restaurants.add(
     1,
     {
       id = 1;
-      name = "Pizza Palace";
-      description = "Delicious pizzas and more!";
-    },
-  );
-  restaurants.add(
-    2,
-    {
-      id = 2;
-      name = "Sushi Central";
-      description = "Fresh sushi delivered to your door.";
+      name = "Tandoori Treats";
+      description = "Authentic North Indian cuisine for delivery.";
+      imageUrl = "/assets/generated/tandoori-treats.png";
     },
   );
 
+  // American - Pizza
+  restaurants.add(
+    2,
+    {
+      id = 2;
+      name = "Pizza Palace";
+      description = "Delicious pizzas and more!";
+      imageUrl = "/assets/generated/pizza-palace.png";
+    },
+  );
+
+  // Japanese - Sushi
+  restaurants.add(
+    3,
+    {
+      id = 3;
+      name = "Sushi Central";
+      description = "Fresh sushi delivered to your door.";
+      imageUrl = "/assets/generated/sushi-central.png";
+    },
+  );
+
+  // Italian - Pasta
+  restaurants.add(
+    4,
+    {
+      id = 4;
+      name = "Pasta House";
+      description = "Traditional handmade pasta and sauces.";
+      imageUrl = "/assets/generated/pasta-house.png";
+    },
+  );
+
+  // Burger Joint
+  restaurants.add(
+    5,
+    {
+      id = 5;
+      name = "Burger Joint";
+      description = "Classic American burgers and fries.";
+      imageUrl = "/assets/generated/burger-joint.png";
+    },
+  );
+
+  // South Indian / Tamil Nadu Restaurant
+  restaurants.add(
+    6,
+    {
+      id = 6;
+      name = "Chennai Spice";
+      description = "Authentic South Indian cuisine, specializing in Tamil Nadu flavors.";
+      imageUrl = "/assets/generated/restaurant-indian-chennai-spice.png";
+    },
+  );
+
+  // Menu Items for Tandoori Treats (Indian)
   menuItems.add(
     1,
     {
       id = 1;
       restaurantId = 1;
-      name = "Margherita Pizza";
-      description = "Classic pizza with tomato, mozzarella, and basil.";
-      price = 1200;
+      name = "Chicken Tikka Masala";
+      description = "Creamy tomato gravy with tender chicken pieces.";
+      price = 1500;
+      imageUrl = "/assets/generated/chicken-tikka-masala.png";
     },
   );
   menuItems.add(
@@ -117,19 +174,586 @@ actor {
     {
       id = 2;
       restaurantId = 1;
-      name = "Pepperoni Pizza";
-      description = "Spicy pepperoni and cheese with garlic-butter crust";
-      price = 1400;
+      name = "Paneer Makhani";
+      description = "Soft cottage cheese cubes in butter-rich sauce.";
+      price = 1200;
+      imageUrl = "/assets/generated/paneer-makhani.png";
     },
   );
   menuItems.add(
     3,
     {
       id = 3;
+      restaurantId = 1;
+      name = "Jeera Rice";
+      description = "Basmati rice with roasted cumin flavor.";
+      price = 800;
+      imageUrl = "/assets/generated/jeera-rice.png";
+    },
+  );
+  menuItems.add(
+    4,
+    {
+      id = 4;
+      restaurantId = 1;
+      name = "Butter Naan (2 pcs)";
+      description = "Leavened bread cooked in tandoor with butter.";
+      price = 350;
+      imageUrl = "/assets/generated/butter-naan.png";
+    },
+  );
+  menuItems.add(
+    5,
+    {
+      id = 5;
+      restaurantId = 1;
+      name = "Gajar Halwa (Dessert)";
+      description = "Carrot pudding with nuts and cardamom.";
+      price = 600;
+      imageUrl = "/assets/generated/gajar-halwa.png";
+    },
+  );
+
+  // Menu Items for Pizza Palace (American)
+  menuItems.add(
+    6,
+    {
+      id = 6;
       restaurantId = 2;
-      name = "California Salmon Roll";
-      description = "Salmon, avocado, cucumber, sushi rice";
+      name = "Margherita Pizza";
+      description = "Classic pizza with tomato, mozzarella, basil.";
       price = 1100;
+      imageUrl = "/assets/generated/margherita-pizza.png";
+    },
+  );
+  menuItems.add(
+    7,
+    {
+      id = 7;
+      restaurantId = 2;
+      name = "Pepperoni Pizza";
+      description = "Pepperoni, cheese, garlic-butter crust.";
+      price = 1400;
+      imageUrl = "/assets/generated/pepperoni-pizza.png";
+    },
+  );
+  menuItems.add(
+    8,
+    {
+      id = 8;
+      restaurantId = 2;
+      name = "Hawaiian Pizza";
+      description = "Ham, pineapple, cheese.";
+      price = 1300;
+      imageUrl = "/assets/generated/hawaiian-pizza.png";
+    },
+  );
+  menuItems.add(
+    9,
+    {
+      id = 9;
+      restaurantId = 2;
+      name = "Garlic Breadsticks";
+      description = "Crispy breadsticks with garlic parmesan butter.";
+      price = 400;
+      imageUrl = "/assets/generated/garlic-bread-pizza.png";
+    },
+  );
+  menuItems.add(
+    10,
+    {
+      id = 10;
+      restaurantId = 2;
+      name = "Caesar Salad";
+      description = "Romaine lettuce, caesar dressing, croutons.";
+      price = 650;
+      imageUrl = "/assets/generated/salad-pizza.png";
+    },
+  );
+
+  // Menu Items for Sushi Central (Japanese)
+  menuItems.add(
+    11,
+    {
+      id = 11;
+      restaurantId = 3;
+      name = "California Salmon Roll";
+      description = "Salmon, avocado, cucumber, sushi rice.";
+      price = 1100;
+      imageUrl = "/assets/generated/california-salmon-roll.png";
+    },
+  );
+  menuItems.add(
+    12,
+    {
+      id = 12;
+      restaurantId = 3;
+      name = "Spicy Tuna Roll";
+      description = "Tuna, sriracha, cucumber, sushi rice.";
+      price = 1200;
+      imageUrl = "/assets/generated/spicy-tuna-roll.png";
+    },
+  );
+  menuItems.add(
+    13,
+    {
+      id = 13;
+      restaurantId = 3;
+      name = "Shrimp Tempura Roll";
+      description = "Tempura fried shrimp, avocado, sushi rice.";
+      price = 950;
+      imageUrl = "/assets/generated/shrimp-tempura-roll.png";
+    },
+  );
+  menuItems.add(
+    14,
+    {
+      id = 14;
+      restaurantId = 3;
+      name = "Miso Soup";
+      description = "Soup with tofu, nori, and spring onions.";
+      price = 400;
+      imageUrl = "/assets/generated/miso-soup.png";
+    },
+  );
+  menuItems.add(
+    15,
+    {
+      id = 15;
+      restaurantId = 3;
+      name = "Edamame";
+      description = "Steamed soybeans with sea salt.";
+      price = 350;
+      imageUrl = "/assets/generated/edamame.png";
+    },
+  );
+
+  // Menu Items for Pasta House (Italian)
+  menuItems.add(
+    16,
+    {
+      id = 16;
+      restaurantId = 4;
+      name = "Fettucine Alfredo";
+      description = "Creamy garlic cheese sauce with fettucine.";
+      price = 1000;
+      imageUrl = "/assets/generated/fettucine-alfredo.png";
+    },
+  );
+  menuItems.add(
+    17,
+    {
+      id = 17;
+      restaurantId = 4;
+      name = "Penne Arrabiata";
+      description = "Spicy tomato sauce, penne pasta.";
+      price = 900;
+      imageUrl = "/assets/generated/penne-arrabiata.png";
+    },
+  );
+  menuItems.add(
+    18,
+    {
+      id = 18;
+      restaurantId = 4;
+      name = "Chicken Parmigiana";
+      description = "Breaded chicken, pasta, tomato cheese sauce.";
+      price = 1350;
+      imageUrl = "/assets/generated/chicken-parmigiana.png";
+    },
+  );
+  menuItems.add(
+    19,
+    {
+      id = 19;
+      restaurantId = 4;
+      name = "Garlic Bread (3 pcs)";
+      description = "Oven roasted garlic bread.";
+      price = 450;
+      imageUrl = "/assets/generated/garlic-bread-pasta.png";
+    },
+  );
+
+  // Menu Items for Burger Joint (American)
+  menuItems.add(
+    20,
+    {
+      id = 20;
+      restaurantId = 5;
+      name = "Cheeseburger";
+      description = "Grilled beef patty, cheese, fries.";
+      price = 1000;
+      imageUrl = "/assets/generated/cheeseburger.png";
+    },
+  );
+  menuItems.add(
+    21,
+    {
+      id = 21;
+      restaurantId = 5;
+      name = "Veggie Burger";
+      description = "Plant-based patty, lettuce, fries.";
+      price = 900;
+      imageUrl = "/assets/generated/veggie-burger.png";
+    },
+  );
+  menuItems.add(
+    22,
+    {
+      id = 22;
+      restaurantId = 5;
+      name = "Vanilla Milkshake";
+      description = "Classic vanilla ice cream shake.";
+      price = 400;
+      imageUrl = "/assets/generated/vanilla-milkshake.png";
+    },
+  );
+
+  // South Indian / Tamil Nadu
+  // Vegetarian Dishes (id: 23-31)
+  menuItems.add(
+    23,
+    {
+      id = 23;
+      restaurantId = 6;
+      name = "Dosa";
+      description = "Crispy fermented rice and lentil crepe.";
+      price = 200;
+      imageUrl = "/assets/generated/dim_dosa.png";
+    },
+  );
+  menuItems.add(
+    24,
+    {
+      id = 24;
+      restaurantId = 6;
+      name = "Vada";
+      description = "Savoury fried lentil donuts.";
+      price = 250;
+      imageUrl = "/assets/generated/dim_vada.png";
+    },
+  );
+  menuItems.add(
+    25,
+    {
+      id = 25;
+      restaurantId = 6;
+      name = "Idly";
+      description = "Steamed rice cakes served with sambar.";
+      price = 200;
+      imageUrl = "/assets/generated/dim_idly.png";
+    },
+  );
+  menuItems.add(
+    26,
+    {
+      id = 26;
+      restaurantId = 6;
+      name = "Sambar";
+      description = "Lentil-based vegetable stew.";
+      price = 250;
+      imageUrl = "/assets/generated/sambar.png";
+    },
+  );
+  menuItems.add(
+    27,
+    {
+      id = 27;
+      restaurantId = 6;
+      name = "Coconut Chutney";
+      description = "Condiment made with coconut and spices.";
+      price = 100;
+      imageUrl = "/assets/generated/coconut-chutney.png";
+    },
+  );
+  menuItems.add(
+    28,
+    {
+      id = 28;
+      restaurantId = 6;
+      name = "Vegetarian Meals";
+      description = "South Indian style rice with assorted vegetables and accompaniments.";
+      price = 600;
+      imageUrl = "/assets/generated/dim_vegetarian_meals.png";
+    },
+  );
+
+  // Non-Vegetarian Dishes (id: 29-55)
+  menuItems.add(
+    29,
+    {
+      id = 29;
+      restaurantId = 6;
+      name = "Non-Veg Meals";
+      description = "Rice, vegetables, and non-veg curry, side dishes.";
+      price = 800;
+      imageUrl = "/assets/generated/dim_non_veg_meals.png";
+    },
+  );
+  menuItems.add(
+    30,
+    {
+      id = 30;
+      restaurantId = 6;
+      name = "Chicken Chettinad";
+      description = "Spicy Tamil chicken curry with coconut and spices.";
+      price = 700;
+      imageUrl = "/assets/generated/dim_chicken_chettinad.png";
+    },
+  );
+  menuItems.add(
+    31,
+    {
+      id = 31;
+      restaurantId = 6;
+      name = "Nattu Kozhi Kulambu";
+      description = "Country chicken curry.";
+      price = 900;
+      imageUrl = "/assets/generated/nattu-kozhi-kulambu.png";
+    },
+  );
+  menuItems.add(
+    32,
+    {
+      id = 32;
+      restaurantId = 6;
+      name = "Nilgiri Chicken Korma";
+      description = "Green masala chicken curry.";
+      price = 800;
+      imageUrl = "/assets/generated/nilgiri-chicken-korma.png";
+    },
+  );
+  menuItems.add(
+    33,
+    {
+      id = 33;
+      restaurantId = 6;
+      name = "Nanjil Nattu Chicken Curry";
+      description = "Traditional Tamil chicken curry.";
+      price = 1000;
+      imageUrl = "/assets/generated/nanjil-nattu-chicken-curry.png";
+    },
+  );
+  menuItems.add(
+    34,
+    {
+      id = 34;
+      restaurantId = 6;
+      name = "Chicken 65";
+      description = "Deep-fried spicy chicken appetizer.";
+      price = 500;
+      imageUrl = "/assets/generated/dim_chicken_65.png";
+    },
+  );
+  menuItems.add(
+    35,
+    {
+      id = 35;
+      restaurantId = 6;
+      name = "Pepper Chicken (Milagu Varuval)";
+      description = "Pepper-spiced chicken dish.";
+      price = 750;
+      imageUrl = "/assets/generated/dim_pepper_chicken_varuval.png";
+    },
+  );
+  menuItems.add(
+    36,
+    {
+      id = 36;
+      restaurantId = 6;
+      name = "Chicken Ghee Roast";
+      description = "Flavorful chicken roasted in clarified butter.";
+      price = 1100;
+      imageUrl = "/assets/generated/chicken-ghee-roast.png";
+    },
+  );
+  menuItems.add(
+    37,
+    {
+      id = 37;
+      restaurantId = 6;
+      name = "Chettinad Mutton Kuzhambu";
+      description = "Tamil-style spicy mutton curry.";
+      price = 950;
+      imageUrl = "/assets/generated/dim_chettinad_mutton_kuzhambu.png";
+    },
+  );
+  menuItems.add(
+    38,
+    {
+      id = 38;
+      restaurantId = 6;
+      name = "Elumbu Rasam / Soup";
+      description = "Broth made from mutton or pork bones.";
+      price = 400;
+      imageUrl = "/assets/generated/elumbu-rasam.png";
+    },
+  );
+  menuItems.add(
+    39,
+    {
+      id = 39;
+      restaurantId = 6;
+      name = "Mutton Chukka (Varuval)";
+      description = "Dry-fried mutton dish.";
+      price = 1150;
+      imageUrl = "/assets/generated/mutton-chukka.png";
+    },
+  );
+  menuItems.add(
+    40,
+    {
+      id = 40;
+      restaurantId = 6;
+      name = "Mutton Uppu Kari";
+      description = "Salt-spiced mutton dish from the Chettinad region.";
+      price = 850;
+      imageUrl = "/assets/generated/mutton-uppu-kari.png";
+    },
+  );
+  menuItems.add(
+    41,
+    {
+      id = 41;
+      restaurantId = 6;
+      name = "Mutton Nalli Fry";
+      description = "Roasted goat bone with marrow dish.";
+      price = 1200;
+      imageUrl = "/assets/generated/mutton-nalli-fry.png";
+    },
+  );
+
+  // Seafood Dishes (id: 42-53)
+  menuItems.add(
+    42,
+    {
+      id = 42;
+      restaurantId = 6;
+      name = "Karimeen Pollichathu";
+      description = "Pearl spot fish, marinated and cooked in banana leaf.";
+      price = 1500;
+      imageUrl = "/assets/generated/karimeen-pollichathu.png";
+    },
+  );
+  menuItems.add(
+    43,
+    {
+      id = 43;
+      restaurantId = 6;
+      name = "Malabar Fish Curry/Meen Curry";
+      description = "Kerala style coconut-based fish curry.";
+      price = 1000;
+      imageUrl = "/assets/generated/malabar-fish-curry.png";
+    },
+  );
+  menuItems.add(
+    44,
+    {
+      id = 44;
+      restaurantId = 6;
+      name = "Nethili 65";
+      description = "Fried anchovies, hot and spicy.";
+      price = 500;
+      imageUrl = "/assets/generated/nethili-65.png";
+    },
+  );
+  menuItems.add(
+    45,
+    {
+      id = 45;
+      restaurantId = 6;
+      name = "Fish Varutharacha";
+      description = "Fish curry with roasted coconut paste.";
+      price = 900;
+      imageUrl = "/assets/generated/fish-varutharacha.png";
+    },
+  );
+  menuItems.add(
+    46,
+    {
+      id = 46;
+      restaurantId = 6;
+      name = "Chepala Pulusu";
+      description = "Andhra style tangy fish curry.";
+      price = 1100;
+      imageUrl = "/assets/generated/chepala-pulusu.png";
+    },
+  );
+  menuItems.add(
+    47,
+    {
+      id = 47;
+      restaurantId = 6;
+      name = "Prawn Ghee Roast";
+      description = "Prawns roasted in ghee and spices.";
+      price = 1300;
+      imageUrl = "/assets/generated/prawn-ghee-roast.png";
+    },
+  );
+  menuItems.add(
+    48,
+    {
+      id = 48;
+      restaurantId = 6;
+      name = "Crab Masala/Nandu Kuzhambu";
+      description = "Spicy crab curry with aromatic spices.";
+      price = 1350;
+      imageUrl = "/assets/generated/crab-masala.png";
+    },
+  );
+  menuItems.add(
+    49,
+    {
+      id = 49;
+      restaurantId = 6;
+      name = "Kanava/Koonthal Masala";
+      description = "Squid masala dish with rich flavors.";
+      price = 900;
+      imageUrl = "/assets/generated/kanava-masala.png";
+    },
+  );
+  menuItems.add(
+    50,
+    {
+      id = 50;
+      restaurantId = 6;
+      name = "Fish Mappas";
+      description = "Kerala style fish coconut curry with coconut milk.";
+      price = 1000;
+      imageUrl = "/assets/generated/fish-mappas.png";
+    },
+  );
+  menuItems.add(
+    51,
+    {
+      id = 51;
+      restaurantId = 6;
+      name = "Fish Kola Urundai";
+      description = "Fish meatballs, deep-fried.";
+      price = 400;
+      imageUrl = "/assets/generated/fish-kola-urundai.png";
+    },
+  );
+  menuItems.add(
+    52,
+    {
+      id = 52;
+      restaurantId = 6;
+      name = "Chemmeen Biryani";
+      description = "Prawn biryani with South Indian spices.";
+      price = 1400;
+      imageUrl = "/assets/generated/chemmeen-biryani.png";
+    },
+  );
+  menuItems.add(
+    53,
+    {
+      id = 53;
+      restaurantId = 6;
+      name = "Andhra Fish Fry";
+      description = "Fish marinated in Andhra spices and fried.";
+      price = 950;
+      imageUrl = "/assets/generated/andhra-fish-fry.png";
     },
   );
 
@@ -202,7 +826,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can place orders");
     };
-    
+
     if (restaurantId == 0 or cartItems.size() == 0) {
       Runtime.trap("Restaurant is required and cart cannot be empty.");
     };

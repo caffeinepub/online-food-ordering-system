@@ -1,210 +1,67 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Online Food Ordering Frontend: Internet Identity Auth, Browsing, Cart/Checkout, Orders",
+  "title": "Fix dish image fallbacks so dosa is only shown for Dosa and improve legacy URL detection",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Add Internet Identity sign-in/sign-out UI and first-login user profile setup flow integrated with authenticated actor calls.",
+      "id": "REQ-16",
+      "summary": "Change dish image fallback so missing/invalid dish images use a neutral generic placeholder, and only show the dosa image when the dish name resolves to Dosa via the centralized helper.",
       "acceptanceCriteria": [
-        "Users can sign in and sign out via Internet Identity in the frontend UI.",
-        "On first successful sign-in, the backend stores a user profile linked to the authenticated Principal.",
-        "Authenticated calls (e.g., placing an order, listing a user's orders) use the caller identity and do not require manual user ID entry."
+        "If a menu item has an unknown/missing/invalid imageUrl, the UI shows a generic dish placeholder (not dosa).",
+        "Menu item cards in Restaurant Detail, cart items, and order detail views do not show dosa imagery unless the item name is Dosa (case-insensitive after normalization).",
+        "The centralized dish image helper continues to be the single source of truth for dish image resolution across the app."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "create",
-          "description": "Create the top-level app shell that wires authentication state (Internet Identity) to route access, shows a header with sign-in/sign-out controls, and ensures authenticated views use the authenticated actor. Use the selected \"authorization\" component guidance for auth and profile bootstrapping; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/AuthButton.tsx",
-          "operation": "create",
-          "description": "Add a sign-in/sign-out button component powered by the existing useInternetIdentity hook, clearing React Query cache on logout per the selected \"authorization\" component guidance; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
-          "operation": "create",
-          "description": "Add a React Query hook that fetches getCallerUserProfile from the actor with proper enabled/loading gating to avoid profile setup modal flash (actor dependency aware) per the selected \"authorization\" component guidance; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/profile/ProfileSetupDialog.tsx",
-          "operation": "create",
-          "description": "Create a first-login modal/dialog prompting for the user's display name and saving it via saveCallerUserProfile, handling authorization failures gracefully. Use shadcn/ui primitives (e.g., Dialog, Input, Button) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/auth/RequireAuth.tsx",
-          "operation": "create",
-          "description": "Create an auth gate wrapper that blocks protected app content when the user is not authenticated, showing a sign-in prompt/empty state and avoiding any personal data fetch until authenticated. Follow the selected \"authorization\" component guidance; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Implement restaurant browsing UI: list restaurants, view restaurant details, and view menu items for a restaurant via backend query capabilities.",
-      "acceptanceCriteria": [
-        "Frontend displays a restaurant list view populated from the backend.",
-        "Selecting a restaurant shows its details and menu items fetched from the backend.",
-        "APIs are read-only for end users (no admin creation UI required unless explicitly added later)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useRestaurants.ts",
-          "operation": "create",
-          "description": "Add React Query hooks to fetch listRestaurants and cache results, returning loading/error states suitable for UI consumption."
-        },
-        {
-          "path": "frontend/src/hooks/useRestaurant.ts",
-          "operation": "create",
-          "description": "Add React Query hooks to fetch getRestaurant and getRestaurantMenu for a selected restaurant ID, with stable query keys and error handling."
-        },
-        {
-          "path": "frontend/src/pages/RestaurantsListPage.tsx",
-          "operation": "create",
-          "description": "Create a restaurants list page that renders restaurants from React Query with clear loading/error/empty states. Use shadcn/ui components (e.g., Card, Button, Skeleton) by composition; verify the component's usage instructions before implementing."
+          "path": "frontend/src/utils/imageFallbacks.ts",
+          "operation": "modify",
+          "description": "Update FALLBACK_IMAGES.dish to point to the new neutral placeholder (frontend/public/assets/generated/dish-generic.dim_512x512.png), and ensure getDishImageUrl keeps mapping the normalized dish name \"dosa\" to frontend/public/assets/generated/dish-dosa.dim_512x512.png while all other unknown/missing/invalid cases resolve to the generic placeholder."
         },
         {
           "path": "frontend/src/pages/RestaurantDetailPage.tsx",
-          "operation": "create",
-          "description": "Create a restaurant detail + menu page that fetches restaurant details and menu items from the backend, and provides an 'Add to cart' affordance. Use shadcn/ui components (e.g., Card, Badge, Separator) by composition; verify the component's usage instructions before implementing."
+          "operation": "modify",
+          "description": "Ensure dish images for menu item cards continue to use getDishImageUrl(item.imageUrl, item.name) with the centralized fallback behavior (generic placeholder by default, dosa only for actual Dosa), and that the fallbackSrc passed to ImageWithFallback aligns with the updated FALLBACK_IMAGES.dish."
         },
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wire the restaurant list and restaurant detail pages into app navigation/routing (e.g., /restaurants and /restaurants/:restaurantId), ensuring there are no orphan pages and navigation between views is clear and consistent."
+          "path": "frontend/public/assets/generated/dish-generic.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the required generated asset: frontend/public/assets/generated/dish-generic.dim_512x512.png (Generic plated-food placeholder image)."
         }
       ]
     },
     {
-      "id": "REQ-4",
-      "summary": "Implement cart + checkout flow: add/remove items, adjust quantities, and submit an order using authenticated calls.",
+      "id": "REQ-17",
+      "summary": "Refine legacy/invalid generated-asset URL detection so valid existing /assets/generated/*.png URLs are not incorrectly forced to fall back.",
       "acceptanceCriteria": [
-        "Frontend supports adding/removing items and adjusting quantities in a cart before checkout.",
-        "Submitting an order creates a new Order and associated OrderItem records in the backend.",
-        "Only authenticated users can place orders; unauthenticated users are prompted to sign in."
+        "Restaurant and menu item images that already resolve to real files under `/assets/generated/` continue to display, even if they do not use the newer `.dim_*` naming scheme.",
+        "Only known-bad/mismatched patterns (e.g., prior pizza placeholder patterns) are treated as legacy and re-resolved via name mapping/fallback.",
+        "No widespread regression where many items revert to a single placeholder image due to overly broad legacy detection."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/cart/cartTypes.ts",
-          "operation": "create",
-          "description": "Define frontend cart state types and helpers (quantities, selected restaurant constraint, and mapping into backend CartItem inputs) for consistent cart behavior across the UI."
-        },
-        {
-          "path": "frontend/src/cart/CartContext.tsx",
-          "operation": "create",
-          "description": "Create a cart state provider (React context) that supports add/remove/update quantity and clearing cart after successful checkout, with optional local persistence for refresh resilience."
-        },
-        {
-          "path": "frontend/src/hooks/usePlaceOrder.ts",
-          "operation": "create",
-          "description": "Add a React Query mutation hook that submits placeOrder(restaurantId, cartItems) with proper error handling and success behavior (e.g., cache invalidation for orders)."
-        },
-        {
-          "path": "frontend/src/pages/CartPage.tsx",
-          "operation": "create",
-          "description": "Create a cart/checkout page that allows quantity adjustments, removal, shows a subtotal, and triggers order submission. Use shadcn/ui components (e.g., Table or Card layout, Button, AlertDialog for confirm) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Wire the cart provider at an appropriate top-level scope and register a /cart route, ensuring only authenticated users can submit orders (use RequireAuth to prompt sign-in when needed)."
+          "description": "Narrow isLegacyAssetUrl logic so it no longer broadly treats all /assets/generated/*.png (without .dim_) as legacy; instead, only treat known-bad/mismatched patterns (e.g., prior pizza placeholder filenames/patterns) as legacy and allow other existing /assets/generated/ paths to pass through unchanged."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Implement order tracking UI: show a user's orders list and order detail with current status and timestamps, using authorized reads and safe caching.",
+      "id": "REQ-19",
+      "summary": "Update the generated dosa image asset to a higher-quality dosa photo and ensure dosa imagery appears only for the Dosa dish throughout the UI via centralized resolution.",
       "acceptanceCriteria": [
-        "Users can view a list of their orders (most recent first) and open an order detail view.",
-        "Order detail shows status and relevant timestamps (at least created time; optionally status update times).",
-        "Backend prevents users from reading other users' orders."
+        "`dish-dosa.dim_512x512.png` is updated to a clearer, more appetizing dosa image (still visually a dosa).",
+        "No non-dosa menu item displays `dish-dosa.dim_512x512.png` anywhere in the application UI flows (restaurants list/detail, cart, order list/detail)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/backend.d.ts",
+          "path": "frontend/public/assets/generated/dish-dosa.dim_512x512.png",
           "operation": "modify",
-          "description": "Update the generated frontend backend interface typings to include the minimal order-listing and order-detail read capabilities required by the UI (e.g., listing the caller's orders and fetching an individual order's metadata including created time and status history/timestamps), aligned with backend changes."
+          "description": "Replace/update frontend/public/assets/generated/dish-dosa.dim_512x512.png with a higher-quality, more appetizing dosa image (still clearly a dosa)."
         },
         {
-          "path": "frontend/src/hooks/useOrders.ts",
-          "operation": "create",
-          "description": "Add React Query hooks for fetching the authenticated user's orders list (most recent first) with robust loading/error/empty handling and identity-aware query keys."
-        },
-        {
-          "path": "frontend/src/hooks/useOrderDetail.ts",
-          "operation": "create",
-          "description": "Add React Query hooks to fetch order detail (status + timestamps/history) and order items for a given orderId (reusing getAllOrderItems and current-status calls where applicable)."
-        },
-        {
-          "path": "frontend/src/pages/OrdersListPage.tsx",
-          "operation": "create",
-          "description": "Create an orders list page showing recent orders, current status, and basic summary with a link to each order's detail. Use shadcn/ui components (e.g., Card, Badge, Skeleton) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/OrderDetailPage.tsx",
-          "operation": "create",
-          "description": "Create an order detail page that shows current status and relevant timestamps (at least created time), plus the order items list. Include a manual refresh affordance (per non-goal of realtime updates). Use shadcn/ui components (e.g., Badge, Separator, Button) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Wire /orders and /orders/:orderId routes into app navigation and ensure these routes are protected as personal data views (RequireAuth), with graceful handling of authorization errors returned by the backend."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Create a coherent React + TypeScript UI for sign-in, browsing, cart/checkout, orders list, and order detail using Tailwind, shadcn/ui, and React Query.",
-      "acceptanceCriteria": [
-        "All user-facing text is in English.",
-        "Data-fetching views use React Query for loading/error states and caching.",
-        "Navigation between major views is clear and consistent (restaurants -> menu -> cart -> order confirmation; orders -> order detail)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add consistent top navigation (Restaurants, Cart, Orders), route-level layouts, and post-checkout navigation (e.g., redirect to order detail or orders list). Use shadcn/ui components (e.g., NavigationMenu, Button) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/layout/AppLayout.tsx",
-          "operation": "create",
-          "description": "Create a shared layout component for consistent header, content container spacing, and responsive behavior across pages. Use shadcn/ui primitives by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/common/QueryState.tsx",
-          "operation": "create",
-          "description": "Create small reusable UI helpers for React Query loading/error/empty states to keep pages consistent and reduce duplication. Use shadcn/ui components (e.g., Alert, Skeleton) by composition; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Ensure the React Query client configuration and top-level providers are aligned with the final app composition (auth provider, cart provider placement if needed) and remain the single entry point for app wiring."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Apply a consistent food-app visual theme across the frontend (non blue-and-purple primary palette) using Tailwind + CSS variables used by shadcn/ui.",
-      "acceptanceCriteria": [
-        "The UI uses a consistent design system (primary/secondary colors, typography scale, button/input styles) across all screens.",
-        "The chosen palette is not predominantly blue-and-purple."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "create",
-          "description": "Create the global Tailwind + CSS variables stylesheet used by shadcn/ui theme tokens, selecting a distinct food-appropriate palette (e.g., warm amber/orange primary with neutral backgrounds) that is not predominantly blue-and-purple, and defining consistent typography/spacing defaults."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Verify Tailwind theme tokens map to the CSS variables used in the new index.css and ensure content scanning paths and theme extensions support consistent styling across all pages."
-        },
-        {
-          "path": "frontend/src/components/layout/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Apply consistent layout spacing and typography scale via Tailwind utility classes so the theme is visually coherent across all screens."
+          "description": "Confirm the centralized dish image helper resolves dosa imagery only when the normalized dish name matches \"dosa\"; all other dishes must not fall back to frontend/public/assets/generated/dish-dosa.dim_512x512.png."
         }
       ]
     }

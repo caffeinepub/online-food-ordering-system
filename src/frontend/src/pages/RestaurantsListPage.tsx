@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { LoadingSkeleton, ErrorState, EmptyState } from '../components/common/QueryState';
 import { ChevronRight, Store } from 'lucide-react';
+import ImageWithFallback from '../components/common/ImageWithFallback';
+import { getRestaurantImageUrl, FALLBACK_IMAGES } from '../utils/imageFallbacks';
 
 export default function RestaurantsListPage() {
   const navigate = useNavigate();
@@ -47,9 +49,17 @@ export default function RestaurantsListPage() {
         {restaurants.map((restaurant) => (
           <Card
             key={restaurant.id.toString()}
-            className="hover:shadow-lg transition-shadow cursor-pointer group"
+            className="hover:shadow-lg transition-shadow cursor-pointer group overflow-hidden"
             onClick={() => navigate({ to: '/restaurants/$restaurantId', params: { restaurantId: restaurant.id.toString() } })}
           >
+            <div className="relative h-48 w-full overflow-hidden bg-muted">
+              <ImageWithFallback
+                src={getRestaurantImageUrl(restaurant.imageUrl, restaurant.name)}
+                alt={restaurant.name}
+                fallbackSrc={FALLBACK_IMAGES.restaurant}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex-1">

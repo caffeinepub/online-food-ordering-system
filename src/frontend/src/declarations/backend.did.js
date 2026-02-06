@@ -33,12 +33,14 @@ export const Restaurant = IDL.Record({
   'id' : IDL.Nat,
   'name' : IDL.Text,
   'description' : IDL.Text,
+  'imageUrl' : IDL.Text,
 });
 export const MenuItem = IDL.Record({
   'id' : IDL.Nat,
   'name' : IDL.Text,
   'description' : IDL.Text,
   'restaurantId' : IDL.Nat,
+  'imageUrl' : IDL.Text,
   'price' : IDL.Nat,
 });
 export const CartItem = IDL.Record({
@@ -95,12 +97,14 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Nat,
     'name' : IDL.Text,
     'description' : IDL.Text,
+    'imageUrl' : IDL.Text,
   });
   const MenuItem = IDL.Record({
     'id' : IDL.Nat,
     'name' : IDL.Text,
     'description' : IDL.Text,
     'restaurantId' : IDL.Nat,
+    'imageUrl' : IDL.Text,
     'price' : IDL.Nat,
   });
   const CartItem = IDL.Record({ 'quantity' : IDL.Nat, 'menuItemId' : IDL.Nat });

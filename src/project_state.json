@@ -1,53 +1,367 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Online food ordering system where customers register/log in, browse restaurants and menus, place orders, and track order status, using a normalized relational database design (1NF–3NF) with PK/FK and one-to-many relationships.",
+  "projectStateVersion": 28,
+  "summary": "ICP full-stack food ordering starter app (React/Vite + Tailwind/shadcn-ui with Internet Identity auth; Motoko backend) now includes expanded seeded restaurant/menu data (Tamil Nadu + seafood items), restaurant and menu-item images via `imageUrl` fields with state migration/backfill, UI rendering of photos across restaurant list/detail pages with fallbacks, and an app-wide food-themed background.",
+  "architectural_notes": [
+    "Frontend: React + Vite + Tailwind with shadcn-ui component library scaffolded and available for feature UI.",
+    "Auth: Internet Identity used for login; authenticated UI enforced via RequireAuth and identity/actor hooks.",
+    "Backend: Motoko canister includes modular authorization/access-control (mixin-style) integrated into main canister.",
+    "Data access: Frontend uses typed canister bindings (.did -> TS) and a central actor hook for backend calls.",
+    "State management: Cart is managed client-side via React context; orders/restaurants fetched via dedicated hooks.",
+    "Images: Restaurant and MenuItem now include `imageUrl` fields end-to-end (seed/model/IDL/bindings/UI) with a conditional state migration to backfill pre-existing records.",
+    "UI: Restaurants list and restaurant detail pages render image assets via a shared image component with fallback handling.",
+    "Theming: App shell applies a global food-themed background with light/dark mode readability.",
+    "Build template: `build-template/` now contains a complete multi-package scaffold (frontend + backend) with pnpm workspace config, extensive shadcn-ui components, custom ESLint rules, and image tooling scripts (resize/prune) for maintaining asset sets."
+  ],
+  "known_issues": [
+    "Some food/menu item images do not match their current item names (imageUrl/mapping mismatch), requiring immediate correction.",
+    "Restaurant UI still shows incorrect images for some items/restaurants (imageUrl/mapping mismatch not fully resolved).",
+    "Dosa menu item images are incorrect/need replacement; ensure correct images are used consistently across the application."
+  ],
+  "isFixRequest": true,
+  "imageRequirements": "## Required Images\n- Generic plated-food placeholder image (dish-generic.dim_512x512.png)\n\n## Edit Images\n- Replace the dosa dish image with a higher-quality, more appetizing dosa photo (dish-dosa.dim_512x512.png > dish-dosa.dim_512x512.png)",
+  "generatedImages": [
+    {
+      "filename": "frontend/public/assets/generated/food-background.dim_1920x1080.png",
+      "description": "Food-themed background pattern for global app shell",
+      "targetWidth": 1920,
+      "targetHeight": 1080
+    },
+    {
+      "filename": "frontend/public/assets/generated/restaurant-tamil-mess-cover.dim_1200x600.png",
+      "description": "Restaurant cover image (Tamil/South Indian)",
+      "targetWidth": 1200,
+      "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/restaurant-coastal-seafood-cover.dim_1200x600.png",
+      "description": "Restaurant cover image (seafood)",
+      "targetWidth": 1200,
+      "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/restaurant-north-indian-cover.dim_1200x600.png",
+      "description": "Restaurant cover image (North Indian)",
+      "targetWidth": 1200,
+      "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/restaurant-pizza-cover.dim_1200x600.png",
+      "description": "Restaurant cover image (pizza)",
+      "targetWidth": 1200,
+      "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/restaurant-sushi-cover.dim_1200x600.png",
+      "description": "Restaurant cover image (sushi)",
+      "targetWidth": 1200,
+      "targetHeight": 600
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-dosa.dim_512x512.png",
+      "description": "Menu item image (dosa)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-idly.dim_512x512.png",
+      "description": "Menu item image (idly)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-vada.dim_512x512.png",
+      "description": "Menu item image (vada)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-veg-meals.dim_512x512.png",
+      "description": "Menu item image (veg meals)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-nonveg-meals.dim_512x512.png",
+      "description": "Menu item image (non-veg meals)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-chicken-chettinad.dim_512x512.png",
+      "description": "Menu item image (Chicken Chettinad)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-chicken-65.dim_512x512.png",
+      "description": "Menu item image (Chicken 65)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-pepper-chicken.dim_512x512.png",
+      "description": "Menu item image (pepper chicken)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    },
+    {
+      "filename": "frontend/public/assets/generated/dish-mutton-kuzhambu.dim_512x512.png",
+      "description": "Menu item image (mutton kuzhambu)",
+      "targetWidth": 512,
+      "targetHeight": 512
+    }
+  ],
   "existing_features": [
     {
-      "id": "feature-implement-user-authentication-using-internet-identity-and-provide-a-basic-user-profile-record-in-the-backend-that-is-created-updated-on-first-login-keyed-by-the-caller-principal",
-      "title": "Implement user authentication using Internet Identity, and provide a basic user profile record in the backend that is created/updated on first login (keyed by the caller Principal).",
-      "reqIds": [
-        "REQ-1"
+      "id": "IF-1",
+      "title": "Internet Identity authentication UI and session handling",
+      "synonyms": [
+        "II login",
+        "AuthButton",
+        "RequireAuth"
       ],
+      "description": "Frontend supports signing in/out with Internet Identity, protects authenticated routes/components, and exposes identity/actor via hooks.",
+      "reqIds": [],
       "version": 1
     },
     {
-      "id": "feature-provide-backend-query-apis-to-browse-restaurants-and-their-menus-including-list-restaurants-get-restaurant-details-and-list-menu-items-for-a-restaurant",
-      "title": "Provide backend query APIs to browse restaurants and their menus, including: list restaurants, get restaurant details, and list menu items for a restaurant.",
+      "id": "IF-2",
+      "title": "User profile setup flow",
+      "synonyms": [
+        "ProfileSetupDialog",
+        "current user profile"
+      ],
+      "description": "Frontend prompts/collects initial user profile information and loads current user profile state for authenticated users.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-3",
+      "title": "Restaurants browsing and detail views",
+      "synonyms": [
+        "RestaurantsListPage",
+        "RestaurantDetailPage"
+      ],
+      "description": "Frontend provides a restaurants list and restaurant detail page, with data-fetching hooks to load restaurant data from backend.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-4",
+      "title": "Cart management (client-side)",
+      "synonyms": [
+        "CartContext",
+        "CartPage"
+      ],
+      "description": "Client-side cart state management with add/update/remove items and a dedicated cart page.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "Order placement workflow",
+      "synonyms": [
+        "usePlaceOrder"
+      ],
+      "description": "Frontend can submit an order (from cart) to the backend using a dedicated hook and query-state handling.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "Orders list and order detail views",
+      "synonyms": [
+        "OrdersListPage",
+        "OrderDetailPage",
+        "useOrders",
+        "useOrderDetail"
+      ],
+      "description": "Authenticated users can view a list of their orders and drill into individual order details.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "Motoko backend canister with authorization/access control mixins",
+      "synonyms": [
+        "MixinAuthorization",
+        "access-control"
+      ],
+      "description": "Backend includes reusable authorization/access-control components integrated into the Motoko canister entrypoint.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-8",
+      "title": "Typed backend bindings and actor creation in frontend",
+      "synonyms": [
+        "backend.did bindings",
+        "useActor"
+      ],
+      "description": "Frontend includes generated/checked .did TypeScript declarations and utilities/hooks to create a typed backend actor for calls.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-9",
+      "title": "Application layout and shared UI primitives",
+      "synonyms": [
+        "AppLayout",
+        "QueryState",
+        "shadcn-ui"
+      ],
+      "description": "Frontend includes a main app layout, query/loading/error state component, and a large set of shadcn-ui components wired into the project.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-10",
+      "title": "Build/deploy template for ICP full-stack app",
+      "synonyms": [
+        "build-template",
+        "Dockerfile",
+        "deploy.sh",
+        "canister.yaml"
+      ],
+      "description": "Repository includes an ICP build/deploy template (docker/build scripts, canister configs, workspace/pnpm config) for the full-stack app.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-11",
+      "title": "Backend `imageUrl` support for restaurants and menu items with migration/backfill",
+      "synonyms": [
+        "Restaurant.imageUrl",
+        "MenuItem.imageUrl",
+        "state migration",
+        "backfill"
+      ],
+      "description": "Motoko backend data model now includes `imageUrl : Text` for `Restaurant` and `MenuItem`, returns these fields from restaurant/menu query APIs, and includes a conditional migration to preserve existing canister state while backfilling missing `imageUrl` values.",
       "reqIds": [
+        "REQ-1",
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-order-placement-end-to-end-users-can-add-menu-items-to-a-cart-specify-quantities-submit-an-order-and-the-backend-persists-the-order-and-order-items-linked-to-the-authenticated-user",
-      "title": "Implement order placement end-to-end: users can add menu items to a cart, specify quantities, submit an order, and the backend persists the order and order items linked to the authenticated user.",
+      "id": "IF-12",
+      "title": "Expanded seeded restaurant and menu data (Tamil Nadu + seafood additions)",
+      "synonyms": [
+        "seed data expansion",
+        "Tamil Nadu dishes",
+        "seafood dishes",
+        "ID counters"
+      ],
+      "description": "Seeded data now includes additional restaurants and significantly expanded menus including Tamil Nadu veg/non-veg/meals and Chettinad-style items plus a seafood set; seed ID counters are updated to remain correct after seeding.",
       "reqIds": [
-        "REQ-4"
+        "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-order-tracking-define-an-order-status-lifecycle-e-g-pending-confirmed-preparing-outfordelivery-delivered-cancelled-and-provide-backend-apis-and-frontend-ui-to-view-a-user-s-orders-and-track-each-order-s-current-status-and-history-timestamps",
-      "title": "Implement order tracking: define an order status lifecycle (e.g., Pending, Confirmed, Preparing, OutForDelivery, Delivered, Cancelled) and provide backend APIs and frontend UI to view a user's orders and track each order’s current status and history/timestamps.",
+      "id": "IF-13",
+      "title": "Restaurant and menu item photos rendered in UI with fallbacks",
+      "synonyms": [
+        "RestaurantsList photos",
+        "RestaurantDetail photos",
+        "ImageWithFallback"
+      ],
+      "description": "Frontend now displays restaurant photos in the restaurants list and restaurant + menu item photos in the restaurant detail menu item cards using `imageUrl`, with a reusable fallback image component/logic; cart add/remove behavior remains intact.",
       "reqIds": [
+        "REQ-4",
         "REQ-5"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-a-coherent-frontend-ui-for-the-core-flows-sign-in-browse-restaurants-view-menu-cart-checkout-orders-list-order-detail-using-react-typescript-tailwind-shadcn-ui-components-and-react-query-for-data-fetching-caching",
-      "title": "Create a coherent frontend UI for the core flows (sign in, browse restaurants, view menu, cart/checkout, orders list, order detail) using React + TypeScript, Tailwind, shadcn/ui components, and React Query for data fetching/caching.",
+      "id": "IF-14",
+      "title": "App-wide food-themed background styling (light/dark readable)",
+      "synonyms": [
+        "global background",
+        "app shell background"
+      ],
+      "description": "Frontend applies a global food-themed background across the application while maintaining readability for text/components in both light and dark mode.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-15",
+      "title": "Expanded build-template workspace (React/Vite + shadcn-ui) with tooling scripts and lint rules",
+      "synonyms": [
+        "build-template/src/frontend",
+        "build-template/src/backend",
+        "resize-images.js",
+        "prune-unused-images.js",
+        "eslint-rules"
+      ],
+      "description": "Repository now includes a more fully populated `build-template/` workspace containing a React/Vite frontend scaffold with shadcn-ui components, associated configs (pnpm workspace, TS/Vite/PostCSS/Tailwind), custom ESLint rules, and helper scripts for image resizing and pruning unused images alongside backend canister template files.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-add-new-static-image-assets-for-the-burger-joint-and-pasta-house-restaurants-and-their-menu-items-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-the-image-requirements-section",
+      "title": "Add new static image assets for the Burger Joint and Pasta House restaurants and their menu items under `frontend/public/assets/generated`, using the exact filenames specified in the Image Requirements section.",
       "reqIds": [
         "REQ-7"
       ],
       "version": 1
     },
     {
-      "id": "feature-apply-a-distinct-consistent-visual-theme-across-the-frontend-colors-typography-spacing-and-component-styling-appropriate-for-a-food-ordering-app-do-not-use-a-blue-and-purple-primary-palette-unless-explicitly-requested",
-      "title": "Apply a distinct, consistent visual theme across the frontend (colors, typography, spacing, and component styling) appropriate for a food ordering app; do not use a blue-and-purple primary palette unless explicitly requested.",
+      "id": "feature-update-frontend-image-resolution-logic-so-pasta-house-and-burger-joint-and-their-menu-items-resolve-to-the-new-generated-image-filenames-including-name-based-fallbacks-e-g-if-an-older-backend-url-is-present-or-empty",
+      "title": "Update frontend image resolution logic so Pasta House and Burger Joint (and their menu items) resolve to the new generated image filenames, including name-based fallbacks (e.g., if an older backend URL is present or empty).",
       "reqIds": [
-        "REQ-8"
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-all-seeded-menu-items-and-ensure-each-item-s-imageurl-resolves-to-an-image-that-matches-the-current-name-no-cross-item-mismatches-for-pizza-palace-items-in-particular-stop-using-unrelated-placeholder-images-e-g-garlic-bread-for-pizza-dishes",
+      "title": "Audit all seeded menu items and ensure each item’s `imageUrl` resolves to an image that matches the current `name` (no cross-item mismatches). For Pizza Palace items in particular, stop using unrelated placeholder images (e.g., garlic bread) for pizza dishes.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-extend-frontend-name-based-dish-image-resolution-so-that-when-a-menu-item-s-name-changes-the-displayed-image-follows-the-updated-name-reliably-including-trimming-case-normalization-and-handling-common-punctuation-parentheticals",
+      "title": "Add/extend frontend name-based dish image resolution so that when a menu item’s name changes, the displayed image follows the updated name reliably (including trimming/case normalization and handling common punctuation/parentheticals).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-ui-consistently-uses-the-centralized-image-resolution-helpers-for-dish-and-restaurant-images-so-fixes-in-fallback-mappings-apply-everywhere-images-are-rendered",
+      "title": "Ensure the UI consistently uses the centralized image resolution helpers for dish and restaurant images (so fixes in fallback mappings apply everywhere images are rendered).",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-dish-image-fallback-behavior-so-non-dosa-menu-items-never-display-the-dosa-image-just-because-an-image-url-is-missing-legacy-use-a-neutral-generic-dish-fallback-instead-and-only-show-the-dosa-image-when-the-dish-name-is-actually-dosa",
+      "title": "Update frontend dish image fallback behavior so non-dosa menu items never display the dosa image just because an image URL is missing/legacy; use a neutral generic dish fallback instead, and only show the dosa image when the dish name is actually \"Dosa\".",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-frontend-legacy-invalid-image-url-detection-in-frontend-src-utils-imagefallbacks-ts-so-that-valid-existing-static-asset-urls-are-not-incorrectly-treated-as-legacy-and-forced-to-fall-back-to-the-generic-placeholder-which-previously-caused-dosa-to-appear-widely",
+      "title": "Refine the frontend legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so that valid existing static asset URLs are not incorrectly treated as legacy and forced to fall back to the generic placeholder (which previously caused dosa to appear widely).",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-dosa-menu-item-image-itself-is-high-quality-and-visually-correct-by-updating-the-existing-generated-dosa-asset-and-ensure-all-occurrences-of-the-dosa-image-in-the-ui-correspond-to-the-dosa-dish-only",
+      "title": "Ensure the dosa menu item image itself is high-quality and visually correct by updating the existing generated dosa asset, and ensure all occurrences of the dosa image in the UI correspond to the Dosa dish only.",
+      "reqIds": [
+        "REQ-19"
       ],
       "version": 1
     }
@@ -55,59 +369,71 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "User registration and login",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Browse restaurants and menus",
+      "summary": "Update restaurant/menu images to use the Burger Joint and Pasta House image assets (update relevant imageUrl mappings/UI as needed).",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Place orders",
-      "reqIds": [],
+      "summary": "Update backend seeded `imageUrl` values so Burger Joint (restaurantId=5) and Pasta House (restaurantId=4), plus their menu items (menuItemIds 16–22, including 19), point to the new generated image asset paths (the new `.dim_*.png` filenames under `/assets/generated/`).",
+      "reqIds": [
+        "REQ-8"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Track order status",
-      "reqIds": [],
+      "summary": "Implement a state upgrade migration that updates existing persisted records for Pasta House and Burger Joint (restaurants and their menu items) to the new `imageUrl` values even if older `imageUrl` values are already present, so upgraded canisters reflect the new images.",
+      "reqIds": [
+        "REQ-9"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Design relational database schema using PK/FK, one-to-many relationships, and normalization (1NF–3NF)",
+      "summary": "Change/update the pizza-related images (restaurant cover and/or pizza menu item images).",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-7",
-      "summary": "Design and implement backend data models that reflect normalized (1NF–3NF) entities for an online food ordering domain, using explicit IDs and references to represent primary/foreign keys and one-to-many relationships: Restaurant -> MenuItem (one-to-many) and User -> Order (one-to-many), with Order -> OrderItem (one-to-many).",
+      "id": "AR-6",
+      "summary": "Fix mismatched menu item images so food items display images that match their (possibly updated) names; update any necessary imageUrl mappings and/or seeded data so changes apply immediately.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update backend seeded `imageUrl` values for any menu items currently pointing at wrong/legacy filenames so they directly reference the correct generated static assets under `/assets/generated/` using the new `.dim_*.png` filenames (especially Pizza Palace menu items).",
       "reqIds": [
-        "REQ-2"
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement a conditional Motoko state upgrade migration that updates persisted `MenuItem.imageUrl` values to the corrected URLs even when older values are already present, so upgraded canisters immediately reflect the fixed images.",
+      "reqIds": [
+        "REQ-14"
       ],
       "status": "pending"
     },
     {
       "id": "AR-11",
-      "summary": "Seed the backend with a small set of sample restaurants and menu items so the app is usable immediately after deployment without requiring an admin UI.",
+      "summary": "Remove/replace the current dosa menu item images and ensure dosa (and other dishes across the app) use correct, high-quality matching images everywhere they appear.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Update backend seeded `MenuItem.imageUrl` values for South Indian items so they point to the existing `.dim_*` generated assets (at minimum: Dosa, Idly, Vada, Vegetarian Meals, Non-Veg Meals, Chicken Chettinad, Chicken 65, Pepper Chicken, Mutton Kuzhambu/Chettinad Mutton Kuzhambu), and implement a conditional state upgrade migration to update persisted records to these corrected URLs on upgrade.",
       "reqIds": [
-        "REQ-6"
+        "REQ-18"
       ],
       "status": "pending"
     }
   ],
-  "architectural_notes": [
-    "Use relational database tables with primary/foreign keys to model users, restaurants, menus/items, orders, and order statuses.",
-    "Model one-to-many relationships (e.g., restaurant->menu items, order->order items).",
-    "Apply basic normalization (1NF–3NF) to reduce redundancy and maintain data integrity."
-  ],
-  "known_issues": [],
-  "isFixRequest": false,
-  "projectName": "Online Food Ordering System",
+  "gameProjectType": "none",
+  "projectName": "Add restaurant & menu item photos, Tamil Nadu + seafood dishes, and food-themed background",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
