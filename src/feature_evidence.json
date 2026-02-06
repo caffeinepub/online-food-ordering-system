@@ -2,11 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-frontend-dish-image-fallback-behavior-so-non-dosa-menu-items-never-display-the-dosa-image-just-because-an-image-url-is-missing-legacy-use-a-neutral-generic-dish-fallback-instead-and-only-show-the-dosa-image-when-the-dish-name-is-actually-dosa",
-      "featureTitle": "Update frontend dish image fallback behavior so non-dosa menu items never display the dosa image just because an image URL is missing/legacy; use a neutral generic dish fallback instead, and only show the dosa image when the dish name is actually \"Dosa\".",
-      "files": [
-        "frontend/src/utils/imageFallbacks.ts"
-      ],
+      "featureId": "feature-add-new-static-image-assets-for-pizza-palace-restaurant-cover-its-menu-items-under-frontend-public-assets-generated-using-consistent-dim-filenames-matching-the-existing-generated-asset-naming-conventions-used-for-other-restaurants",
+      "featureTitle": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, matching the existing generated-asset naming conventions used for other restaurants.",
+      "files": [],
       "components": [
         "authorization@4.0.0",
         "core-infrastructure@1.0.2",
@@ -16,13 +14,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-16"
+        "REQ-28"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-refine-the-frontend-legacy-invalid-image-url-detection-in-frontend-src-utils-imagefallbacks-ts-so-that-valid-existing-static-asset-urls-are-not-incorrectly-treated-as-legacy-and-forced-to-fall-back-to-the-generic-placeholder-which-previously-caused-dosa-to-appear-widely",
-      "featureTitle": "Refine the frontend legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so that valid existing static asset URLs are not incorrectly treated as legacy and forced to fall back to the generic placeholder (which previously caused dosa to appear widely).",
+      "featureId": "feature-update-centralized-frontend-image-resolution-so-pizza-palace-restaurant-name-pizza-palace-and-its-menu-items-margherita-pizza-pepperoni-pizza-hawaiian-pizza-garlic-breadsticks-caesar-salad-resolve-to-the-newly-generated-static-assets-by-name-based-mapping-and-are-displayed-consistently-anywhere-restaurant-menu-images-render",
+      "featureTitle": "Update centralized frontend image resolution so Pizza Palace (restaurant name \"Pizza Palace\") and its menu items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to the newly generated static assets by name-based mapping, and are displayed consistently anywhere restaurant/menu images render.",
       "files": [
         "frontend/src/utils/imageFallbacks.ts"
       ],
@@ -35,26 +33,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-dosa-menu-item-image-itself-is-high-quality-and-visually-correct-by-updating-the-existing-generated-dosa-asset-and-ensure-all-occurrences-of-the-dosa-image-in-the-ui-correspond-to-the-dosa-dish-only",
-      "featureTitle": "Ensure the dosa menu item image itself is high-quality and visually correct by updating the existing generated dosa asset, and ensure all occurrences of the dosa image in the UI correspond to the Dosa dish only.",
-      "files": [
-        "frontend/src/utils/imageFallbacks.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-19"
+        "REQ-29"
       ],
       "confidence": "high"
     }

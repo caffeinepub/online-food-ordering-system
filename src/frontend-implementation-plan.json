@@ -1,67 +1,61 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix dish image fallbacks so dosa is only shown for Dosa and improve legacy URL detection",
+  "title": "Add Pizza Palace generated images and wire them into centralized image resolution",
   "requirements": [
     {
-      "id": "REQ-16",
-      "summary": "Change dish image fallback so missing/invalid dish images use a neutral generic placeholder, and only show the dosa image when the dish name resolves to Dosa via the centralized helper.",
+      "id": "REQ-28",
+      "summary": "Add new generated static image assets for Pizza Palace cover and its 5 menu items under frontend/public/assets/generated/ using consistent .dim_* filenames.",
       "acceptanceCriteria": [
-        "If a menu item has an unknown/missing/invalid imageUrl, the UI shows a generic dish placeholder (not dosa).",
-        "Menu item cards in Restaurant Detail, cart items, and order detail views do not show dosa imagery unless the item name is Dosa (case-insensitive after normalization).",
-        "The centralized dish image helper continues to be the single source of truth for dish image resolution across the app."
+        "The following new image files exist under `frontend/public/assets/generated/` with the exact filenames specified in Image Requirements.",
+        "Each image is the correct dimension based on its filename suffix (1200x600 for the cover; 512x512 for dish images)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/imageFallbacks.ts",
-          "operation": "modify",
-          "description": "Update FALLBACK_IMAGES.dish to point to the new neutral placeholder (frontend/public/assets/generated/dish-generic.dim_512x512.png), and ensure getDishImageUrl keeps mapping the normalized dish name \"dosa\" to frontend/public/assets/generated/dish-dosa.dim_512x512.png while all other unknown/missing/invalid cases resolve to the generic placeholder."
-        },
-        {
-          "path": "frontend/src/pages/RestaurantDetailPage.tsx",
-          "operation": "modify",
-          "description": "Ensure dish images for menu item cards continue to use getDishImageUrl(item.imageUrl, item.name) with the centralized fallback behavior (generic placeholder by default, dosa only for actual Dosa), and that the fallbackSrc passed to ImageWithFallback aligns with the updated FALLBACK_IMAGES.dish."
-        },
-        {
-          "path": "frontend/public/assets/generated/dish-generic.dim_512x512.png",
+          "path": "frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png",
           "operation": "create",
-          "description": "Add the required generated asset: frontend/public/assets/generated/dish-generic.dim_512x512.png (Generic plated-food placeholder image)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "summary": "Refine legacy/invalid generated-asset URL detection so valid existing /assets/generated/*.png URLs are not incorrectly forced to fall back.",
-      "acceptanceCriteria": [
-        "Restaurant and menu item images that already resolve to real files under `/assets/generated/` continue to display, even if they do not use the newer `.dim_*` naming scheme.",
-        "Only known-bad/mismatched patterns (e.g., prior pizza placeholder patterns) are treated as legacy and re-resolved via name mapping/fallback.",
-        "No widespread regression where many items revert to a single placeholder image due to overly broad legacy detection."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/imageFallbacks.ts",
-          "operation": "modify",
-          "description": "Narrow isLegacyAssetUrl logic so it no longer broadly treats all /assets/generated/*.png (without .dim_) as legacy; instead, only treat known-bad/mismatched patterns (e.g., prior pizza placeholder filenames/patterns) as legacy and allow other existing /assets/generated/ paths to pass through unchanged."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Update the generated dosa image asset to a higher-quality dosa photo and ensure dosa imagery appears only for the Dosa dish throughout the UI via centralized resolution.",
-      "acceptanceCriteria": [
-        "`dish-dosa.dim_512x512.png` is updated to a clearer, more appetizing dosa image (still visually a dosa).",
-        "No non-dosa menu item displays `dish-dosa.dim_512x512.png` anywhere in the application UI flows (restaurants list/detail, cart, order list/detail)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/dish-dosa.dim_512x512.png",
-          "operation": "modify",
-          "description": "Replace/update frontend/public/assets/generated/dish-dosa.dim_512x512.png with a higher-quality, more appetizing dosa image (still clearly a dosa)."
+          "description": "Add the generated Pizza Palace restaurant cover static asset at `frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png` (1200x600)."
         },
         {
+          "path": "frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png` (512x512)."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png` (512x512)."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png` (512x512)."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png` (512x512)."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated dish static asset at `frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png` (512x512)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "summary": "Update centralized image mapping so Pizza Palace and its menu items resolve by name to the new generated static assets wherever images render.",
+      "acceptanceCriteria": [
+        "In the restaurants list and restaurant detail views, Pizza Palace uses the new Pizza Palace cover image.",
+        "In the Pizza Palace restaurant detail view, each of the 5 Pizza Palace menu items displays its corresponding new dish image (not the generic dish fallback).",
+        "Image resolution changes are made via the centralized helpers in `frontend/src/utils/imageFallbacks.ts` (no duplicate ad-hoc mapping elsewhere)."
+      ],
+      "file_operations": [
+        {
           "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Confirm the centralized dish image helper resolves dosa imagery only when the normalized dish name matches \"dosa\"; all other dishes must not fall back to frontend/public/assets/generated/dish-dosa.dim_512x512.png."
+          "description": "Update centralized name-based mappings so restaurant name \"Pizza Palace\" resolves to `frontend/public/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png` and dish names (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to `frontend/public/assets/generated/dish-margherita-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-pepperoni-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-hawaiian-pizza.dim_512x512.png`, `frontend/public/assets/generated/dish-garlic-breadsticks.dim_512x512.png`, `frontend/public/assets/generated/dish-caesar-salad.dim_512x512.png`, ensuring all UI uses the centralized helpers (no ad-hoc mapping elsewhere)."
         }
       ]
     }

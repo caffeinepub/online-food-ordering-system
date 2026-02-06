@@ -6,14 +6,13 @@ import Array "mo:core/Array";
 import Order "mo:core/Order";
 import List "mo:core/List";
 import Runtime "mo:core/Runtime";
+
 import Int "mo:core/Int";
 import Principal "mo:core/Principal";
 import Migration "migration";
-
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
-// Use `with migration` clause to apply migration function
 (with migration = Migration.run)
 actor {
   // Authorization Mixin
@@ -109,7 +108,7 @@ actor {
       id = 2;
       name = "Pizza Palace";
       description = "Delicious pizzas and more!";
-      imageUrl = "/assets/generated/pizza-palace.png";
+      imageUrl = "/assets/generated/pizza-palace.dim_512x512.png";
     },
   );
 
@@ -166,7 +165,7 @@ actor {
       name = "Chicken Tikka Masala";
       description = "Creamy tomato gravy with tender chicken pieces.";
       price = 1500;
-      imageUrl = "/assets/generated/chicken-tikka-masala.png";
+      imageUrl = "/assets/generated/chicken-tikka-masala.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -177,7 +176,7 @@ actor {
       name = "Paneer Makhani";
       description = "Soft cottage cheese cubes in butter-rich sauce.";
       price = 1200;
-      imageUrl = "/assets/generated/paneer-makhani.png";
+      imageUrl = "/assets/generated/paneer-makhani.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -188,7 +187,7 @@ actor {
       name = "Jeera Rice";
       description = "Basmati rice with roasted cumin flavor.";
       price = 800;
-      imageUrl = "/assets/generated/jeera-rice.png";
+      imageUrl = "/assets/generated/jeera-rice.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -199,7 +198,7 @@ actor {
       name = "Butter Naan (2 pcs)";
       description = "Leavened bread cooked in tandoor with butter.";
       price = 350;
-      imageUrl = "/assets/generated/butter-naan.png";
+      imageUrl = "/assets/generated/butter-naan.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -210,7 +209,7 @@ actor {
       name = "Gajar Halwa (Dessert)";
       description = "Carrot pudding with nuts and cardamom.";
       price = 600;
-      imageUrl = "/assets/generated/gajar-halwa.png";
+      imageUrl = "/assets/generated/gajar-halwa.dim_512x512.png";
     },
   );
 
@@ -223,7 +222,7 @@ actor {
       name = "Margherita Pizza";
       description = "Classic pizza with tomato, mozzarella, basil.";
       price = 1100;
-      imageUrl = "/assets/generated/margherita-pizza.png";
+      imageUrl = "/assets/generated/margherita-pizza.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -234,7 +233,7 @@ actor {
       name = "Pepperoni Pizza";
       description = "Pepperoni, cheese, garlic-butter crust.";
       price = 1400;
-      imageUrl = "/assets/generated/pepperoni-pizza.png";
+      imageUrl = "/assets/generated/pepperoni-pizza.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -245,7 +244,7 @@ actor {
       name = "Hawaiian Pizza";
       description = "Ham, pineapple, cheese.";
       price = 1300;
-      imageUrl = "/assets/generated/hawaiian-pizza.png";
+      imageUrl = "/assets/generated/hawaiian-pizza.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -256,7 +255,7 @@ actor {
       name = "Garlic Breadsticks";
       description = "Crispy breadsticks with garlic parmesan butter.";
       price = 400;
-      imageUrl = "/assets/generated/garlic-bread-pizza.png";
+      imageUrl = "/assets/generated/garlic-bread.dim_512x512.png";
     },
   );
   menuItems.add(
@@ -267,7 +266,7 @@ actor {
       name = "Caesar Salad";
       description = "Romaine lettuce, caesar dressing, croutons.";
       price = 650;
-      imageUrl = "/assets/generated/salad-pizza.png";
+      imageUrl = "/assets/generated/caesar-salad.dim_512x512.png";
     },
   );
 
@@ -896,3 +895,4 @@ actor {
     orders.add(orderId, updatedOrder);
   };
 };
+

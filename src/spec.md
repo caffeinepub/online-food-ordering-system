@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Stop dosa imagery from being used as a generic placeholder and ensure each dish shows the correct image across the app.
+**Goal:** Add and wire up new static image assets for the Pizza Palace restaurant and its existing menu items so they display consistently across the app and are persisted via updated backend seed and migration.
 
 **Planned changes:**
-- Update the centralized frontend dish-image resolution so missing/invalid menu-item image URLs use a neutral generic dish placeholder, and only resolve to the dosa image when the dish name is actually “Dosa” (case-insensitive, normalized).
-- Refine legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` to avoid incorrectly treating valid `/assets/generated/` URLs as legacy and forcing fallback.
-- Update backend seed data for specified South Indian menu items so `MenuItem.imageUrl` points to the existing `.dim_*` generated assets, and add an upgrade migration to correct persisted records on canister upgrade.
-- Replace the existing generated dosa asset with a clearer, more appetizing dosa image, ensuring it appears only for the Dosa dish throughout the UI (restaurant detail, cart, order list/detail).
+- Add new Pizza Palace cover and dish images under `frontend/public/assets/generated/` using the required `.dim_*` filenames and dimensions.
+- Update the centralized image mapping in `frontend/src/utils/imageFallbacks.ts` so Pizza Palace and its 5 menu items resolve to the new static assets anywhere images render.
+- Update backend seed data in `backend/main.mo` so Pizza Palace (restaurantId=2) and menuItemIds 6–10 point to the new `/assets/generated/*.dim_*` imageUrl paths on fresh deploy.
+- Extend `backend/migration.mo` upgrade logic to overwrite any existing persisted Pizza Palace restaurant/menu `imageUrl` values (restaurantId=2, menuItemIds 6–10) with the new asset paths.
 
-**User-visible outcome:** Menu items no longer show dosa imagery unless the item is Dosa; items with missing/bad image URLs show a generic dish placeholder, and South Indian dishes display their correct seeded images consistently (including after upgrades).
+**User-visible outcome:** Pizza Palace shows the new cover image in restaurant lists/details, and its 5 menu items show their specific new dish images (instead of a generic fallback), including after upgrading an existing deployment.

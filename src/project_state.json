@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 28,
+  "projectStateVersion": 36,
   "summary": "ICP full-stack food ordering starter app (React/Vite + Tailwind/shadcn-ui with Internet Identity auth; Motoko backend) now includes expanded seeded restaurant/menu data (Tamil Nadu + seafood items), restaurant and menu-item images via `imageUrl` fields with state migration/backfill, UI rendering of photos across restaurant list/detail pages with fallbacks, and an app-wide food-themed background.",
   "architectural_notes": [
     "Frontend: React + Vite + Tailwind with shadcn-ui component library scaffolded and available for feature UI.",
@@ -11,15 +11,17 @@
     "Images: Restaurant and MenuItem now include `imageUrl` fields end-to-end (seed/model/IDL/bindings/UI) with a conditional state migration to backfill pre-existing records.",
     "UI: Restaurants list and restaurant detail pages render image assets via a shared image component with fallback handling.",
     "Theming: App shell applies a global food-themed background with light/dark mode readability.",
-    "Build template: `build-template/` now contains a complete multi-package scaffold (frontend + backend) with pnpm workspace config, extensive shadcn-ui components, custom ESLint rules, and image tooling scripts (resize/prune) for maintaining asset sets."
+    "Build template: `build-template/` now contains a complete multi-package scaffold (frontend + backend) with pnpm workspace config, extensive shadcn-ui components, custom ESLint rules, and image tooling scripts (resize/prune) for maintaining asset sets.",
+    "Decision: auto-generate new images for the 5 North Indian menu items (Chicken Tikka Masala, Paneer Makhani, Jeera Rice, Butter Naan (2 pcs), Gajar Halwa) rather than sourcing specific provided photos."
   ],
   "known_issues": [
     "Some food/menu item images do not match their current item names (imageUrl/mapping mismatch), requiring immediate correction.",
     "Restaurant UI still shows incorrect images for some items/restaurants (imageUrl/mapping mismatch not fully resolved).",
-    "Dosa menu item images are incorrect/need replacement; ensure correct images are used consistently across the application."
+    "Dosa menu item images are incorrect/need replacement; ensure correct images are used consistently across the application.",
+    "Deployed UI still shows images as not visible (likely due to missing/incorrect imageUrl values or asset filenames not present at the referenced paths)."
   ],
-  "isFixRequest": true,
-  "imageRequirements": "## Required Images\n- Generic plated-food placeholder image (dish-generic.dim_512x512.png)\n\n## Edit Images\n- Replace the dosa dish image with a higher-quality, more appetizing dosa photo (dish-dosa.dim_512x512.png > dish-dosa.dim_512x512.png)",
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Wide photo-realistic restaurant cover image featuring a pizza spread on a rustic table with warm lighting (restaurant-pizza-palace-cover.dim_1200x600.png)\n- Square photo-realistic dish image of a Margherita pizza with basil leaves and melted mozzarella (dish-margherita-pizza.dim_512x512.png)\n- Square photo-realistic dish image of a pepperoni pizza with crispy pepperoni slices and browned cheese (dish-pepperoni-pizza.dim_512x512.png)\n- Square photo-realistic dish image of a Hawaiian pizza with pineapple chunks, ham, and melted cheese (dish-hawaiian-pizza.dim_512x512.png)\n- Square photo-realistic dish image of garlic breadsticks with visible garlic-butter glaze and parmesan (dish-garlic-breadsticks.dim_512x512.png)\n- Square photo-realistic dish image of a Caesar salad with romaine, croutons, parmesan shavings, and creamy dressing (dish-caesar-salad.dim_512x512.png)",
   "generatedImages": [
     {
       "filename": "frontend/public/assets/generated/food-background.dim_1920x1080.png",
@@ -364,6 +366,54 @@
         "REQ-19"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-ensure-every-menu-item-displays-an-image-that-matches-the-menu-item-s-current-name-by-using-name-based-image-resolution-whenever-the-backend-imageurl-is-missing-empty-or-points-to-a-known-legacy-incorrect-asset",
+      "title": "Ensure every menu item displays an image that matches the menu item’s current `name` by using name-based image resolution whenever the backend `imageUrl` is missing, empty, or points to a known legacy/incorrect asset.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-cross-item-mismatches-in-the-centralized-dish-name-mapping-so-that-pizza-palace-items-margherita-pizza-pepperoni-pizza-hawaiian-pizza-garlic-breadsticks-caesar-salad-do-not-map-to-unrelated-dish-images-e-g-garlic-bread-or-veg-meals-and-instead-resolve-to-a-neutral-generic-dish-fallback-unless-a-correct-pizza-salad-specific-asset-exists",
+      "title": "Remove cross-item mismatches in the centralized dish-name mapping so that Pizza Palace items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) do not map to unrelated dish images (e.g., garlic bread or veg meals) and instead resolve to a neutral generic dish fallback unless a correct pizza/salad-specific asset exists.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-5-new-static-dish-images-512x512-for-the-tandoori-treats-menu-items-chicken-tikka-masala-paneer-makhani-jeera-rice-butter-naan-2-pcs-and-gajar-halwa-dessert-add-the-files-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
+      "title": "Generate 5 new static dish images (512x512) for the Tandoori Treats menu items: Chicken Tikka Masala, Paneer Makhani, Jeera Rice, Butter Naan (2 pcs), and Gajar Halwa (Dessert). Add the files under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-dish-image-resolution-so-these-5-menu-items-resolve-to-the-newly-generated-dish-images-by-name-based-mapping-and-or-direct-imageurl-including-handling-the-existing-names-with-parentheticals-butter-naan-2-pcs-gajar-halwa-dessert",
+      "title": "Update frontend dish image resolution so these 5 menu items resolve to the newly generated dish images by name-based mapping (and/or direct imageUrl), including handling the existing names with parentheticals (\"Butter Naan (2 pcs)\", \"Gajar Halwa (Dessert)\").",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-new-static-image-assets-for-pizza-palace-restaurant-cover-its-menu-items-under-frontend-public-assets-generated-using-consistent-dim-filenames-matching-the-existing-generated-asset-naming-conventions-used-for-other-restaurants",
+      "title": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, matching the existing generated-asset naming conventions used for other restaurants.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-centralized-frontend-image-resolution-so-pizza-palace-restaurant-name-pizza-palace-and-its-menu-items-margherita-pizza-pepperoni-pizza-hawaiian-pizza-garlic-breadsticks-caesar-salad-resolve-to-the-newly-generated-static-assets-by-name-based-mapping-and-are-displayed-consistently-anywhere-restaurant-menu-images-render",
+      "title": "Update centralized frontend image resolution so Pizza Palace (restaurant name \"Pizza Palace\") and its menu items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to the newly generated static assets by name-based mapping, and are displayed consistently anywhere restaurant/menu images render.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -428,6 +478,66 @@
       "summary": "Update backend seeded `MenuItem.imageUrl` values for South Indian items so they point to the existing `.dim_*` generated assets (at minimum: Dosa, Idly, Vada, Vegetarian Meals, Non-Veg Meals, Chicken Chettinad, Chicken 65, Pepper Chicken, Mutton Kuzhambu/Chettinad Mutton Kuzhambu), and implement a conditional state upgrade migration to update persisted records to these corrected URLs on upgrade.",
       "reqIds": [
         "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add menu item images for North Indian items: Chicken Tikka Masala, Paneer Makhani, Jeera Rice, Butter Naan (2 pcs), and Gajar Halwa (Dessert) (update seeded/persisted MenuItem.imageUrl and ensure UI renders correctly).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Update backend seeded `Restaurant.imageUrl` and `MenuItem.imageUrl` values so they reference the correct current static asset paths (especially replacing legacy `/assets/generated/*.png` values with the correct `/assets/generated/* .dim_* .png` filenames where available), so images match names immediately on a fresh deploy.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Add a conditional Motoko state upgrade migration that updates existing persisted `Restaurant.imageUrl` and `MenuItem.imageUrl` values when they are legacy/incorrect so upgraded canisters also show name-correct images without requiring a fresh deploy.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Update backend seeded `MenuItem.imageUrl` values for menuItemIds 1–5 (Tandoori Treats) to point to the new generated `/assets/generated/*.dim_512x512.png` filenames for: Chicken Tikka Masala, Paneer Makhani, Jeera Rice, Butter Naan (2 pcs), and Gajar Halwa (Dessert).",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Add/extend a conditional Motoko state upgrade migration so that, on upgrade, persisted `MenuItem.imageUrl` values for menuItemIds 1–5 are updated to the new generated `/assets/generated/*.dim_512x512.png` paths even when older/legacy values are already present.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Auto-generate new static image assets for Pizza Palace (restaurant cover and its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, and update seeded/migrated `imageUrl` mappings so the new images render in the UI.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Update backend seeded `imageUrl` values for Pizza Palace (restaurantId=2) and its menu items (menuItemIds 6–10) so a fresh deploy points directly to the new `/assets/generated/*.dim_*` static asset paths.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Extend the conditional Motoko state upgrade migration to update any existing persisted Pizza Palace restaurant/menu `imageUrl` values to the new `.dim_*` asset paths even when older/legacy values are already present.",
+      "reqIds": [
+        "REQ-31"
       ],
       "status": "pending"
     }

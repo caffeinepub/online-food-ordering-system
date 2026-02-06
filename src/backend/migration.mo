@@ -1,8 +1,16 @@
 import Map "mo:core/Map";
 import Text "mo:core/Text";
+import Nat "mo:core/Nat";
 
 module {
-  type OldMenuItem = {
+  type Restaurant = {
+    id : Nat;
+    name : Text;
+    description : Text;
+    imageUrl : Text;
+  };
+
+  type MenuItem = {
     id : Nat;
     restaurantId : Nat;
     name : Text;
@@ -11,53 +19,55 @@ module {
     imageUrl : Text;
   };
 
-  type OldActor = {
-    menuItems : Map.Map<Nat, OldMenuItem>;
+  type Actor = {
+    restaurants : Map.Map<Nat, Restaurant>;
+    menuItems : Map.Map<Nat, MenuItem>;
   };
 
-  type NewMenuItem = {
-    id : Nat;
-    restaurantId : Nat;
-    name : Text;
-    description : Text;
-    price : Nat;
-    imageUrl : Text;
+  let pizzaRestaurantMapping : [(Text, Text)] = [
+    ("/assets/generated/pizza-palace.png", "/assets/generated/pizza-palace.dim_512x512.png"),
+  ];
+
+  let pizzaMenuMapping : [(Text, Text)] = [
+    ("/assets/generated/margherita-pizza.png", "/assets/generated/margherita-pizza.dim_512x512.png"),
+    ("/assets/generated/pepperoni-pizza.png", "/assets/generated/pepperoni-pizza.dim_512x512.png"),
+    ("/assets/generated/hawaiian-pizza.png", "/assets/generated/hawaiian-pizza.dim_512x512.png"),
+    ("/assets/generated/garlic-bread-pizza.png", "/assets/generated/garlic-bread.dim_512x512.png"),
+    ("/assets/generated/salad-pizza.png", "/assets/generated/caesar-salad.dim_512x512.png"),
+  ];
+
+  public func updateImageUrl(imageUrl : Text, mapping : [(Text, Text)]) : Text {
+    for ((oldPath, newPath) in mapping.values()) {
+      if (imageUrl == oldPath) { return newPath };
+    };
+    imageUrl;
   };
 
-  type NewActor = {
-    menuItems : Map.Map<Nat, NewMenuItem>;
-  };
-
-  public func run(old : OldActor) : NewActor {
-    let newMenuItems = old.menuItems.map<Nat, OldMenuItem, NewMenuItem>(
-      func(_id, menuItem) {
-        switch (menuItem.restaurantId, menuItem.name) {
-          // Fix South Indian item urls
-          case (6, "Dosa") { { menuItem with imageUrl = "/assets/generated/dim_dosa.png" } };
-          case (6, "Idly") { { menuItem with imageUrl = "/assets/generated/dim_idly.png" } };
-          case (6, "Vegetarian Meals") {
-            { menuItem with imageUrl = "/assets/generated/dim_vegetarian_meals.png" };
-          };
-          case (6, "Vada") { { menuItem with imageUrl = "/assets/generated/dim_vada.png" } };
-          case (6, "Non-Veg Meals") {
-            { menuItem with imageUrl = "/assets/generated/dim_non_veg_meals.png" };
-          };
-          case (6, "Chicken Chettinad") {
-            { menuItem with imageUrl = "/assets/generated/dim_chicken_chettinad.png" };
-          };
-          case (6, "Chicken 65") {
-            { menuItem with imageUrl = "/assets/generated/dim_chicken_65.png" };
-          };
-          case (6, "Pepper Chicken (Milagu Varuval)") {
-            { menuItem with imageUrl = "/assets/generated/dim_pepper_chicken_varuval.png" };
-          };
-          case (6, "Chettinad Mutton Kuzhambu") {
-            { menuItem with imageUrl = "/assets/generated/dim_chettinad_mutton_kuzhambu.png" };
-          };
-          case (_, _) { menuItem };
+  public func run(old : Actor) : Actor {
+    let newRestaurants = old.restaurants.map<Nat, Restaurant, Restaurant>(
+      func(_, restaurant) {
+        if (restaurant.id == 2) {
+          { restaurant with imageUrl = updateImageUrl(restaurant.imageUrl, pizzaRestaurantMapping) };
+        } else {
+          restaurant;
         };
       }
     );
-    { menuItems = newMenuItems };
+
+    let newMenuItems = old.menuItems.map<Nat, MenuItem, MenuItem>(
+      func(_, menuItem) {
+        if (menuItem.restaurantId == 2) {
+          { menuItem with imageUrl = updateImageUrl(menuItem.imageUrl, pizzaMenuMapping) };
+        } else {
+          menuItem;
+        };
+      }
+    );
+
+    {
+      old with
+      restaurants = newRestaurants;
+      menuItems = newMenuItems;
+    };
   };
 };

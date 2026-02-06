@@ -1,95 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Stop using dosa images as generic menu-item placeholders and ensure correct dish images app-wide",
+  "title": "Generate and wire up new Pizza Palace restaurant and menu item images",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-16",
-      "text": "Update frontend dish image fallback behavior so non-dosa menu items never display the dosa image just because an image URL is missing/legacy; use a neutral generic dish fallback instead, and only show the dosa image when the dish name is actually \"Dosa\".",
+      "id": "REQ-28",
+      "text": "Add new static image assets for Pizza Palace (restaurant cover + its menu items) under `frontend/public/assets/generated/` using consistent `.dim_*` filenames, matching the existing generated-asset naming conventions used for other restaurants.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+          "same way generate the images for the pizza palace"
         ]
       },
       "acceptanceCriteria": [
-        "If a menu item has an unknown/missing/invalid imageUrl, the UI shows a generic dish placeholder (not dosa).",
-        "Menu item cards in Restaurant Detail, cart items, and order detail views do not show dosa imagery unless the item name is Dosa (case-insensitive after normalization).",
-        "The centralized dish image helper continues to be the single source of truth for dish image resolution across the app."
+        "The following new image files exist under `frontend/public/assets/generated/` with the exact filenames specified in Image Requirements.",
+        "Each image is the correct dimension based on its filename suffix (1200x600 for the cover; 512x512 for dish images)."
       ]
     },
     {
-      "id": "REQ-17",
-      "text": "Refine the frontend legacy/invalid image URL detection in `frontend/src/utils/imageFallbacks.ts` so that valid existing static asset URLs are not incorrectly treated as legacy and forced to fall back to the generic placeholder (which previously caused dosa to appear widely).",
+      "id": "REQ-29",
+      "text": "Update centralized frontend image resolution so Pizza Palace (restaurant name \"Pizza Palace\") and its menu items (Margherita Pizza, Pepperoni Pizza, Hawaiian Pizza, Garlic Breadsticks, Caesar Salad) resolve to the newly generated static assets by name-based mapping, and are displayed consistently anywhere restaurant/menu images render.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+          "same way generate the images for the pizza palace"
         ]
       },
       "acceptanceCriteria": [
-        "Restaurant and menu item images that already resolve to real files under `/assets/generated/` continue to display, even if they do not use the newer `.dim_*` naming scheme.",
-        "Only known-bad/mismatched patterns (e.g., prior pizza placeholder patterns) are treated as legacy and re-resolved via name mapping/fallback.",
-        "No widespread regression where many items revert to a single placeholder image due to overly broad legacy detection."
+        "In the restaurants list and restaurant detail views, Pizza Palace uses the new Pizza Palace cover image.",
+        "In the Pizza Palace restaurant detail view, each of the 5 Pizza Palace menu items displays its corresponding new dish image (not the generic dish fallback).",
+        "Image resolution changes are made via the centralized helpers in `frontend/src/utils/imageFallbacks.ts` (no duplicate ad-hoc mapping elsewhere)."
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Update backend seeded `MenuItem.imageUrl` values for South Indian items so they point to the existing `.dim_*` generated assets (at minimum: Dosa, Idly, Vada, Vegetarian Meals, Non-Veg Meals, Chicken Chettinad, Chicken 65, Pepper Chicken, Mutton Kuzhambu/Chettinad Mutton Kuzhambu), and implement a conditional state upgrade migration to update persisted records to these corrected URLs on upgrade.",
+      "id": "REQ-30",
+      "text": "Update backend seeded `imageUrl` values for Pizza Palace (restaurantId=2) and its menu items (menuItemIds 6–10) so a fresh deploy points directly to the new `/assets/generated/*.dim_*` static asset paths.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+          "same way generate the images for the pizza palace"
         ]
       },
       "acceptanceCriteria": [
-        "Fresh deployments seed the South Indian menu items with `.dim_*` imageUrl paths that match the existing generated filenames in `frontend/public/assets/generated/`.",
-        "On canister upgrade, existing persisted records for the affected menu items are updated to the corrected `.dim_*` URLs even if they previously had older/legacy values.",
-        "After upgrade, Dosa uses the dosa image asset; other affected items use their corresponding non-dosa assets."
+        "`backend/main.mo` sets Pizza Palace restaurant `imageUrl` to the new cover asset path.",
+        "`backend/main.mo` sets menuItemIds 6–10 `imageUrl` fields to the new dish asset paths.",
+        "On a fresh deploy, listing restaurants and Pizza Palace menu items returns the updated `.dim_*` imageUrl values."
       ]
     },
     {
-      "id": "REQ-19",
-      "text": "Ensure the dosa menu item image itself is high-quality and visually correct by updating the existing generated dosa asset, and ensure all occurrences of the dosa image in the UI correspond to the Dosa dish only.",
-      "target": "frontend",
+      "id": "REQ-31",
+      "text": "Extend the conditional Motoko state upgrade migration to update any existing persisted Pizza Palace restaurant/menu `imageUrl` values to the new `.dim_*` asset paths even when older/legacy values are already present.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "remove the dosa images from the menu items and replace with the perfect images all over the application"
+          "same way generate the images for the pizza palace"
         ]
       },
       "acceptanceCriteria": [
-        "`dish-dosa.dim_512x512.png` is updated to a clearer, more appetizing dosa image (still visually a dosa).",
-        "No non-dosa menu item displays `dish-dosa.dim_512x512.png` anywhere in the application UI flows (restaurants list/detail, cart, order list/detail)."
+        "`backend/migration.mo` updates persisted records for restaurantId=2 and menuItemIds 6–10 to the new imageUrl values during upgrade.",
+        "Upgrading an existing canister (with legacy Pizza Palace imageUrl values) results in the UI showing the new Pizza Palace images without requiring a fresh deploy."
       ]
     }
   ],
   "constraints": [
-    "Frontend files listed as immutable in SYSTEM_CONTEXT must not be edited (compose instead).",
-    "Backend must remain a single-actor Motoko canister with all logic in `backend/main.mo`; add `backend/migration.mo` only as needed for upgrade state corrections."
+    "Frontend immutable paths must not be modified: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, `frontend/src/components/ui`.",
+    "Backend must remain a single-actor Motoko canister with all business logic in `backend/main.mo`.",
+    "Add/modify `backend/migration.mo` only as needed per the conditional migration policy."
   ],
   "nonGoals": [
-    "Generating bespoke new images for every single seeded dish across all cuisines (beyond the generic fallback and dosa edit) unless explicitly requested.",
-    "Adding new restaurants, menu items, or changing pricing/descriptions unrelated to image correctness."
+    "Do not add new restaurants or new Pizza Palace menu items beyond the existing seeded items (menuItemIds 6–10).",
+    "Do not implement real-time features, external storage, or third-party services for image hosting."
   ],
   "imageRequirements": {
     "required": [
-      "Generic plated-food placeholder image (dish-generic.dim_512x512.png)"
+      "Wide photo-realistic restaurant cover image featuring a pizza spread on a rustic table with warm lighting (restaurant-pizza-palace-cover.dim_1200x600.png)",
+      "Square photo-realistic dish image of a Margherita pizza with basil leaves and melted mozzarella (dish-margherita-pizza.dim_512x512.png)",
+      "Square photo-realistic dish image of a pepperoni pizza with crispy pepperoni slices and browned cheese (dish-pepperoni-pizza.dim_512x512.png)",
+      "Square photo-realistic dish image of a Hawaiian pizza with pineapple chunks, ham, and melted cheese (dish-hawaiian-pizza.dim_512x512.png)",
+      "Square photo-realistic dish image of garlic breadsticks with visible garlic-butter glaze and parmesan (dish-garlic-breadsticks.dim_512x512.png)",
+      "Square photo-realistic dish image of a Caesar salad with romaine, croutons, parmesan shavings, and creamy dressing (dish-caesar-salad.dim_512x512.png)"
     ],
-    "edits": [
-      "Replace the dosa dish image with a higher-quality, more appetizing dosa photo (dish-dosa.dim_512x512.png > dish-dosa.dim_512x512.png)"
-    ]
+    "edits": []
   },
   "userProfileUpdate": {
     "goalsToAdd": [],

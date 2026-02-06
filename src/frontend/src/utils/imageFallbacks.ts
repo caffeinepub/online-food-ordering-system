@@ -19,6 +19,14 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'pepper chicken (milagu varuval)': '/assets/generated/dish-pepper-chicken.dim_512x512.png',
   'chettinad mutton kuzhambu': '/assets/generated/dish-mutton-kuzhambu.dim_512x512.png',
   'mutton kuzhambu': '/assets/generated/dish-mutton-kuzhambu.dim_512x512.png',
+  // Tandoori Treats (North Indian) dishes - now with specific generated assets
+  'chicken tikka masala': '/assets/generated/dish-chicken-tikka-masala.dim_512x512.png',
+  'paneer makhani': '/assets/generated/dish-paneer-makhani.dim_512x512.png',
+  'jeera rice': '/assets/generated/dish-jeera-rice.dim_512x512.png',
+  'butter naan (2 pcs)': '/assets/generated/dish-butter-naan.dim_512x512.png',
+  'butter naan': '/assets/generated/dish-butter-naan.dim_512x512.png',
+  'gajar halwa (dessert)': '/assets/generated/dish-gajar-halwa.dim_512x512.png',
+  'gajar halwa': '/assets/generated/dish-gajar-halwa.dim_512x512.png',
   // Burger Joint dishes
   'cheeseburger': '/assets/generated/dish-cheeseburger.dim_512x512.png',
   'veggie burger': '/assets/generated/dish-veggie-burger.dim_512x512.png',
@@ -31,19 +39,19 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'chicken parmigiana': '/assets/generated/dish-chicken-parmigiana.dim_512x512.png',
   'garlic bread (3 pcs)': '/assets/generated/dish-garlic-bread.dim_512x512.png',
   'garlic bread': '/assets/generated/dish-garlic-bread.dim_512x512.png',
-  // Pizza Palace dishes - using garlic bread as generic fallback since no pizza images exist
-  'margherita pizza': '/assets/generated/dish-garlic-bread.dim_512x512.png',
-  'pepperoni pizza': '/assets/generated/dish-garlic-bread.dim_512x512.png',
-  'hawaiian pizza': '/assets/generated/dish-garlic-bread.dim_512x512.png',
-  'garlic breadsticks': '/assets/generated/dish-garlic-bread.dim_512x512.png',
-  'caesar salad': '/assets/generated/dish-veg-meals.dim_512x512.png',
+  // Pizza Palace dishes - now with specific generated assets
+  'margherita pizza': '/assets/generated/dish-margherita-pizza.dim_512x512.png',
+  'pepperoni pizza': '/assets/generated/dish-pepperoni-pizza.dim_512x512.png',
+  'hawaiian pizza': '/assets/generated/dish-hawaiian-pizza.dim_512x512.png',
+  'garlic breadsticks': '/assets/generated/dish-garlic-breadsticks.dim_512x512.png',
+  'caesar salad': '/assets/generated/dish-caesar-salad.dim_512x512.png',
 };
 
 // Map of known restaurant names to their generated image filenames
 const RESTAURANT_NAME_TO_IMAGE: Record<string, string> = {
   'chennai spice': '/assets/generated/restaurant-tamil-mess-cover.dim_1200x600.png',
   'tandoori treats': '/assets/generated/restaurant-north-indian-cover.dim_1200x600.png',
-  'pizza palace': '/assets/generated/restaurant-pizza-cover.dim_1200x600.png',
+  'pizza palace': '/assets/generated/restaurant-pizza-palace-cover.dim_1200x600.png',
   'sushi central': '/assets/generated/restaurant-sushi-cover.dim_1200x600.png',
   'pasta house': '/assets/generated/restaurant-pasta-house-cover.dim_1200x600.png',
   'burger joint': '/assets/generated/restaurant-burger-joint-cover.dim_1200x600.png',
@@ -69,17 +77,27 @@ function normalizeName(name: string): string {
 
 /**
  * Checks if a URL points to a legacy/incorrect asset that should be re-resolved
- * Only treats known-bad patterns as legacy, not all non-.dim_ URLs
+ * Treats known-bad patterns and legacy dim_* patterns as invalid
  */
 function isLegacyAssetUrl(url: string): boolean {
   if (!url.includes('assets/generated/')) return false;
   
   // Legacy patterns that need re-resolution:
-  // - Known bad Pizza Palace patterns (garlic-bread-pizza.png, salad-pizza.png)
+  // - Known bad Pizza Palace patterns (garlic-bread-pizza.png, salad-pizza.png, margherita-pizza.png, etc.)
   // - Known bad South Indian patterns (dim_dosa.png, dim_idly.png, etc. - missing proper prefix)
+  // - Known bad North Indian patterns (chicken-tikka-masala.png, paneer-makhani.png, etc.)
+  // - Any dim_* pattern without the proper dish- prefix
   const legacyPatterns = [
+    // Pizza Palace incorrect mappings
+    /pizza-palace\.dim_512x512\.png/,
     /garlic-bread-pizza\.png/,
     /salad-pizza\.png/,
+    /margherita-pizza\.png(?!\.dim_)/,
+    /pepperoni-pizza\.png(?!\.dim_)/,
+    /hawaiian-pizza\.png(?!\.dim_)/,
+    /caesar-salad\.png(?!\.dim_)/,
+    /garlic-breadsticks\.png(?!\.dim_)/,
+    // South Indian legacy patterns
     /dim_dosa\.png/,
     /dim_vada\.png/,
     /dim_idly\.png/,
@@ -89,6 +107,35 @@ function isLegacyAssetUrl(url: string): boolean {
     /dim_chicken_65\.png/,
     /dim_pepper_chicken_varuval\.png/,
     /dim_chettinad_mutton_kuzhambu\.png/,
+    // North Indian incorrect patterns (without .dim_ suffix)
+    /chicken-tikka-masala\.png(?!\.dim_)/,
+    /paneer-makhani\.png(?!\.dim_)/,
+    /jeera-rice\.png(?!\.dim_)/,
+    /butter-naan\.png(?!\.dim_)/,
+    /gajar-halwa\.png(?!\.dim_)/,
+    // Pasta House incorrect patterns
+    /garlic-bread-pasta\.png/,
+    /fettucine-alfredo\.png(?!\.dim_)/,
+    /penne-arrabiata\.png(?!\.dim_)/,
+    /chicken-parmigiana\.png(?!\.dim_)/,
+    // Sushi incorrect patterns
+    /california-salmon-roll\.png/,
+    /spicy-tuna-roll\.png/,
+    /shrimp-tempura-roll\.png/,
+    /miso-soup\.png/,
+    /edamame\.png/,
+    // Burger Joint incorrect patterns
+    /cheeseburger\.png(?!\.dim_)/,
+    /veggie-burger\.png(?!\.dim_)/,
+    /vanilla-milkshake\.png(?!\.dim_)/,
+    // Restaurant cover legacy patterns
+    /tandoori-treats\.png(?!\.dim_)/,
+    /pizza-palace\.png(?!\.dim_)/,
+    /sushi-central\.png(?!\.dim_)/,
+    /pasta-house\.png(?!\.dim_)/,
+    /burger-joint\.png(?!\.dim_)/,
+    /restaurant-indian-chennai-spice\.png(?!\.dim_)/,
+    /restaurant-pizza-cover\.dim_1200x600\.png/,
   ];
   
   return legacyPatterns.some(pattern => pattern.test(url));
