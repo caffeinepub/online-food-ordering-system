@@ -6,6 +6,7 @@ import { LoadingSkeleton, ErrorState, EmptyState } from '../components/common/Qu
 import { ChevronRight, Store } from 'lucide-react';
 import ImageWithFallback from '../components/common/ImageWithFallback';
 import { getRestaurantImageUrl, FALLBACK_IMAGES } from '../utils/imageFallbacks';
+import { getErrorMessage } from '../utils/getErrorMessage';
 
 export default function RestaurantsListPage() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function RestaurantsListPage() {
     return (
       <div>
         <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
-        <ErrorState message={error.message} />
+        <ErrorState message={getErrorMessage(error)} />
       </div>
     );
   }
@@ -46,39 +47,54 @@ export default function RestaurantsListPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {restaurants.map((restaurant) => (
-          <Card
-            key={restaurant.id.toString()}
-            className="hover:shadow-lg transition-shadow cursor-pointer group overflow-hidden"
-            onClick={() => navigate({ to: '/restaurants/$restaurantId', params: { restaurantId: restaurant.id.toString() } })}
-          >
-            <div className="relative h-48 w-full overflow-hidden bg-muted">
-              <ImageWithFallback
-                src={getRestaurantImageUrl(restaurant.imageUrl, restaurant.name)}
-                alt={restaurant.name}
-                fallbackSrc={FALLBACK_IMAGES.restaurant}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors flex items-center gap-2">
-                    <Store className="h-5 w-5" />
-                    {restaurant.name}
-                  </CardTitle>
-                  <CardDescription className="mt-2">{restaurant.description}</CardDescription>
-                </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+        {restaurants.map((restaurant) => {
+          // Defensive handling for missing/invalid restaurant data
+          const restaurantId = restaurant?.id;
+          const restaurantName = restaurant?.name || 'Unknown Restaurant';
+          const restaurantDescription = restaurant?.description || 'No description available';
+          const restaurantImageUrl = restaurant?.imageUrl || '';
+
+          // Skip restaurants with invalid IDs
+          if (!restaurantId || restaurantId <= 0n) {
+            return null;
+          }
+
+          const restaurantIdString = restaurantId.toString();
+
+          return (
+            <Card
+              key={restaurantIdString}
+              className="hover:shadow-lg transition-shadow cursor-pointer group overflow-hidden"
+              onClick={() => navigate({ to: '/restaurants/$restaurantId', params: { restaurantId: restaurantIdString } })}
+            >
+              <div className="relative h-48 w-full overflow-hidden bg-muted">
+                <ImageWithFallback
+                  src={getRestaurantImageUrl(restaurantImageUrl, restaurantName)}
+                  alt={restaurantName}
+                  fallbackSrc={FALLBACK_IMAGES.restaurant}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" variant="secondary">
-                View Menu
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors flex items-center gap-2">
+                      <Store className="h-5 w-5" />
+                      {restaurantName}
+                    </CardTitle>
+                    <CardDescription className="mt-2">{restaurantDescription}</CardDescription>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full" variant="secondary">
+                  View Menu
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

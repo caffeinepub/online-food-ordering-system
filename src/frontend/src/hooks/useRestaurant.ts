@@ -9,6 +9,8 @@ export function useGetRestaurant(restaurantId: bigint) {
     queryKey: ['restaurant', restaurantId.toString()],
     queryFn: async () => {
       if (!actor) return null;
+      // Only call backend if ID is valid
+      if (restaurantId <= 0n) return null;
       return actor.getRestaurant(restaurantId);
     },
     enabled: !!actor && !actorFetching && restaurantId > 0n,
@@ -22,6 +24,8 @@ export function useGetRestaurantMenu(restaurantId: bigint) {
     queryKey: ['restaurantMenu', restaurantId.toString()],
     queryFn: async () => {
       if (!actor) return [];
+      // Only call backend if ID is valid
+      if (restaurantId <= 0n) return [];
       return actor.getRestaurantMenu(restaurantId);
     },
     enabled: !!actor && !actorFetching && restaurantId > 0n,

@@ -12,6 +12,7 @@ import OrderDetailPage from './pages/OrderDetailPage';
 import AppLayout from './components/layout/AppLayout';
 import ProfileSetupDialog from './components/profile/ProfileSetupDialog';
 import RequireAuth from './components/auth/RequireAuth';
+import { AppErrorBoundary } from './components/common/AppErrorBoundary';
 import { UtensilsCrossed } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -136,12 +137,14 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <CartProvider>
-        <RouterProvider router={router} />
-        {showProfileSetup && <ProfileSetupDialog />}
-        <Toaster />
-      </CartProvider>
-    </ThemeProvider>
+    <AppErrorBoundary>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <CartProvider>
+          <RouterProvider router={router} />
+          {showProfileSetup && <ProfileSetupDialog />}
+          <Toaster />
+        </CartProvider>
+      </ThemeProvider>
+    </AppErrorBoundary>
   );
 }

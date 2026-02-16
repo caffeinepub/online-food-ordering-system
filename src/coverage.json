@@ -1,61 +1,37 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T10:10:24.982Z",
+  "generatedAt": "2026-02-11T08:55:23.716Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 2,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-43",
-        "summary": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+        "id": "REQ-1",
+        "summary": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
-          "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
-          "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
-          "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
-          "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
-          "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
-          "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
-          "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png"
+          "frontend/src/utils/restaurantId.ts",
+          "frontend/src/utils/getErrorMessage.ts",
+          "frontend/src/pages/RestaurantsListPage.tsx",
+          "frontend/src/pages/RestaurantDetailPage.tsx",
+          "frontend/src/hooks/useRestaurant.ts"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
-          "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
-          "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
-          "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
-          "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
-          "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
-          "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
-          "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png"
+          "frontend/src/utils/restaurantId.ts",
+          "frontend/src/utils/getErrorMessage.ts",
+          "frontend/src/pages/RestaurantsListPage.tsx",
+          "frontend/src/pages/RestaurantDetailPage.tsx",
+          "frontend/src/hooks/useRestaurant.ts"
         ]
       },
       {
-        "id": "REQ-44",
-        "summary": "Update the backend seeded menu item `imageUrl` values in `backend/main.mo` for Chennai Spice seafood menuItemIds 46–53 (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry) to point to the new `/assets/generated/*.dim_512x512.png` static asset paths generated for these items.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-45",
-        "summary": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/utils/imageFallbacks.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/utils/imageFallbacks.ts"
-        ]
-      },
-      {
-        "id": "REQ-46",
-        "summary": "Add a conditional Motoko state upgrade migration (create `backend/migration.mo` if it does not exist, per the project migration policy) that updates persisted `MenuItem.imageUrl` values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths even if older `imageUrl` values are already present, so upgraded canisters immediately display the new images.",
+        "id": "REQ-2",
+        "summary": "Ensure backend restaurant detail APIs used by the frontend (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap, so the frontend can always render an error or empty state instead of crashing.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -63,21 +39,15 @@
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/dish-andhra-fish-fry.dim_512x512.png",
-    "frontend/public/assets/generated/dish-chemmeen-biryani.dim_512x512.png",
-    "frontend/public/assets/generated/dish-chepala-pulusu.dim_512x512.png",
-    "frontend/public/assets/generated/dish-crab-masala-nandu-kuzhambu.dim_512x512.png",
-    "frontend/public/assets/generated/dish-fish-kola-urundai.dim_512x512.png",
-    "frontend/public/assets/generated/dish-fish-mappas.dim_512x512.png",
-    "frontend/public/assets/generated/dish-kanava-koonthal-masala.dim_512x512.png",
-    "frontend/public/assets/generated/dish-prawn-ghee-roast.dim_512x512.png",
-    "frontend/src/utils/imageFallbacks.ts",
+    "frontend/src/hooks/useRestaurant.ts",
+    "frontend/src/pages/RestaurantDetailPage.tsx",
+    "frontend/src/pages/RestaurantsListPage.tsx",
+    "frontend/src/utils/getErrorMessage.ts",
+    "frontend/src/utils/restaurantId.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

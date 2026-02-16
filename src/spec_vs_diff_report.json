@@ -1,50 +1,27 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T10:10:24.979Z",
-  "summary": "Diff adds a backend migration and updates frontend dish-name image mappings, but the generated image asset files are not present in the diff and the backend migration (and likely seeded URLs) point to different, non-requested image filenames (\"dish-indian-*\") instead of the specified \"dish-*.dim_512x512.png\" names.",
+  "generatedAt": "2026-02-11T08:55:23.713Z",
+  "summary": "Frontend changes add robust restaurantId parsing/validation, safer React Query hooks, defensive list rendering, and safer error-message extraction to prevent runtime crashes when navigating to Restaurant Detail. However, no backend changes are shown for `getRestaurant` / `getRestaurantMenu`, so backend safety requirements appear unimplemented in this diff summary.",
   "missing_requirements": [
     {
-      "id": "REQ-43",
-      "requirement": "Generate and add 8 new static 512x512 seafood dish image assets under `frontend/public/assets/generated/` using the exact specified filenames.",
-      "reason": "The diff summary shows no added PNG assets under `frontend/public/assets/generated/` (only code/text files were added/modified), so the required image files are not evidenced as created.",
+      "id": "REQ-2",
+      "requirement": "Ensure backend restaurant detail APIs (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap.",
+      "reason": "The diff summary contains only frontend changes plus utility additions; there are no modifications to `backend/main.mo` (or a new `backend/migration.mo`) demonstrating safe handling for nonexistent/invalid IDs or preventing traps.",
       "evidence": [
-        "<file-diff> summary shows ADDED FILES: backend/migration.mo; MODIFIED: backend/main.mo, frontend/src/utils/imageFallbacks.ts, frontend-file-summaries.txt, project_state.json; no `frontend/public/assets/generated/*.png` files listed."
-      ]
-    },
-    {
-      "id": "REQ-44",
-      "requirement": "Update seeded backend menu item imageUrl values in `backend/main.mo` for Chennai Spice menuItemIds 46–53 to `/assets/generated/dish-*.dim_512x512.png` matching the specified filenames.",
-      "reason": "`backend/main.mo` is truncated before any of menuItemIds 46–53 are shown, so there is no evidence the seeded `imageUrl` values for items 46–53 were updated. Additionally, the new migration uses different filenames (`/assets/generated/dish-indian-*.dim_512x512.png`), suggesting the seeded values may also have been updated to non-specified paths or remain inconsistent.",
-      "evidence": [
-        "backend/main.mo (truncated; does not show menuItems 46–53)",
-        "backend/migration.mo (uses `/assets/generated/dish-indian-...dim_512x512.png` which does not match requested filenames)"
-      ]
-    },
-    {
-      "id": "REQ-46",
-      "requirement": "Migration must update persisted MenuItem.imageUrl values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths matching the specified filenames.",
-      "reason": "A migration exists and targets ids 46–53, but it updates them to different, non-requested filenames (adds `dish-indian-` prefix and different slugging for kanava/koonthal), so it does not meet the acceptance criteria of updating to the exact new `.dim_512x512.png` asset paths from Image Requirements.",
-      "evidence": [
-        "backend/migration.mo (e.g., sets id 46 to `/assets/generated/dish-indian-chepala-pulusu.dim_512x512.png` instead of `/assets/generated/dish-chepala-pulusu.dim_512x512.png`; similar for 47–53)"
+        "File diff summary shows only frontend files added/modified; no backend files listed as modified/added."
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "Migration updates menu items 46–53 to `/assets/generated/dish-indian-*.dim_512x512.png` image URLs (different naming scheme than requested).",
-      "reason": "BuildRequest explicitly specifies exact filenames like `dish-chepala-pulusu.dim_512x512.png`, `dish-kanava-koonthal-masala.dim_512x512.png`, etc. The diff implements different filenames with an added `dish-indian-` prefix and different slug for kanava/koonthal.",
-      "evidence": [
-        "backend/migration.mo (sets `/assets/generated/dish-indian-chepala-pulusu.dim_512x512.png`, `/assets/generated/dish-indian-kanavakoonthal-masala.dim_512x512.png`, etc.)"
-      ]
-    }
-  ],
+  "hallucinated_features": [],
   "confidence": 0.74,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/utils/imageFallbacks.ts",
+    "frontend/src/hooks/useRestaurant.ts",
+    "frontend/src/pages/RestaurantDetailPage.tsx",
+    "frontend/src/pages/RestaurantsListPage.tsx",
+    "frontend/src/utils/getErrorMessage.ts",
+    "frontend/src/utils/restaurantId.ts",
     "project_state.json"
   ]
 }

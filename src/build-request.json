@@ -1,106 +1,67 @@
 {
   "kind": "build_request",
-  "title": "Generate and wire up images for Chennai Spice seafood menu items",
-  "priority": "normal",
+  "title": "Fix error when opening a restaurant detail page",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-43",
-      "text": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
+      "id": "REQ-1",
+      "text": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages-4"
+          "msg-4"
         ],
         "quotes": [
-          "Andhra Fish Fry GENERATE IMAGES FOR THIS ITEMS BY YOURSELF OR REMOVE THEM"
+          "there is a error in opening restaurant"
         ]
       },
       "acceptanceCriteria": [
-        "All 8 image files exist under `frontend/public/assets/generated/` with the exact filenames from Image Requirements.",
-        "Each image is 512x512 and visually represents the named dish (no generic placeholder-looking image)."
+        "From the Restaurants list page, clicking any restaurant card navigates to `/restaurants/<id>` and the page renders without a blank screen or uncaught exception.",
+        "The Restaurant Detail page shows a user-friendly error UI (not a crash) when the URL contains an invalid restaurantId (empty, non-numeric, or negative).",
+        "If fetching restaurant or menu data fails, the existing error UI is shown (via `ErrorState`) and the Back button still works.",
+        "No invalid restaurant entries (missing `id`) are clickable in the list; they are safely skipped as already intended."
       ]
     },
     {
-      "id": "REQ-44",
-      "text": "Update the backend seeded menu item `imageUrl` values in `backend/main.mo` for Chennai Spice seafood menuItemIds 46–53 (Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, Andhra Fish Fry) to point to the new `/assets/generated/*.dim_512x512.png` static asset paths generated for these items.",
+      "id": "REQ-2",
+      "text": "Ensure backend restaurant detail APIs used by the frontend (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap, so the frontend can always render an error or empty state instead of crashing.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "recent-messages-4"
+          "msg-4"
         ],
         "quotes": [
-          "Chepala Pulusu",
-          "Prawn Ghee Roast",
-          "Crab Masala/Nandu Kuzhambu",
-          "Kanava/Koonthal Masala",
-          "Fish Mappas",
-          "Fish Kola Urundai",
-          "Chemmeen Biryani",
-          "Andhra Fish Fry"
+          "there is a error in opening restaurant"
         ]
       },
       "acceptanceCriteria": [
-        "On a fresh deploy, `getRestaurantMenu(6)` returns menu items 46–53 with `imageUrl` values that match the new `/assets/generated/dish-*.dim_512x512.png` filenames from Image Requirements.",
-        "No Chennai Spice seafood menu item (46–53) references the old non-`.dim_` placeholder filenames (e.g., `/assets/generated/chepala-pulusu.png`)."
-      ]
-    },
-    {
-      "id": "REQ-45",
-      "text": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "recent-messages-4"
-        ],
-        "quotes": [
-          "GENERATE IMAGES FOR THIS ITEMS BY YOURSELF OR REMOVE THEM"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When `getDishImageUrl(undefined, <dish name>)` is called for each of the 8 seafood dish names, it returns the corresponding new `/assets/generated/dish-*.dim_512x512.png` path.",
-        "The name normalization handles the slash in \"Crab Masala/Nandu Kuzhambu\" and \"Kanava/Koonthal Masala\" such that either full name resolves correctly.",
-        "The Restaurant Detail UI for Chennai Spice shows non-generic images for these 8 menu items (no `dish-generic` fallback for them under normal conditions)."
-      ]
-    },
-    {
-      "id": "REQ-46",
-      "text": "Add a conditional Motoko state upgrade migration (create `backend/migration.mo` if it does not exist, per the project migration policy) that updates persisted `MenuItem.imageUrl` values for Chennai Spice seafood menuItemIds 46–53 to the new `/assets/generated/dish-*.dim_512x512.png` paths even if older `imageUrl` values are already present, so upgraded canisters immediately display the new images.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "recent-messages-4"
-        ],
-        "quotes": [
-          "GENERATE IMAGES FOR THIS ITEMS BY YOURSELF OR REMOVE THEM"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After an upgrade, persisted menu items 46–53 have `imageUrl` values updated to the new `.dim_512x512.png` asset paths from Image Requirements (regardless of previous non-empty legacy values).",
-        "The migration is conditional and safe to run on canisters that already have the correct new URLs (no unintended changes to unrelated menu items/restaurants)."
+        "Calling `getRestaurant(<nonexistentId>)` returns `null` (or equivalent optional none) and does not trap.",
+        "Calling `getRestaurantMenu(<nonexistentId>)` returns an empty list and does not trap.",
+        "Existing seeded restaurant IDs (1–7) return their restaurant record and menu items successfully."
       ]
     }
   ],
   "constraints": [
-    "Use English for any user-facing text.",
-    "Backend must remain a single-actor Motoko canister with all logic in `backend/main.mo` (migration logic only in `backend/migration.mo` if required).",
-    "Do not edit any frontend files under `frontend/src/components/ui` or other immutable paths listed in SYSTEM_CONTEXT."
+    "Do not modify files under `frontend/src/components/ui` (read-only UI primitives).",
+    "Do not modify any files listed in `frontend.immutablePaths` in SYSTEM_CONTEXT.",
+    "Backend must remain a single Motoko actor in `backend/main.mo`; only add `backend/migration.mo` if state schema changes require it."
   ],
   "nonGoals": [
-    "Removing the listed Chennai Spice seafood menu items from the menu (only do this if image generation is impossible, which is not the intended approach here).",
-    "Adding new restaurants or changing pricing/descriptions for these items.",
-    "Introducing any external image hosting or serving images from the backend canister."
+    "Adding new restaurant features (create/edit/delete) is out of scope.",
+    "Changing authentication/Internet Identity behavior is out of scope unless required to prevent the restaurant page error."
   ],
   "imageRequirements": {
-    "required": [
-      "Photo-realistic close-up of Andhra-style tangy fish curry in a bowl, warm tones, visible tamarind/red gravy (dish-chepala-pulusu.dim_512x512.png)",
-      "Photo-realistic prawn ghee roast plated with roasted prawns and spice masala, rich reddish-brown tones (dish-prawn-ghee-roast.dim_512x512.png)",
-      "Photo-realistic spicy crab curry in a bowl with crab pieces and aromatic masala gravy (dish-crab-masala-nandu-kuzhambu.dim_512x512.png)",
-      "Photo-realistic squid masala dish, rings/tentacles coated in thick masala, plated close-up (dish-kanava-koonthal-masala.dim_512x512.png)",
-      "Photo-realistic Kerala-style fish mappas with coconut milk curry, creamy light-orange gravy and fish pieces (dish-fish-mappas.dim_512x512.png)",
-      "Photo-realistic fish kola urundai (fish meatballs) deep-fried, served on a plate with garnish (dish-fish-kola-urundai.dim_512x512.png)",
-      "Photo-realistic prawn biryani, top-down plated rice with prawns and fried onions, vibrant spices (dish-chemmeen-biryani.dim_512x512.png)",
-      "Photo-realistic Andhra fish fry, golden-brown spiced fried fish fillet on plate with onion/lemon garnish (dish-andhra-fish-fry.dim_512x512.png)"
-    ],
+    "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

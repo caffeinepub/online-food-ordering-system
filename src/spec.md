@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add photo-realistic images for Chennai Spice seafood menu items and ensure both seeded and persisted menu data points to the new assets.
+**Goal:** Fix errors when opening a restaurant detail page so navigation and rendering are reliable for all seeded restaurants.
 
 **Planned changes:**
-- Generate and add 8 new 512x512 static dish images for Chennai Spice seafood items under `frontend/public/assets/generated/` using the specified filenames.
-- Update backend seed data in `backend/main.mo` so Chennai Spice menuItemIds 46–53 `imageUrl` values reference the new `/assets/generated/*.dim_512x512.png` paths.
-- Update `frontend/src/utils/imageFallbacks.ts` so these 8 dish names resolve by name to the new assets (including handling names with slashes).
-- Add a safe, conditional backend upgrade migration (in `backend/migration.mo` if needed) to update persisted `MenuItem.imageUrl` values for menuItemIds 46–53 to the new asset paths.
+- Fix frontend restaurant card click/navigation so it consistently routes to `/restaurants/<restaurantId>` and renders the Restaurant Detail page (header + menu) without runtime errors for seeded restaurants.
+- Add/ensure user-friendly invalid-ID handling on the Restaurant Detail route (empty, non-numeric, or negative IDs show an error UI instead of crashing).
+- Ensure existing fetch-failure behavior uses the current `ErrorState` UI and that the Back button still works.
+- Harden backend APIs (`getRestaurant`, `getRestaurantMenu`) to safely handle missing/invalid/nonexistent restaurant IDs by returning `null` / empty list without trapping.
 
-**User-visible outcome:** The Chennai Spice restaurant detail/menu UI shows correct, non-generic images for the 8 seafood dishes on fresh deploys and after upgrades.
+**User-visible outcome:** Clicking any seeded restaurant from the list opens its detail page reliably without a blank screen or uncaught exception; invalid URLs and data-fetch failures show a friendly error state instead of crashing.

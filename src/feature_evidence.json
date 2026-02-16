@@ -2,27 +2,14 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-generate-new-static-512x512-dish-image-assets-for-the-chennai-spice-seafood-menu-items-chepala-pulusu-prawn-ghee-roast-crab-masala-nandu-kuzhambu-kanava-koonthal-masala-fish-mappas-fish-kola-urundai-chemmeen-biryani-and-andhra-fish-fry-and-add-them-under-frontend-public-assets-generated-using-the-exact-filenames-specified-in-image-requirements",
-      "featureTitle": "Generate new static 512x512 dish image assets for the Chennai Spice seafood menu items: Chepala Pulusu, Prawn Ghee Roast, Crab Masala/Nandu Kuzhambu, Kanava/Koonthal Masala, Fish Mappas, Fish Kola Urundai, Chemmeen Biryani, and Andhra Fish Fry, and add them under `frontend/public/assets/generated/` using the exact filenames specified in Image Requirements.",
-      "files": [],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-43"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-centralized-frontend-image-resolution-in-frontend-src-utils-imagefallbacks-ts-so-the-chennai-spice-seafood-dish-names-resolve-by-name-to-the-newly-generated-seafood-dish-assets-replacing-any-current-mappings-that-force-these-names-to-the-generic-dish-fallback",
-      "featureTitle": "Update the centralized frontend image resolution in `frontend/src/utils/imageFallbacks.ts` so the Chennai Spice seafood dish names resolve by name to the newly generated seafood dish assets (replacing any current mappings that force these names to the generic dish fallback).",
+      "featureId": "feature-fix-the-restaurant-detail-open-flow-so-that-clicking-a-restaurant-card-in-the-restaurants-list-reliably-navigates-to-restaurants-restaurantid-and-renders-the-restaurant-detail-page-restaurant-header-menu-list-without-throwing-any-runtime-errors-for-all-seeded-restaurants",
+      "featureTitle": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
       "files": [
-        "frontend/src/utils/imageFallbacks.ts"
+        "frontend/src/hooks/useRestaurant.ts",
+        "frontend/src/pages/RestaurantDetailPage.tsx",
+        "frontend/src/pages/RestaurantsListPage.tsx",
+        "frontend/src/utils/getErrorMessage.ts",
+        "frontend/src/utils/restaurantId.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -33,7 +20,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-45"
+        "REQ-1"
       ],
       "confidence": "high"
     }

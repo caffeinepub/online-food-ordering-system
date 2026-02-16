@@ -29,7 +29,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
               <UtensilsCrossed className="h-6 w-6 text-primary" />
-              <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 FoodHub
               </span>
             </Link>

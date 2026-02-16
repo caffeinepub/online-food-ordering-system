@@ -9,6 +9,7 @@ import { EmptyState } from '../components/common/QueryState';
 import { toast } from 'sonner';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import type { CartItem } from '../backend';
+import { formatINR } from '../utils/formatCurrency';
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ export default function CartPage() {
   const restaurantName = items.length > 0 ? items[0].restaurantName : '';
 
   const subtotal = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
-  const subtotalInDollars = subtotal / 100;
 
   const handleCheckout = () => {
     if (!identity) {
@@ -84,15 +84,14 @@ export default function CartPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {items.map((item) => {
-                const priceInDollars = Number(item.price) / 100;
-                const itemTotal = priceInDollars * item.quantity;
+                const itemTotal = Number(item.price) * item.quantity;
 
                 return (
                   <div key={item.menuItemId.toString()}>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <h3 className="font-semibold">{item.menuItemName}</h3>
-                        <p className="text-sm text-muted-foreground">${priceInDollars.toFixed(2)} each</p>
+                        <p className="text-sm text-muted-foreground">{formatINR(item.price)} each</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="flex items-center border rounded-md">
@@ -114,7 +113,7 @@ export default function CartPage() {
                             <Plus className="h-4 w-4" />
                           </Button>
                         </div>
-                        <div className="w-20 text-right font-semibold">${itemTotal.toFixed(2)}</div>
+                        <div className="w-24 text-right font-semibold">{formatINR(itemTotal)}</div>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -142,12 +141,12 @@ export default function CartPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotalInDollars.toFixed(2)}</span>
+                  <span>{formatINR(subtotal)}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>${subtotalInDollars.toFixed(2)}</span>
+                  <span>{formatINR(subtotal)}</span>
                 </div>
               </div>
               <Button onClick={handleCheckout} disabled={isPending} className="w-full" size="lg">

@@ -5,8 +5,6 @@ import Time "mo:core/Time";
 import Array "mo:core/Array";
 import Order "mo:core/Order";
 import List "mo:core/List";
-import Migration "migration";
-
 import Runtime "mo:core/Runtime";
 import Int "mo:core/Int";
 import Principal "mo:core/Principal";
@@ -15,7 +13,7 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
 // Apply migration via with-clause
-(with migration = Migration.run)
+
 actor {
   // Authorization Mixin
   let accessControlState = AccessControl.initState();
@@ -86,8 +84,8 @@ actor {
   let orders = Map.empty<Nat, UserOrder>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  var nextRestaurantId = 6; // Update for more seeded restaurants
-  var nextMenuItemId = 53; // Updated for more seeded menu items
+  var nextRestaurantId = 8; // Next ID after seeded restaurants
+  var nextMenuItemId = 61; // Next ID after seeded menu items
   var nextOrderId = 1;
   var nextOrderItemId = 1;
 
@@ -102,7 +100,6 @@ actor {
       imageUrl = "/assets/generated/tandoori-treats.png";
     },
   );
-
   // American - Pizza
   restaurants.add(
     2,
@@ -113,7 +110,6 @@ actor {
       imageUrl = "/assets/generated/pizza-palace.dim_512x512.png";
     },
   );
-
   // Japanese - Sushi
   restaurants.add(
     3,
@@ -124,7 +120,6 @@ actor {
       imageUrl = "/assets/generated/restaurant-japanese-sushi-central.dim_1200x600.png";
     },
   );
-
   // Italian - Pasta
   restaurants.add(
     4,
@@ -135,7 +130,6 @@ actor {
       imageUrl = "/assets/generated/pasta-house.png";
     },
   );
-
   // Burger Joint
   restaurants.add(
     5,
@@ -146,7 +140,6 @@ actor {
       imageUrl = "/assets/generated/burger-joint.png";
     },
   );
-
   // South Indian / Tamil Nadu Restaurant
   restaurants.add(
     6,
@@ -157,8 +150,18 @@ actor {
       imageUrl = "/assets/generated/restaurant-indian-chennai-spice.dim_1200x600.png";
     },
   );
+  // Sakthi Snacks - New South Indian Restaurant
+  restaurants.add(
+    7,
+    {
+      id = 7;
+      name = "Sakthi Snacks";
+      description = "Authentic South Indian snack bar specializing in vegetarian street food favorites. Reasonable prices, crispy delights, tangy chutneys!";
+      imageUrl = "/assets/generated/restaurant-indian-sakthi-snacks.dim_1200x600.png";
+    },
+  );
 
-  // Menu Items for Tandoori Treats (Indian)
+  // Menu Items for each restaurant
   menuItems.add(
     1,
     {
@@ -214,8 +217,6 @@ actor {
       imageUrl = "/assets/generated/gajar-halwa.dim_512x512.png";
     },
   );
-
-  // Menu Items for Pizza Palace (American)
   menuItems.add(
     6,
     {
@@ -271,8 +272,6 @@ actor {
       imageUrl = "/assets/generated/caesar-salad.dim_512x512.png";
     },
   );
-
-  // Menu Items for Sushi Central (Japanese)
   menuItems.add(
     11,
     {
@@ -328,8 +327,6 @@ actor {
       imageUrl = "/assets/generated/dish-japanese-edamame.dim_512x512.png";
     },
   );
-
-  // Menu Items for Pasta House (Italian)
   menuItems.add(
     16,
     {
@@ -374,8 +371,6 @@ actor {
       imageUrl = "/assets/generated/garlic-bread-pasta.png";
     },
   );
-
-  // Menu Items for Burger Joint (American)
   menuItems.add(
     20,
     {
@@ -409,9 +404,6 @@ actor {
       imageUrl = "/assets/generated/vanilla-milkshake.png";
     },
   );
-
-  // South Indian / Tamil Nadu
-  // Vegetarian Dishes (id: 23-31)
   menuItems.add(
     23,
     {
@@ -478,8 +470,6 @@ actor {
       imageUrl = "/assets/generated/dish-indian-vegetarian-meals.dim_512x512.png";
     },
   );
-
-  // Non-Vegetarian Dishes (id: 29-55)
   menuItems.add(
     29,
     {
@@ -580,17 +570,6 @@ actor {
     },
   );
   menuItems.add(
-    38,
-    {
-      id = 38;
-      restaurantId = 6;
-      name = "Elumbu Rasam / Soup";
-      description = "Broth made from mutton or pork bones.";
-      price = 400;
-      imageUrl = "/assets/generated/elumbu-rasam.png";
-    },
-  );
-  menuItems.add(
     39,
     {
       id = 39;
@@ -623,8 +602,6 @@ actor {
       imageUrl = "/assets/generated/mutton-nalli-fry.png";
     },
   );
-
-  // Seafood Dishes (id: 42-53)
   menuItems.add(
     42,
     {
@@ -757,11 +734,89 @@ actor {
       imageUrl = "/assets/generated/dish-indian-andhra-fish-fry.dim_512x512.png";
     },
   );
+  menuItems.add(
+    54,
+    {
+      id = 54;
+      restaurantId = 6;
+      name = "Pani Puri";
+      description = "Crispy puris filled with spicy and tangy flavored water, chickpeas, and potatoes. A popular Indian street snack.";
+      price = 200;
+      imageUrl = "/assets/generated/dish-indian-pani-puri.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    55,
+    {
+      id = 55;
+      restaurantId = 6;
+      name = "Bhel Puri";
+      description = "A savory snack made with puffed rice, vegetables, and tangy tamarind sauce. A classic Indian chaat.";
+      price = 250;
+      imageUrl = "/assets/generated/dish-indian-bhel-puri.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    56,
+    {
+      id = 56;
+      restaurantId = 6;
+      name = "Kaalan";
+      description = "A Tamil Nadu street food made with deep-fried mushrooms in a spicy, tangy gravy. Relished as an evening snack.";
+      price = 180;
+      imageUrl = "/assets/generated/dish-indian-kaalan.dim_512x512.png";
+    },
+  );
+  // Sakthi Snacks - Pure Veg Menu Items
+  menuItems.add(
+    57,
+    {
+      id = 57;
+      restaurantId = 7;
+      name = "Samosa (2 pcs)";
+      description = "Crispy deep-fried pastry with savory potato and spice filling. Served with tangy chutney.";
+      price = 120;
+      imageUrl = "/assets/generated/samosa.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    58,
+    {
+      id = 58;
+      restaurantId = 7;
+      name = "Pani Puri";
+      description = "Crispy hollow puris filled with spiced potato, served with tangy flavored water and chutneys.";
+      price = 80;
+      imageUrl = "/assets/generated/pani-puri-snack.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    59,
+    {
+      id = 59;
+      restaurantId = 7;
+      name = "Vada Pav";
+      description = "Spicy potato vada stuffed into a pav (bread roll), served with chutneys and fried green chilies.";
+      price = 80;
+      imageUrl = "/assets/generated/vada-pav.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    60,
+    {
+      id = 60;
+      restaurantId = 7;
+      name = "Chole Bhature";
+      description = "Deep-fried bread (bhature) served with spicy chickpea curry (chole).";
+      price = 200;
+      imageUrl = "/assets/generated/chole-bhature.dim_512x512.png";
+    },
+  );
 
   // Public Queries
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
+      Runtime.trap("Unauthorized: Only users can access profiles");
     };
     userProfiles.get(caller);
   };
@@ -773,15 +828,15 @@ actor {
     userProfiles.get(_user);
   };
 
-  public query ({ caller }) func listRestaurants() : async [Restaurant] {
+  public query func listRestaurants() : async [Restaurant] {
     restaurants.values().toArray();
   };
 
-  public query ({ caller }) func getRestaurant(_id : Nat) : async ?Restaurant {
+  public query func getRestaurant(_id : Nat) : async ?Restaurant {
     restaurants.get(_id);
   };
 
-  public query ({ caller }) func getRestaurantMenu(_restaurantId : Nat) : async [MenuItem] {
+  public query func getRestaurantMenu(_restaurantId : Nat) : async [MenuItem] {
     menuItems.values().toArray().filter(func(item) { item.restaurantId == _restaurantId });
   };
 
