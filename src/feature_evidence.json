@@ -2,15 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-restaurant-detail-open-flow-so-that-clicking-a-restaurant-card-in-the-restaurants-list-reliably-navigates-to-restaurants-restaurantid-and-renders-the-restaurant-detail-page-restaurant-header-menu-list-without-throwing-any-runtime-errors-for-all-seeded-restaurants",
-      "featureTitle": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
-      "files": [
-        "frontend/src/hooks/useRestaurant.ts",
-        "frontend/src/pages/RestaurantDetailPage.tsx",
-        "frontend/src/pages/RestaurantsListPage.tsx",
-        "frontend/src/utils/getErrorMessage.ts",
-        "frontend/src/utils/restaurantId.ts"
-      ],
+      "featureId": "feature-identify-which-sakthi-snacks-dish-image-files-under-frontend-public-assets-generated-are-visually-mismatched-do-not-depict-the-dish-implied-by-the-filename-and-replace-them-by-generating-corrected-versions-while-keeping-a-deterministic-filename-scheme",
+      "featureTitle": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
+      "files": [],
       "components": [
         "authorization@4.0.0",
         "core-infrastructure@1.0.2",
@@ -21,6 +15,25 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-frontend-src-utils-imagefallbacks-ts-so-sakthi-snacks-dish-name-mappings-resolve-to-the-corrected-sakthi-snacks-image-assets-including-correcting-any-currently-wrong-name-to-image-mappings-for-sakthi-snacks-items",
+      "featureTitle": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+      "files": [
+        "frontend/src/utils/imageFallbacks.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
       ],
       "confidence": "high"
     }

@@ -86,12 +86,28 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'shrimp tempura roll': '/assets/generated/dish-shrimp-tempura-roll.dim_512x512.png',
   'miso soup': '/assets/generated/dish-miso-soup.dim_512x512.png',
   'edamame': '/assets/generated/dish-edamame.dim_512x512.png',
-  // Sakthi Snacks dishes - new restaurant with street snacks
+  // Sakthi Snacks dishes - original items
   'samosa (2 pcs)': '/assets/generated/dish-samosas.dim_512x512.png',
   'samosas': '/assets/generated/dish-samosas.dim_512x512.png',
   'samosa': '/assets/generated/dish-samosas.dim_512x512.png',
   'vada pav': '/assets/generated/dish-vada-pav.dim_512x512.png',
   'chole bhature': '/assets/generated/dish-chole-bhature.dim_512x512.png',
+  // Sakthi Snacks - New items with corrected v2 assets
+  'pakora plate': '/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png',
+  'chennaa masala': '/assets/generated/dish-chole-bhature.dim_512x512.png',
+  'vegetable cutlets': '/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png',
+  'samosa chaat': '/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png',
+  'vegetable puff': '/assets/generated/dish-samosas.dim_512x512.png',
+  'curd vada': '/assets/generated/dish-vada.dim_512x512.png',
+  'dahi puri': '/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png',
+  'pav bhaji': '/assets/generated/dish-vada-pav.dim_512x512.png',
+  'vegetable sandwich': '/assets/generated/dish-generic.dim_512x512.png',
+  'onion pakora': '/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png',
+  'mysore bonda': '/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png',
+  'vegetable momos (6 pcs)': '/assets/generated/dish-generic.dim_512x512.png',
+  'vegetable momos': '/assets/generated/dish-generic.dim_512x512.png',
+  'vegetable frankie roll': '/assets/generated/dish-vada-pav.dim_512x512.png',
+  'jalebi': '/assets/generated/dish-generic.dim_512x512.png',
 };
 
 // Map of known restaurant names to their generated image filenames
@@ -139,6 +155,7 @@ function isLegacyAssetUrl(url: string): boolean {
   // - Known bad Sushi Central patterns (california-salmon-roll.png, etc.)
   // - Known bad Chennai Spice patterns (sambar.png, coconut-chutney.png, etc. without .dim_ suffix)
   // - Known bad Sakthi Snacks patterns (samosa.png, vada-pav.png, etc. without .dim_ suffix)
+  // - Old Sakthi Snacks non-v2 patterns that need to be replaced with v2 versions
   // - Any dim_* pattern without the proper dish- prefix
   const legacyPatterns = [
     // Pizza Palace incorrect mappings
@@ -227,6 +244,28 @@ function isLegacyAssetUrl(url: string): boolean {
     /pani-puri-snack\.png(?!\.dim_)/,
     /vada-pav\.png(?!\.dim_)/,
     /chole-bhature\.png(?!\.dim_)/,
+    /bhel-puri-snacks-generated\.dim_512x512\.png/,
+    /pakora-snacks_generated\.dim_512x512\.png/,
+    /chennamasala-snacks-generated\.dim_512x512\.png/,
+    /veggiecutlets-snacks-generated\.dim_512x512\.png/,
+    /samosa-chaat-snacks-generated\.dim_512x512\.png/,
+    /vegpuff-snacks-generated\.dim_512x512\.png/,
+    /vadacurd-snacks-generated\.dim_512x512\.png/,
+    /dahipuri-snacks-generated\.dim_512x512\.png/,
+    /pavbhaji-snacks-generated\.dim_512x512\.png/,
+    /vegsandwich-snacks-generated\.dim_512x512\.png/,
+    /onionpakora-snacks-generated\.dim_512x512\.png/,
+    /bonda-snacks-generated\.dim_512x512\.png/,
+    /veggie-momos-snacks-generated\.dim_512x512\.png/,
+    /frankieroll-snacks-generated\.dim_512x512\.png/,
+    /jalebi-snacks-generated\.dim_512x512\.png/,
+    // Old Sakthi Snacks non-v2 patterns (need to be replaced with v2 versions)
+    /dish-sakthi-pani-puri\.dim_512x512\.png/,
+    /dish-sakthi-bhel-puri\.dim_512x512\.png/,
+    /dish-sakthi-onion-pakoda\.dim_512x512\.png/,
+    /dish-sakthi-bajji\.dim_512x512\.png/,
+    /dish-sakthi-sundal\.dim_512x512\.png/,
+    /dish-sakthi-murukku\.dim_512x512\.png/,
     // Restaurant cover legacy patterns
     /tandoori-treats\.png(?!\.dim_)/,
     /pizza-palace\.png(?!\.dim_)/,

@@ -85,7 +85,7 @@ actor {
   let userProfiles = Map.empty<Principal, UserProfile>();
 
   var nextRestaurantId = 8; // Next ID after seeded restaurants
-  var nextMenuItemId = 61; // Next ID after seeded menu items
+  var nextMenuItemId = 76; // Next ID after seeded menu items (61 + 15 new menu items)
   var nextOrderId = 1;
   var nextOrderItemId = 1;
 
@@ -813,6 +813,173 @@ actor {
     },
   );
 
+  // Sakthi Snacks - New Items
+  menuItems.add(
+    61,
+    {
+      id = 61;
+      restaurantId = 7;
+      name = "Bhel Puri";
+      description = "Puffed rice, vegetables, tamarind chutney - a refreshing vegetarian street food.";
+      price = 200;
+      imageUrl = "/assets/generated/bhel-puri-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    62,
+    {
+      id = 62;
+      restaurantId = 7;
+      name = "Pakora Plate";
+      description = "Assorted mixed bites with potatoes & spinach in a chickpea flour coating. 100% vegetarian, crispy, and delicious.";
+      price = 150;
+      imageUrl = "/assets/generated/pakora-snacks_generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    63,
+    {
+      id = 63;
+      restaurantId = 7;
+      name = "Chennaa Masala";
+      description = "Authentic vegetarian dish with tamarind, chickpeas in a spicy rich tomato gravy, loaded with Indian spices.";
+      price = 220;
+      imageUrl = "/assets/generated/chennamasala-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    64,
+    {
+      id = 64;
+      restaurantId = 7;
+      name = "Vegetable Cutlets";
+      description = "A healthy snack made with potatoes, carrots, and peas. Shallow fried, 100% vegetarian.";
+      price = 180;
+      imageUrl = "/assets/generated/veggiecutlets-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    65,
+    {
+      id = 65;
+      restaurantId = 7;
+      name = "Samosa Chaat";
+      description = "Mixed snack dish with broken samosas, chickpea curry, drizzled with fragrant chutneys. Vegetarian delight!";
+      price = 200;
+      imageUrl = "/assets/generated/samosa-chaat-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    66,
+    {
+      id = 66;
+      restaurantId = 7;
+      name = "Vegetable Puff";
+      description = "Crispy layered pastry pocket filled with spicy vegetables. Baked, not fried. Pure vegetarian.";
+      price = 80;
+      imageUrl = "/assets/generated/vegpuff-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    67,
+    {
+      id = 67;
+      restaurantId = 7;
+      name = "Curd Vada";
+      description = "Savoury lentil vada soaked in fresh curd, topped with Indian spices and vegetables. Vegetarian & Gluten free. ";
+      price = 140;
+      imageUrl = "/assets/generated/vadacurd-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    68,
+    {
+      id = 68;
+      restaurantId = 7;
+      name = "Dahi Puri";
+      description = "Semolina balls filled with tangy potato, onions, aromatic masalas, and creamy curd. Vegetarian street food.";
+      price = 100;
+      imageUrl = "/assets/generated/dahipuri-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    69,
+    {
+      id = 69;
+      restaurantId = 7;
+      name = "Pav Bhaji";
+      description = "Spiced puree vegetables served with buttered toasted buns. A famous Mumbai vegetarian street food.";
+      price = 160;
+      imageUrl = "/assets/generated/pavbhaji-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    70,
+    {
+      id = 70;
+      restaurantId = 7;
+      name = "Vegetable Sandwich";
+      description = "Classic snack loaded with fresh tomatoes, cucumber, carrots, lettuce, and a vegetarian spread.";
+      price = 60;
+      imageUrl = "/assets/generated/vegsandwich-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    71,
+    {
+      id = 71;
+      restaurantId = 7;
+      name = "Onion Pakora";
+      description = "Thin Indian onion fritters, battered in spicy turmeric and chickpea flour.";
+      price = 80;
+      imageUrl = "/assets/generated/onionpakora-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    72,
+    {
+      id = 72;
+      restaurantId = 7;
+      name = "Mysore Bonda";
+      description = "Famous street food from Karnataka - a fluffy fried snack made with spices, yogurt, and lentil flour. 100% vegetarian.";
+      price = 80;
+      imageUrl = "/assets/generated/bonda-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    73,
+    {
+      id = 73;
+      restaurantId = 7;
+      name = "Vegetable Momos (6 pcs)";
+      description = "Dumplings filled with seasoned vegetable stuffing. A tasty vegetarian treat.";
+      price = 120;
+      imageUrl = "/assets/generated/veggie-momos-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    74,
+    {
+      id = 74;
+      restaurantId = 7;
+      name = "Vegetable Frankie Roll";
+      description = "Roti wrap filled with spiced mixed vegetables and tamarind chutney. 100% vegetarian & spicy.";
+      price = 160;
+      imageUrl = "/assets/generated/frankieroll-snacks-generated.dim_512x512.png";
+    },
+  );
+  menuItems.add(
+    75,
+    {
+      id = 75;
+      restaurantId = 7;
+      name = "Jalebi";
+      description = "Crispy deep-fried Indian sweet dish, soaked in saffron sugar syrup. 100% vegetarian and gluten free.";
+      price = 80;
+      imageUrl = "/assets/generated/jalebi-snacks-generated.dim_512x512.png";
+    },
+  );
+
   // Public Queries
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -952,3 +1119,4 @@ actor {
     orders.add(orderId, updatedOrder);
   };
 };
+

@@ -4,30 +4,39 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "Error occurs when opening a restaurant (restaurant details/open flow fails)."
+    "Recently generated images are mismatched (do not correspond to expected snack items/menu)."
   ],
   "isFixRequest": true,
+  "imageRequirements": "## Edit Images\n- Crispy pani puri with chutneys and sev on a banana leaf, studio lighting, high detail (dish-sakthi-pani-puri.dim_512x512.png > dish-sakthi-pani-puri.v2.dim_512x512.png)\n- Bhel puri in a bowl with puffed rice, sev, onions, tomatoes, coriander, tamarind drizzle, studio lighting (dish-sakthi-bhel-puri.dim_512x512.png > dish-sakthi-bhel-puri.v2.dim_512x512.png)\n- Golden onion pakoda/fritters piled on a plate with mint chutney, studio lighting (dish-sakthi-onion-pakoda.dim_512x512.png > dish-sakthi-onion-pakoda.v2.dim_512x512.png)\n- Mixed vegetable bajji (banana pepper/plantain fritters) with chutneys, studio lighting (dish-sakthi-bajji.dim_512x512.png > dish-sakthi-bajji.v2.dim_512x512.png)\n- Spiced sundal (chickpea snack) garnished with coconut and curry leaves in a bowl, studio lighting (dish-sakthi-sundal.dim_512x512.png > dish-sakthi-sundal.v2.dim_512x512.png)\n- South Indian murukku/chakli spirals stacked on a plate, studio lighting (dish-sakthi-murukku.dim_512x512.png > dish-sakthi-murukku.v2.dim_512x512.png)",
   "existing_features": [
     {
-      "id": "feature-fix-the-restaurant-detail-open-flow-so-that-clicking-a-restaurant-card-in-the-restaurants-list-reliably-navigates-to-restaurants-restaurantid-and-renders-the-restaurant-detail-page-restaurant-header-menu-list-without-throwing-any-runtime-errors-for-all-seeded-restaurants",
-      "title": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
+      "id": "feature-identify-which-sakthi-snacks-dish-image-files-under-frontend-public-assets-generated-are-visually-mismatched-do-not-depict-the-dish-implied-by-the-filename-and-replace-them-by-generating-corrected-versions-while-keeping-a-deterministic-filename-scheme",
+      "title": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
       "reqIds": [
         "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-utils-imagefallbacks-ts-so-sakthi-snacks-dish-name-mappings-resolve-to-the-corrected-sakthi-snacks-image-assets-including-correcting-any-currently-wrong-name-to-image-mappings-for-sakthi-snacks-items",
+      "title": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+      "reqIds": [
+        "REQ-2"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-2",
-      "summary": "Ensure backend restaurant detail APIs used by the frontend (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap, so the frontend can always render an error or empty state instead of crashing.",
+      "id": "AR-3",
+      "summary": "Ensure the seeded Sakthi Snacks restaurant (restaurantId = 7) menu items in `backend/main.mo` have `imageUrl` values that correspond to the correct generated static assets under `/assets/generated/` (or are left empty/legacy-safe so the frontend name-based mapping resolves correctly), so the backend does not provide mismatched image URLs.",
       "reqIds": [
-        "REQ-2"
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Fix error when opening a restaurant detail page",
+  "projectName": "Fix mismatched generated dish images for Sakthi Snacks menu items",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

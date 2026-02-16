@@ -1,27 +1,61 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T08:55:23.713Z",
-  "summary": "Frontend changes add robust restaurantId parsing/validation, safer React Query hooks, defensive list rendering, and safer error-message extraction to prevent runtime crashes when navigating to Restaurant Detail. However, no backend changes are shown for `getRestaurant` / `getRestaurantMenu`, so backend safety requirements appear unimplemented in this diff summary.",
+  "generatedAt": "2026-02-16T03:42:46.486Z",
+  "summary": "The diff does not implement the core Sakthi Snacks image mismatch fix: no new corrected Sakthi image assets were added, the fallback mapping changes shown are not clearly updated to the specified Sakthi v2 filenames, and there are no backend seed/migration updates for restaurantId=7. Some unrelated mapping/documentation/state files were modified without being requested.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Ensure backend restaurant detail APIs (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap.",
-      "reason": "The diff summary contains only frontend changes plus utility additions; there are no modifications to `backend/main.mo` (or a new `backend/migration.mo`) demonstrating safe handling for nonexistent/invalid IDs or preventing traps.",
+      "id": "REQ-1",
+      "requirement": "Add corrected replacement Sakthi Snacks dish images under `frontend/public/assets/generated/` using the specified new filenames (e.g., `dish-sakthi-*-v2.dim_512x512.png`) and keep them as static frontend assets.",
+      "reason": "Diff shows no added files under `frontend/public/assets/generated/` (Added: 0) and no evidence of the specified `dish-sakthi-...v2...` assets being introduced.",
       "evidence": [
-        "File diff summary shows only frontend files added/modified; no backend files listed as modified/added."
+        "File diff summary: Added: 0, Modified: 3, Removed: 0"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including fixing wrong name-to-image mappings like unrelated items mapping to Sakthi assets).",
+      "reason": "The visible portion of `imageFallbacks.ts` shows mappings like `'pani puri': '/assets/generated/dish-pani-puri.dim_512x512.png'` and `'bhel puri': '/assets/generated/dish-bhel-puri.dim_512x...'` but does not show updates to the specified Sakthi filenames (`dish-sakthi-...v2...`). The file is truncated, so full Sakthi mapping updates cannot be verified from the provided diff.",
+      "evidence": [
+        "frontend/src/utils/imageFallbacks.ts"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Update backend seed data for Sakthi Snacks (restaurantId=7) in `backend/main.mo` so menu item `imageUrl` values point to correct `/assets/generated/...` static assets (or are left empty/legacy-safe), with conditional migration if needed.",
+      "reason": "No backend files were modified; there is no evidence of changes to `backend/main.mo` or any `backend/migration.mo` being added.",
+      "evidence": [
+        "File diff summary: Modified files do not include backend/main.mo; Added files: none"
       ]
     }
   ],
-  "hallucinated_features": [],
+  "hallucinated_features": [
+    {
+      "description": "Edits to `frontend-file-summaries.txt` (documentation-style summary of many frontend files).",
+      "reason": "Not requested by any requirement; requirements focus on generated image assets, `imageFallbacks.ts`, and backend seed/migration changes.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Edits to `project_state.json` (tracking new_feature_requests/status).",
+      "reason": "Not requested by the BuildRequest requirements/acceptance criteria; appears to be internal project tracking rather than implementing the Sakthi image fix.",
+      "evidence": [
+        "project_state.json"
+      ]
+    },
+    {
+      "description": "Additional/expanded dish name mappings for non-Sakthi items (e.g., multiple 'Chennai Spice' dishes/seafood/snacks) in `imageFallbacks.ts`.",
+      "reason": "The BuildRequest scope is specifically to correct Sakthi Snacks image mismatches and mappings; adding/updating many other restaurant/dish mappings is not requested (and risks violating the non-goal of unrelated changes).",
+      "evidence": [
+        "frontend/src/utils/imageFallbacks.ts"
+      ]
+    }
+  ],
   "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/hooks/useRestaurant.ts",
-    "frontend/src/pages/RestaurantDetailPage.tsx",
-    "frontend/src/pages/RestaurantsListPage.tsx",
-    "frontend/src/utils/getErrorMessage.ts",
-    "frontend/src/utils/restaurantId.ts",
+    "frontend/src/utils/imageFallbacks.ts",
     "project_state.json"
   ]
 }

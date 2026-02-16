@@ -1,37 +1,52 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T08:55:23.716Z",
+  "generatedAt": "2026-02-16T03:42:46.489Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 1,
+    "total": 3,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
+        "summary": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/restaurantId.ts",
-          "frontend/src/utils/getErrorMessage.ts",
-          "frontend/src/pages/RestaurantsListPage.tsx",
-          "frontend/src/pages/RestaurantDetailPage.tsx",
-          "frontend/src/hooks/useRestaurant.ts"
+          "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png"
         ],
         "matchedFiles": [
-          "frontend/src/utils/restaurantId.ts",
-          "frontend/src/utils/getErrorMessage.ts",
-          "frontend/src/pages/RestaurantsListPage.tsx",
-          "frontend/src/pages/RestaurantDetailPage.tsx",
-          "frontend/src/hooks/useRestaurant.ts"
+          "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Ensure backend restaurant detail APIs used by the frontend (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap, so the frontend can always render an error or empty state instead of crashing.",
+        "summary": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/imageFallbacks.ts",
+          "frontend/src/utils/imageFallbacks.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/imageFallbacks.ts",
+          "frontend/src/utils/imageFallbacks.ts"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Ensure the seeded Sakthi Snacks restaurant (restaurantId = 7) menu items in `backend/main.mo` have `imageUrl` values that correspond to the correct generated static assets under `/assets/generated/` (or are left empty/legacy-safe so the frontend name-based mapping resolves correctly), so the backend does not provide mismatched image URLs.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -43,11 +58,13 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/hooks/useRestaurant.ts",
-    "frontend/src/pages/RestaurantDetailPage.tsx",
-    "frontend/src/pages/RestaurantsListPage.tsx",
-    "frontend/src/utils/getErrorMessage.ts",
-    "frontend/src/utils/restaurantId.ts",
+    "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
+    "frontend/src/utils/imageFallbacks.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

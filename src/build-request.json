@@ -1,58 +1,83 @@
 {
   "kind": "build_request",
-  "title": "Fix error when opening a restaurant detail page",
-  "priority": "high",
+  "title": "Fix mismatched generated dish images for Sakthi Snacks menu items",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the restaurant detail open flow so that clicking a restaurant card in the restaurants list reliably navigates to `/restaurants/$restaurantId` and renders the Restaurant Detail page (restaurant header + menu list) without throwing any runtime errors for all seeded restaurants.",
+      "text": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "there is a error in opening restaurant"
+          "the images recently generated are mismatched"
         ]
       },
       "acceptanceCriteria": [
-        "From the Restaurants list page, clicking any restaurant card navigates to `/restaurants/<id>` and the page renders without a blank screen or uncaught exception.",
-        "The Restaurant Detail page shows a user-friendly error UI (not a crash) when the URL contains an invalid restaurantId (empty, non-numeric, or negative).",
-        "If fetching restaurant or menu data fails, the existing error UI is shown (via `ErrorState`) and the Back button still works.",
-        "No invalid restaurant entries (missing `id`) are clickable in the list; they are safely skipped as already intended."
+        "For each affected Sakthi Snacks image asset, a corrected replacement image is added to `frontend/public/assets/generated/` using the new filenames specified in Image Requirements (edits).",
+        "The corrected images visually match their dish names (e.g., pani puri shows puris with chutneys; murukku shows chakli/murukku spirals).",
+        "No runtime network fetch is introduced for these images; they remain static assets served by the frontend."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure backend restaurant detail APIs used by the frontend (`getRestaurant` and `getRestaurantMenu`) handle missing/invalid restaurant IDs safely (returning `null` / empty list as appropriate) and do not trap, so the frontend can always render an error or empty state instead of crashing.",
+      "text": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "the images recently generated are mismatched"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When rendering the Sakthi Snacks restaurant menu, each menu item’s image resolves to the correct Sakthi Snacks asset via `getDishImageUrl(item.imageUrl, item.name)`.",
+        "Known incorrect Sakthi Snacks mappings are fixed so that unrelated items are not mapped to the Sakthi Snacks-specific assets (e.g., items like \"jalebi\" do not resolve to a \"sundal\" image asset).",
+        "If a menu item has an empty/legacy/incorrect `imageUrl`, the correct image is still selected via name-based mapping where available."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Ensure the seeded Sakthi Snacks restaurant (restaurantId = 7) menu items in `backend/main.mo` have `imageUrl` values that correspond to the correct generated static assets under `/assets/generated/` (or are left empty/legacy-safe so the frontend name-based mapping resolves correctly), so the backend does not provide mismatched image URLs.",
       "target": "backend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "there is a error in opening restaurant"
+          "the images recently generated are mismatched"
         ]
       },
       "acceptanceCriteria": [
-        "Calling `getRestaurant(<nonexistentId>)` returns `null` (or equivalent optional none) and does not trap.",
-        "Calling `getRestaurantMenu(<nonexistentId>)` returns an empty list and does not trap.",
-        "Existing seeded restaurant IDs (1–7) return their restaurant record and menu items successfully."
+        "Backend returns Sakthi Snacks menu items whose `imageUrl` values (when present) point to the correct `/assets/generated/...` filenames for those dishes.",
+        "If the canister already has persisted seeded data, apply changes via a conditional migration consistent with the project’s migration policy; otherwise, update the seed data directly.",
+        "No non-Sakthi menu items are inadvertently changed as part of this fix."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under `frontend/src/components/ui` (read-only UI primitives).",
-    "Do not modify any files listed in `frontend.immutablePaths` in SYSTEM_CONTEXT.",
-    "Backend must remain a single Motoko actor in `backend/main.mo`; only add `backend/migration.mo` if state schema changes require it."
+    "Do not edit any files under `frontend/src/components/ui` (compose them instead).",
+    "Do not modify any frontend files listed as immutable in SYSTEM_CONTEXT (including `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, and `frontend/src/main.tsx`).",
+    "Backend must remain a single Motoko actor in `backend/main.mo`; only add `backend/migration.mo` if required by persisted state changes (conditional migration policy)."
   ],
   "nonGoals": [
-    "Adding new restaurant features (create/edit/delete) is out of scope.",
-    "Changing authentication/Internet Identity behavior is out of scope unless required to prevent the restaurant page error."
+    "Adding new restaurants or new menu items beyond correcting image mismatches.",
+    "Implementing new image hosting/storage via backend; images must remain frontend static assets.",
+    "Changing the overall UI layout or styling beyond what’s necessary to verify/reflect corrected images."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": []
+    "edits": [
+      "Crispy pani puri with chutneys and sev on a banana leaf, studio lighting, high detail (dish-sakthi-pani-puri.dim_512x512.png > dish-sakthi-pani-puri.v2.dim_512x512.png)",
+      "Bhel puri in a bowl with puffed rice, sev, onions, tomatoes, coriander, tamarind drizzle, studio lighting (dish-sakthi-bhel-puri.dim_512x512.png > dish-sakthi-bhel-puri.v2.dim_512x512.png)",
+      "Golden onion pakoda/fritters piled on a plate with mint chutney, studio lighting (dish-sakthi-onion-pakoda.dim_512x512.png > dish-sakthi-onion-pakoda.v2.dim_512x512.png)",
+      "Mixed vegetable bajji (banana pepper/plantain fritters) with chutneys, studio lighting (dish-sakthi-bajji.dim_512x512.png > dish-sakthi-bajji.v2.dim_512x512.png)",
+      "Spiced sundal (chickpea snack) garnished with coconut and curry leaves in a bowl, studio lighting (dish-sakthi-sundal.dim_512x512.png > dish-sakthi-sundal.v2.dim_512x512.png)",
+      "South Indian murukku/chakli spirals stacked on a plate, studio lighting (dish-sakthi-murukku.dim_512x512.png > dish-sakthi-murukku.v2.dim_512x512.png)"
+    ]
   },
   "userProfileUpdate": {
     "goalsToAdd": [],

@@ -1,42 +1,67 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Stabilize restaurant detail navigation and error handling",
+  "title": "Fix Sakthi Snacks mismatched dish images and mapping to corrected static assets",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Harden restaurants list -> restaurant detail navigation and detail page ID parsing/query error handling to avoid runtime crashes and show friendly error UI for invalid IDs.",
+      "summary": "Replace visually mismatched Sakthi Snacks generated dish images with corrected v2 static assets using deterministic filenames.",
       "acceptanceCriteria": [
-        "From the Restaurants list page, clicking any restaurant card navigates to `/restaurants/<id>` and the page renders without a blank screen or uncaught exception.",
-        "The Restaurant Detail page shows a user-friendly error UI (not a crash) when the URL contains an invalid restaurantId (empty, non-numeric, or negative).",
-        "If fetching restaurant or menu data fails, the existing error UI is shown (via `ErrorState`) and the Back button still works.",
-        "No invalid restaurant entries (missing `id`) are clickable in the list; they are safely skipped as already intended."
+        "For each affected Sakthi Snacks image asset, a corrected replacement image is added to `frontend/public/assets/generated/` using the new filenames specified in Image Requirements (edits).",
+        "The corrected images visually match their dish names (e.g., pani puri shows puris with chutneys; murukku shows chakli/murukku spirals).",
+        "No runtime network fetch is introduced for these images; they remain static assets served by the frontend."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/restaurantId.ts",
+          "path": "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
           "operation": "create",
-          "description": "Add a small shared helper to validate and parse `restaurantId` route params into a positive bigint (returning a typed result that includes an error message for invalid/empty/non-numeric/negative values) so both list/detail flows handle IDs consistently."
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-pani-puri.dim_512x512.png > dish-sakthi-pani-puri.v2.dim_512x512.png (crispy pani puri with chutneys and sev)."
         },
         {
-          "path": "frontend/src/utils/getErrorMessage.ts",
+          "path": "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
           "operation": "create",
-          "description": "Add a utility to safely convert unknown thrown values (including non-Error shapes from query libraries) into a user-friendly string for `ErrorState`, avoiding runtime errors from accessing `.message` on non-Error values."
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-bhel-puri.dim_512x512.png > dish-sakthi-bhel-puri.v2.dim_512x512.png (bhel puri bowl with puffed rice, sev, onions, tomatoes, coriander, tamarind drizzle)."
         },
         {
-          "path": "frontend/src/pages/RestaurantsListPage.tsx",
-          "operation": "modify",
-          "description": "Ensure only valid restaurants are clickable by validating `restaurant.id` before rendering a clickable Card; use the shared `restaurantId` helper to build the route param string; and use `getErrorMessage` when rendering `ErrorState` to prevent crashes if `error` is not an `Error` object."
+          "path": "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-onion-pakoda.dim_512x512.png > dish-sakthi-onion-pakoda.v2.dim_512x512.png (golden onion pakoda/fritters with mint chutney)."
         },
         {
-          "path": "frontend/src/pages/RestaurantDetailPage.tsx",
-          "operation": "modify",
-          "description": "Replace inline `restaurantId` parsing with the shared `restaurantId` helper; ensure queries are always invoked with a safe value while being disabled for invalid IDs; and use `getErrorMessage` for `ErrorState` to prevent runtime errors while preserving the Back button behavior."
+          "path": "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-bajji.dim_512x512.png > dish-sakthi-bajji.v2.dim_512x512.png (mixed vegetable bajji with chutneys)."
         },
         {
-          "path": "frontend/src/hooks/useRestaurant.ts",
+          "path": "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-sundal.dim_512x512.png > dish-sakthi-sundal.v2.dim_512x512.png (spiced sundal with coconut and curry leaves)."
+        },
+        {
+          "path": "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-murukku.dim_512x512.png > dish-sakthi-murukku.v2.dim_512x512.png (South Indian murukku/chakli spirals stacked on a plate)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Update Sakthi Snacks dish-name fallback mappings so menu items resolve to the corrected v2 assets and fix known wrong mappings.",
+      "acceptanceCriteria": [
+        "When rendering the Sakthi Snacks restaurant menu, each menu item’s image resolves to the correct Sakthi Snacks asset via `getDishImageUrl(item.imageUrl, item.name)`.",
+        "Known incorrect Sakthi Snacks mappings are fixed so that unrelated items are not mapped to the Sakthi Snacks-specific assets (e.g., items like \"jalebi\" do not resolve to a \"sundal\" image asset).",
+        "If a menu item has an empty/legacy/incorrect `imageUrl`, the correct image is still selected via name-based mapping where available."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Make `useGetRestaurant`/`useGetRestaurantMenu` resilient to invalid IDs by allowing a nullable/invalid input pattern (while keeping React hook call sites stable) and ensuring queries stay disabled for non-positive IDs; keep return values (`null`/`[]`) consistent so the detail page can render empty/not-found/error states without crashing."
+          "description": "Update `DISH_NAME_TO_IMAGE` entries for Sakthi Snacks items to point to the new v2 assets (e.g., mappings that currently use dish-sakthi-pani-puri.dim_512x512.png / dish-sakthi-bhel-puri.dim_512x512.png / dish-sakthi-onion-pakoda.dim_512x512.png / dish-sakthi-bajji.dim_512x512.png / dish-sakthi-sundal.dim_512x512.png / dish-sakthi-murukku.dim_512x512.png should resolve to their corresponding v2 filenames under frontend/public/assets/generated/). Fix incorrect Sakthi mapping(s) such as 'jalebi' no longer mapping to the sundal asset; map it to a non-Sakthi appropriate fallback (e.g., generic) unless a correct jalebi asset exists."
+        },
+        {
+          "path": "frontend/src/utils/imageFallbacks.ts",
+          "operation": "modify",
+          "description": "Extend `isLegacyAssetUrl()` to treat the old (non-v2) Sakthi Snacks generated filenames for the affected dishes as legacy/invalid, so that if the backend still supplies those older URLs, `getDishImageUrl()` will re-resolve via name-based mapping to the corrected v2 static assets (no runtime fetch; still served as frontend static assets)."
         }
       ]
     }
