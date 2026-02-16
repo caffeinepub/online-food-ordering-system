@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-identify-which-sakthi-snacks-dish-image-files-under-frontend-public-assets-generated-are-visually-mismatched-do-not-depict-the-dish-implied-by-the-filename-and-replace-them-by-generating-corrected-versions-while-keeping-a-deterministic-filename-scheme",
-      "featureTitle": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
+      "featureId": "feature-generate-new-correct-dish-images-without-user-uploads-for-sakthi-snacks-menu-items-jalebi-vegetable-frankie-roll-vegetable-momos-and-vegetable-sandwich-and-add-them-as-static-assets-under-frontend-public-assets-generated-using-the-filenames-specified-in-the-image-requirements",
+      "featureTitle": "Generate new, correct dish images (without user uploads) for Sakthi Snacks menu items: Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich, and add them as static assets under `frontend/public/assets/generated/` using the filenames specified in the Image Requirements.",
       "files": [],
       "components": [
         "authorization@4.0.0",
@@ -19,8 +19,8 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-frontend-src-utils-imagefallbacks-ts-so-sakthi-snacks-dish-name-mappings-resolve-to-the-corrected-sakthi-snacks-image-assets-including-correcting-any-currently-wrong-name-to-image-mappings-for-sakthi-snacks-items",
-      "featureTitle": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+      "featureId": "feature-update-frontend-src-utils-imagefallbacks-ts-so-the-dish-name-mapping-resolves-these-sakthi-snacks-items-to-the-newly-generated-dish-assets-jalebi-vegetable-frankie-roll-vegetable-momos-including-the-existing-vegetable-momos-6-pcs-normalized-key-and-vegetable-sandwich",
+      "featureTitle": "Update `frontend/src/utils/imageFallbacks.ts` so the dish-name mapping resolves these Sakthi Snacks items to the newly generated dish assets: `jalebi`, `vegetable frankie roll`, `vegetable momos` (including the existing `vegetable momos (6 pcs)` normalized key), and `vegetable sandwich`.",
       "files": [
         "frontend/src/utils/imageFallbacks.ts"
       ],

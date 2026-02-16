@@ -1,92 +1,83 @@
 {
   "kind": "build_request",
-  "title": "Fix mismatched generated dish images for Sakthi Snacks menu items",
+  "title": "Generate and wire correct images for Sakthi Snacks items (Jalebi, Veg Frankie Roll, Veg Momos, Veg Sandwich)",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
+      "text": "Generate new, correct dish images (without user uploads) for Sakthi Snacks menu items: Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich, and add them as static assets under `frontend/public/assets/generated/` using the filenames specified in the Image Requirements.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "the images recently generated are mismatched"
+          "change the image of jilebi and generate by yourself",
+          "generate images y yourself"
         ]
       },
       "acceptanceCriteria": [
-        "For each affected Sakthi Snacks image asset, a corrected replacement image is added to `frontend/public/assets/generated/` using the new filenames specified in Image Requirements (edits).",
-        "The corrected images visually match their dish names (e.g., pani puri shows puris with chutneys; murukku shows chakli/murukku spirals).",
-        "No runtime network fetch is introduced for these images; they remain static assets served by the frontend."
+        "The following image files exist under `frontend/public/assets/generated/` and render correctly in a browser: `dish-sakthi-jalebi.dim_512x512.png`, `dish-sakthi-vegetable-frankie-roll.dim_512x512.png`, `dish-sakthi-vegetable-momos.dim_512x512.png`, `dish-sakthi-vegetable-sandwich.dim_512x512.png`.",
+        "Each generated image visually matches the dish implied by its filename (Jalebi is a syrupy spiral dessert; momos are steamed dumplings; frankie roll is a wrap/roll; vegetable sandwich is a layered sandwich)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+      "text": "Update `frontend/src/utils/imageFallbacks.ts` so the dish-name mapping resolves these Sakthi Snacks items to the newly generated dish assets: `jalebi`, `vegetable frankie roll`, `vegetable momos` (including the existing `vegetable momos (6 pcs)` normalized key), and `vegetable sandwich`.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "the images recently generated are mismatched"
+          "change the image of jilebi and generate by yourself",
+          "generate images y yourself"
         ]
       },
       "acceptanceCriteria": [
-        "When rendering the Sakthi Snacks restaurant menu, each menu item’s image resolves to the correct Sakthi Snacks asset via `getDishImageUrl(item.imageUrl, item.name)`.",
-        "Known incorrect Sakthi Snacks mappings are fixed so that unrelated items are not mapped to the Sakthi Snacks-specific assets (e.g., items like \"jalebi\" do not resolve to a \"sundal\" image asset).",
-        "If a menu item has an empty/legacy/incorrect `imageUrl`, the correct image is still selected via name-based mapping where available."
+        "In `frontend/src/utils/imageFallbacks.ts`, the `DISH_NAME_TO_IMAGE` entries for `jalebi`, `vegetable frankie roll`, `vegetable momos`, `vegetable momos (6 pcs)`, and `vegetable sandwich` point to the new `/assets/generated/dish-sakthi-*.dim_512x512.png` paths.",
+        "When `getDishImageUrl` is called with an empty/legacy `imageUrl` and a matching dish name, it returns the new Sakthi image path rather than the generic dish fallback."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the seeded Sakthi Snacks restaurant (restaurantId = 7) menu items in `backend/main.mo` have `imageUrl` values that correspond to the correct generated static assets under `/assets/generated/` (or are left empty/legacy-safe so the frontend name-based mapping resolves correctly), so the backend does not provide mismatched image URLs.",
+      "text": "Update the seeded Sakthi Snacks (restaurantId = 7) menu items in `backend/main.mo` so their `imageUrl` values for Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich correspond to the new generated static assets under `/assets/generated/` (or are set to an empty string so the frontend name-based mapping resolves to the correct new images).",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "the images recently generated are mismatched"
+          "change the image of jilebi and generate by yourself",
+          "generate images y yourself"
         ]
       },
       "acceptanceCriteria": [
-        "Backend returns Sakthi Snacks menu items whose `imageUrl` values (when present) point to the correct `/assets/generated/...` filenames for those dishes.",
-        "If the canister already has persisted seeded data, apply changes via a conditional migration consistent with the project’s migration policy; otherwise, update the seed data directly.",
-        "No non-Sakthi menu items are inadvertently changed as part of this fix."
+        "`backend/main.mo` no longer seeds legacy/mismatched `imageUrl` values for Sakthi Snacks items: Jalebi, Vegetable Frankie Roll, Vegetable Momos, Vegetable Sandwich.",
+        "After loading the Restaurants list and Sakthi Snacks restaurant detail page, these four menu items display the newly generated images (either via direct `imageUrl` or via name-based mapping when `imageUrl` is empty/legacy)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under `frontend/src/components/ui` (compose them instead).",
-    "Do not modify any frontend files listed as immutable in SYSTEM_CONTEXT (including `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, and `frontend/src/main.tsx`).",
-    "Backend must remain a single Motoko actor in `backend/main.mo`; only add `backend/migration.mo` if required by persisted state changes (conditional migration policy)."
+    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional backend services).",
+    "Do not edit files under `frontend/src/components/ui` or the immutable hook entrypoints listed in SYSTEM_CONTEXT.",
+    "Store generated images as static assets under `frontend/public/assets/generated/` and reference them via `/assets/generated/...` paths (do not serve images via the backend)."
   ],
   "nonGoals": [
-    "Adding new restaurants or new menu items beyond correcting image mismatches.",
-    "Implementing new image hosting/storage via backend; images must remain frontend static assets.",
-    "Changing the overall UI layout or styling beyond what’s necessary to verify/reflect corrected images."
+    "Do not change authentication (Internet Identity) behavior.",
+    "Do not redesign other restaurants’ menus or images beyond the four specified Sakthi Snacks items.",
+    "Do not add real-time features, external databases, or third-party auth providers."
   ],
   "imageRequirements": {
-    "required": [],
-    "edits": [
-      "Crispy pani puri with chutneys and sev on a banana leaf, studio lighting, high detail (dish-sakthi-pani-puri.dim_512x512.png > dish-sakthi-pani-puri.v2.dim_512x512.png)",
-      "Bhel puri in a bowl with puffed rice, sev, onions, tomatoes, coriander, tamarind drizzle, studio lighting (dish-sakthi-bhel-puri.dim_512x512.png > dish-sakthi-bhel-puri.v2.dim_512x512.png)",
-      "Golden onion pakoda/fritters piled on a plate with mint chutney, studio lighting (dish-sakthi-onion-pakoda.dim_512x512.png > dish-sakthi-onion-pakoda.v2.dim_512x512.png)",
-      "Mixed vegetable bajji (banana pepper/plantain fritters) with chutneys, studio lighting (dish-sakthi-bajji.dim_512x512.png > dish-sakthi-bajji.v2.dim_512x512.png)",
-      "Spiced sundal (chickpea snack) garnished with coconut and curry leaves in a bowl, studio lighting (dish-sakthi-sundal.dim_512x512.png > dish-sakthi-sundal.v2.dim_512x512.png)",
-      "South Indian murukku/chakli spirals stacked on a plate, studio lighting (dish-sakthi-murukku.dim_512x512.png > dish-sakthi-murukku.v2.dim_512x512.png)"
-    ]
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
+    "required": [
+      "Close-up studio photo of bright orange jalebi spirals soaked in sugar syrup, on a small plate, high detail (dish-sakthi-jalebi.dim_512x512.png)",
+      "Close-up studio photo of a vegetable frankie roll/wrap (flatbread roll) sliced to show filling, with chutney, high detail (dish-sakthi-vegetable-frankie-roll.dim_512x512.png)",
+      "Close-up studio photo of steamed vegetable momos/dumplings arranged on a plate with dipping sauce, high detail (dish-sakthi-vegetable-momos.dim_512x512.png)",
+      "Close-up studio photo of a fresh vegetable sandwich with visible layers (tomato, cucumber, lettuce), on a plate, high detail (dish-sakthi-vegetable-sandwich.dim_512x512.png)"
+    ],
+    "edits": []
   }
 }

@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix mismatched Sakthi Snacks dish images by replacing incorrect generated assets and ensuring frontend/backend mappings point to the corrected static files.
+**Goal:** Generate accurate images for four Sakthi Snacks dishes and ensure the app displays them consistently via seeded data and name-based fallback mapping.
 
 **Planned changes:**
-- Review the Sakthi Snacks dish images under `frontend/public/assets/generated/` to identify which ones do not visually match their filenames, and add corrected replacement images using a deterministic `.v2` filename scheme.
-- Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name-to-image mappings resolve to the corrected Sakthi Snacks assets and remove/repair any incorrect cross-item mappings.
-- Update seeded Sakthi Snacks (restaurantId = 7) menu items in `backend/main.mo` so returned `imageUrl` values (when present) point to the correct `/assets/generated/...` filenames, using a conditional migration if required by persisted state.
+- Add new generated dish images for Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich under `frontend/public/assets/generated/` using the specified filenames.
+- Update `frontend/src/utils/imageFallbacks.ts` to map the Sakthi dish names (including the normalized `vegetable momos (6 pcs)` key) to the new `/assets/generated/dish-sakthi-*.dim_512x512.png` paths.
+- Update Sakthi Snacks (restaurantId = 7) seeded menu items in `backend/main.mo` so their `imageUrl` values no longer point to legacy/mismatched images and resolve to the new static assets (directly or via empty `imageUrl` + frontend mapping).
 
-**User-visible outcome:** Sakthi Snacks menu items display the correct dish photos (including when `imageUrl` is missing/legacy), with all images served as static frontend assets and no mismatched Sakthi Snacks mappings affecting other items.
+**User-visible outcome:** On the Sakthi Snacks restaurant and menu screens, Jalebi, Vegetable Frankie Roll, Vegetable Momos (including “6 pcs”), and Vegetable Sandwich display the correct newly generated images.

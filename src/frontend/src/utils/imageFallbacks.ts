@@ -101,13 +101,13 @@ const DISH_NAME_TO_IMAGE: Record<string, string> = {
   'curd vada': '/assets/generated/dish-vada.dim_512x512.png',
   'dahi puri': '/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png',
   'pav bhaji': '/assets/generated/dish-vada-pav.dim_512x512.png',
-  'vegetable sandwich': '/assets/generated/dish-generic.dim_512x512.png',
+  'vegetable sandwich': '/assets/generated/dish-sakthi-vegetable-sandwich.v2.dim_512x512.png',
   'onion pakora': '/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png',
   'mysore bonda': '/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png',
-  'vegetable momos (6 pcs)': '/assets/generated/dish-generic.dim_512x512.png',
-  'vegetable momos': '/assets/generated/dish-generic.dim_512x512.png',
-  'vegetable frankie roll': '/assets/generated/dish-vada-pav.dim_512x512.png',
-  'jalebi': '/assets/generated/dish-generic.dim_512x512.png',
+  'vegetable momos (6 pcs)': '/assets/generated/dish-sakthi-vegetable-momos.v2.dim_512x512.png',
+  'vegetable momos': '/assets/generated/dish-sakthi-vegetable-momos.v2.dim_512x512.png',
+  'vegetable frankie roll': '/assets/generated/dish-sakthi-vegetable-frankie-roll.v2.dim_512x512.png',
+  'jalebi': '/assets/generated/dish-sakthi-jalebi.v2.dim_512x512.png',
 };
 
 // Map of known restaurant names to their generated image filenames

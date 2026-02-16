@@ -1,67 +1,50 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Sakthi Snacks mismatched dish images and mapping to corrected static assets",
+  "title": "Wire new Sakthi Snacks dish images (Jalebi, Veg Frankie Roll, Veg Momos, Veg Sandwich) as static assets and fallbacks",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace visually mismatched Sakthi Snacks generated dish images with corrected v2 static assets using deterministic filenames.",
+      "summary": "Add newly generated static dish images for the four specified Sakthi Snacks menu items under frontend/public/assets/generated using the required filenames.",
       "acceptanceCriteria": [
-        "For each affected Sakthi Snacks image asset, a corrected replacement image is added to `frontend/public/assets/generated/` using the new filenames specified in Image Requirements (edits).",
-        "The corrected images visually match their dish names (e.g., pani puri shows puris with chutneys; murukku shows chakli/murukku spirals).",
-        "No runtime network fetch is introduced for these images; they remain static assets served by the frontend."
+        "The following image files exist under `frontend/public/assets/generated/` and render correctly in a browser: `dish-sakthi-jalebi.dim_512x512.png`, `dish-sakthi-vegetable-frankie-roll.dim_512x512.png`, `dish-sakthi-vegetable-momos.dim_512x512.png`, `dish-sakthi-vegetable-sandwich.dim_512x512.png`.",
+        "Each generated image visually matches the dish implied by its filename (Jalebi is a syrupy spiral dessert; momos are steamed dumplings; frankie roll is a wrap/roll; vegetable sandwich is a layered sandwich)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-sakthi-jalebi.dim_512x512.png",
           "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-pani-puri.dim_512x512.png > dish-sakthi-pani-puri.v2.dim_512x512.png (crispy pani puri with chutneys and sev)."
+          "description": "Create the required static asset image for Jalebi at `frontend/public/assets/generated/dish-sakthi-jalebi.dim_512x512.png`."
         },
         {
-          "path": "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png",
           "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-bhel-puri.dim_512x512.png > dish-sakthi-bhel-puri.v2.dim_512x512.png (bhel puri bowl with puffed rice, sev, onions, tomatoes, coriander, tamarind drizzle)."
+          "description": "Create the required static asset image for Vegetable Frankie Roll at `frontend/public/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png`."
         },
         {
-          "path": "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png",
           "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-onion-pakoda.dim_512x512.png > dish-sakthi-onion-pakoda.v2.dim_512x512.png (golden onion pakoda/fritters with mint chutney)."
+          "description": "Create the required static asset image for Vegetable Momos at `frontend/public/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png`."
         },
         {
-          "path": "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
+          "path": "frontend/public/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png",
           "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-bajji.dim_512x512.png > dish-sakthi-bajji.v2.dim_512x512.png (mixed vegetable bajji with chutneys)."
-        },
-        {
-          "path": "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
-          "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-sundal.dim_512x512.png > dish-sakthi-sundal.v2.dim_512x512.png (spiced sundal with coconut and curry leaves)."
-        },
-        {
-          "path": "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png",
-          "operation": "create",
-          "description": "Add the corrected generated image per Image Requirements edit: dish-sakthi-murukku.dim_512x512.png > dish-sakthi-murukku.v2.dim_512x512.png (South Indian murukku/chakli spirals stacked on a plate)."
+          "description": "Create the required static asset image for Vegetable Sandwich at `frontend/public/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png`."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Update Sakthi Snacks dish-name fallback mappings so menu items resolve to the corrected v2 assets and fix known wrong mappings.",
+      "summary": "Update dish name-to-image mapping so Sakthi Snacks items resolve to the newly generated static dish assets when imageUrl is empty or legacy.",
       "acceptanceCriteria": [
-        "When rendering the Sakthi Snacks restaurant menu, each menu item’s image resolves to the correct Sakthi Snacks asset via `getDishImageUrl(item.imageUrl, item.name)`.",
-        "Known incorrect Sakthi Snacks mappings are fixed so that unrelated items are not mapped to the Sakthi Snacks-specific assets (e.g., items like \"jalebi\" do not resolve to a \"sundal\" image asset).",
-        "If a menu item has an empty/legacy/incorrect `imageUrl`, the correct image is still selected via name-based mapping where available."
+        "In `frontend/src/utils/imageFallbacks.ts`, the `DISH_NAME_TO_IMAGE` entries for `jalebi`, `vegetable frankie roll`, `vegetable momos`, `vegetable momos (6 pcs)`, and `vegetable sandwich` point to the new `/assets/generated/dish-sakthi-*.dim_512x512.png` paths.",
+        "When `getDishImageUrl` is called with an empty/legacy `imageUrl` and a matching dish name, it returns the new Sakthi image path rather than the generic dish fallback."
       ],
       "file_operations": [
         {
           "path": "frontend/src/utils/imageFallbacks.ts",
           "operation": "modify",
-          "description": "Update `DISH_NAME_TO_IMAGE` entries for Sakthi Snacks items to point to the new v2 assets (e.g., mappings that currently use dish-sakthi-pani-puri.dim_512x512.png / dish-sakthi-bhel-puri.dim_512x512.png / dish-sakthi-onion-pakoda.dim_512x512.png / dish-sakthi-bajji.dim_512x512.png / dish-sakthi-sundal.dim_512x512.png / dish-sakthi-murukku.dim_512x512.png should resolve to their corresponding v2 filenames under frontend/public/assets/generated/). Fix incorrect Sakthi mapping(s) such as 'jalebi' no longer mapping to the sundal asset; map it to a non-Sakthi appropriate fallback (e.g., generic) unless a correct jalebi asset exists."
-        },
-        {
-          "path": "frontend/src/utils/imageFallbacks.ts",
-          "operation": "modify",
-          "description": "Extend `isLegacyAssetUrl()` to treat the old (non-v2) Sakthi Snacks generated filenames for the affected dishes as legacy/invalid, so that if the backend still supplies those older URLs, `getDishImageUrl()` will re-resolve via name-based mapping to the corrected v2 static assets (no runtime fetch; still served as frontend static assets)."
+          "description": "Update `DISH_NAME_TO_IMAGE` entries for `jalebi`, `vegetable frankie roll`, `vegetable momos`, `vegetable momos (6 pcs)`, and `vegetable sandwich` to point to `/assets/generated/dish-sakthi-jalebi.dim_512x512.png`, `/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png`, `/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png`, and `/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png` so `getDishImageUrl` resolves them correctly for empty/legacy imageUrl values."
         }
       ]
     }

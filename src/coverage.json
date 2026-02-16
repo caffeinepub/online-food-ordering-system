@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T03:42:46.489Z",
+  "generatedAt": "2026-02-16T06:47:56.525Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,41 +12,35 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Identify which Sakthi Snacks dish image files under `frontend/public/assets/generated/` are visually mismatched (do not depict the dish implied by the filename), and replace them by generating corrected versions while keeping a deterministic filename scheme.",
+        "summary": "Generate new, correct dish images (without user uploads) for Sakthi Snacks menu items: Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich, and add them as static assets under `frontend/public/assets/generated/` using the filenames specified in the Image Requirements.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png"
+          "frontend/public/assets/generated/dish-sakthi-jalebi.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
-          "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png"
+          "frontend/public/assets/generated/dish-sakthi-jalebi.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png",
+          "frontend/public/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update `frontend/src/utils/imageFallbacks.ts` so Sakthi Snacks dish name mappings resolve to the corrected Sakthi Snacks image assets (including correcting any currently-wrong name-to-image mappings for Sakthi Snacks items).",
+        "summary": "Update `frontend/src/utils/imageFallbacks.ts` so the dish-name mapping resolves these Sakthi Snacks items to the newly generated dish assets: `jalebi`, `vegetable frankie roll`, `vegetable momos` (including the existing `vegetable momos (6 pcs)` normalized key), and `vegetable sandwich`.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/imageFallbacks.ts",
           "frontend/src/utils/imageFallbacks.ts"
         ],
         "matchedFiles": [
-          "frontend/src/utils/imageFallbacks.ts",
           "frontend/src/utils/imageFallbacks.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Ensure the seeded Sakthi Snacks restaurant (restaurantId = 7) menu items in `backend/main.mo` have `imageUrl` values that correspond to the correct generated static assets under `/assets/generated/` (or are left empty/legacy-safe so the frontend name-based mapping resolves correctly), so the backend does not provide mismatched image URLs.",
+        "summary": "Update the seeded Sakthi Snacks (restaurantId = 7) menu items in `backend/main.mo` so their `imageUrl` values for Jalebi, Vegetable Frankie Roll, Vegetable Momos, and Vegetable Sandwich correspond to the new generated static assets under `/assets/generated/` (or are set to an empty string so the frontend name-based mapping resolves to the correct new images).",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -54,16 +48,15 @@
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/dish-sakthi-bajji.v2.dim_512x512.png",
-    "frontend/public/assets/generated/dish-sakthi-bhel-puri.v2.dim_512x512.png",
-    "frontend/public/assets/generated/dish-sakthi-murukku.v2.dim_512x512.png",
-    "frontend/public/assets/generated/dish-sakthi-onion-pakoda.v2.dim_512x512.png",
-    "frontend/public/assets/generated/dish-sakthi-pani-puri.v2.dim_512x512.png",
-    "frontend/public/assets/generated/dish-sakthi-sundal.v2.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-jalebi.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-vegetable-frankie-roll.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-vegetable-momos.dim_512x512.png",
+    "frontend/public/assets/generated/dish-sakthi-vegetable-sandwich.dim_512x512.png",
     "frontend/src/utils/imageFallbacks.ts",
     "project_state.json",
     "scratch/component-selection.json",
